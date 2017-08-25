@@ -29,44 +29,60 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       //地图详细数据
-      '/api/getMapDetails/*': {
+      '/api/getMapDetails': {
         target: 'http://localhost:8000',
-        secure: false
+        secure: false,
+        pathRewrite: {
+          '^/api/getMapDetails': '/api/getMapDetails'
+        }
       },
       //地图
-      '/api/getMap/*': {
+      '/api/getMap': {
         target: 'http://localhost:8000',
-        secure: false
+        secure: false,
+        pathRewrite: {
+          '^/api/getMap': '/api/getMap'
+        }
       },
       //折线图
-      '/api/getAmountByDate/*': {
+      '/api/getAmountByDate': {
         target: 'http://localhost:8000',
-        secure: false
+        secure: false,
+        pathRewrite: {
+          '^/api/getAmountByDate': '/api/getAmountByDate'
+        }
       },
-      '/api/v1/*': {
+      '/api/v1': {
         target: 'http://testbk.wezebra.com',
         // target: 'http://192.168.0.128:8080',
-        secure: false
+        secure: false,
+        pathRewrite: {
+          '^/api/v1': '/api/v1'
+        }
       },
-      // 'http://localhost:': {
-      //   target: 'http://testbk.wezebra.com',
-      //   // target: 'http://192.168.0.128:8080',
-      //   secure: false
-      // },
-      '/riskcontrol/*': {
+      '/riskcontrol': {
         target: 'http://testbk.wezebra.com',
         // target: 'http://192.168.0.128:8080',
-        secure: false
+        secure: false,
+        pathRewrite: {
+          '^/riskcontrol': '/riskcontrol'
+        }
       },
-      '/postlending/*': {
+      '/postlending': {
         target: 'http://testbk.wezebra.com',
         // target: 'http://192.168.0.128:8080',
-        secure: false
+        secure: false,
+        pathRewrite: {
+          '^/postlending':'/postlending'
+        }
       },
-      '/counter/*': {
+      '/counter': {
         target: 'http://testbk.wezebra.com',
         // target: 'http://192.168.0.128:8080',
-        secure: false
+        secure: false,
+        pathRewrite: {
+          '^/counter': '/counter'
+        }
       },
       '/anon': {
         target: 'http://testbk.wezebra.com',
@@ -76,13 +92,19 @@ module.exports = {
           '^/anon': '/anon'
         }
       },
-      '/admin/api/branch/*': {
+      '/admin/api/branch': {
         target: 'http://192.168.0.107:8001',
-        secure: false
+        secure: false,
+        pathRewrite: {
+          '^/admin/api/branch': '/admin/api/branch'
+        }
       },
-      '/api/upload/*': {
+      '/api/upload': {
         target: 'http://192.168.0.107:8001',
-        secure: false
+        secure: false,
+        pathRewrite: {
+          '^/api/upload':'/api/upload'
+        }
       }
     },
     // CSS Sourcemaps off by default because relative paths are "buggy"
