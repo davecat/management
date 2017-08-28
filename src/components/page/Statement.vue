@@ -1,25 +1,25 @@
 <template>
   <div>
-    <div class="crumbs">
-      <el-breadcrumb separator="/">
-        <el-breadcrumb-item><i class="fa fa-dashboard"></i> 中介</el-breadcrumb-item>
-        <el-breadcrumb-item>对账明细</el-breadcrumb-item>
-      </el-breadcrumb>
-    </div>
+    <!--<div class="crumbs">-->
+      <!--<el-breadcrumb separator="/">-->
+        <!--<el-breadcrumb-item><i class="fa fa-dashboard"></i> 中介</el-breadcrumb-item>-->
+        <!--<el-breadcrumb-item>对账明细</el-breadcrumb-item>-->
+      <!--</el-breadcrumb>-->
+    <!--</div>-->
     <el-row>
-      <el-tabs>
+      <el-tabs v-model="activeName">
         <el-tab-pane label="应收款" name="Rejected"></el-tab-pane>
         <el-tab-pane label="中退清算" name="Canceled"></el-tab-pane>
       </el-tabs>
     </el-row>
     <el-row>
       <el-form :inline="true" :model="searchForm">
-        <el-form-item label="应收款日期：">
+        <el-form-item>
           <el-date-picker
             v-model="searchForm.applyDate"
             align="right"
             type="date"
-            placeholder="选择日期"
+            placeholder="应收款日期"
             @change="selectedData">
           </el-date-picker>
         </el-form-item>
@@ -35,7 +35,7 @@
       </el-form>
     </el-row>
     <el-row style="height: 21px;">
-      <el-col :span="4" style="float: left;margin-top: 12px;color: red;">
+      <el-col :span="4" style="float: left;margin-top: 12px;color: red;min-width: 150px">
         应收合计:{{ sumPayeeAmount | currency}}
       </el-col>
       <div class="pagination" style="position: absolute;right: 0;top: 0;margin: 0">
@@ -176,6 +176,7 @@
   export default {
     data() {
       return {
+        activeName: 'Rejected',
         tableData: [],
         cur_page: 1,
         size: 10,
@@ -183,7 +184,7 @@
         sumPayeeAmount: 0,
         url: '/counter/api/v1/payee/lib/getPayeeLibPage',
         searchForm: {
-          applyDate: format(Date.now(), 'YYYY-MM-DD'),
+          applyDate: '',
           customerName: ''
         },
         formLabelWidth: '120px',

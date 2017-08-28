@@ -218,7 +218,7 @@
 </template>
 
 <script>
-  import json from "../../../static/city.json";
+  import json from "static/city.json";
   import { pagination } from '../mixins/pagination.js'
   import store from '@/store'
   export default {
