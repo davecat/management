@@ -32,6 +32,7 @@
     </el-row>
     <el-row>
       <el-table
+        v-loading.body="loading"
         ref="multipleTable"
         :data="tableData"
         tooltip-effect="dark"

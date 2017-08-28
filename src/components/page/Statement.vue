@@ -42,6 +42,7 @@
     </el-row>
     <el-row>
       <el-table
+        v-loading.body="loading"
         :data="tableData"
         :default-sort="{prop: 'payeeDate', order: 'descending'}"
         style="width: 100%">
@@ -171,6 +172,7 @@
     data() {
       return {
         activeName: 'Rejected',
+        loading: false,//加载动画
         tableData: [],
         cur_page: 1,
         size: 10,
@@ -271,6 +273,7 @@
         this.getData();
       },
       getData(){
+        this.loading = true;
         this.axios.post(this.url, {
           ...this.searchForm,
           page: this.cur_page - 1,
@@ -278,6 +281,7 @@
         }).then((res) => {
           this.tableData = res.data.content;
           this.totalElements = res.data.totalElements;
+          this.loading = false;
           if (res.data.sumPayeeAmount !== undefined) {
             this.sumPayeeAmount = res.data.sumPayeeAmount;
           } else {

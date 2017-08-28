@@ -1,5 +1,5 @@
 /**
- * Created by ethan-liu on 2017/6/28.
+ * Created by dave on 2017/8/24.
  */
 export const qiniu = {
     data() {

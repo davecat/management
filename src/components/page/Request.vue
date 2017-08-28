@@ -65,6 +65,7 @@
     </el-row>
     <el-row>
       <el-table
+        v-loading.body="loading"
         ref="multipleTable"
         :data="tableData"
         highlight-current-row
@@ -801,6 +802,7 @@
             value: 'otherException',
             label: '其他问题'
           }],
+        loading: false,//加载动画
         tableData: [],
         cur_page: 1,
         size: 10,
@@ -1119,6 +1121,7 @@
         this.getData();
       },
       getData(a){
+        this.loading = true;
         this.axios.post(this.url, {
           ...this.searchForm,
           page: this.cur_page - 1,
@@ -1126,6 +1129,7 @@
         }).then((res) => {
           this.tableData = res.data.content;
           this.totalElements = res.data.totalElements;
+          this.loading = false;
           if (a === 'Unchecked') {
             this.uncheckedNumber = res.data.totalElements;
           }
