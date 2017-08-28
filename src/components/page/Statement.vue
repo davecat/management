@@ -1,11 +1,5 @@
 <template>
   <div>
-    <!--<div class="crumbs">-->
-      <!--<el-breadcrumb separator="/">-->
-        <!--<el-breadcrumb-item><i class="fa fa-dashboard"></i> 中介</el-breadcrumb-item>-->
-        <!--<el-breadcrumb-item>对账明细</el-breadcrumb-item>-->
-      <!--</el-breadcrumb>-->
-    <!--</div>-->
     <el-row>
       <el-tabs v-model="activeName">
         <el-tab-pane label="应收款" name="Rejected"></el-tab-pane>
@@ -34,7 +28,7 @@
         </el-form-item>
       </el-form>
     </el-row>
-    <el-row style="height: 21px;">
+    <el-row style="margin-bottom: 10px">
       <el-col :span="4" style="float: left;margin-top: 12px;color: red;min-width: 150px">
         应收合计:{{ sumPayeeAmount | currency}}
       </el-col>

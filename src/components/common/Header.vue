@@ -19,7 +19,6 @@
             }
         },
         created: function () {
-          console.log(this.staff);
         },
         methods: {
             doLogout() {

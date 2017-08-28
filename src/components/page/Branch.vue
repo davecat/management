@@ -1,23 +1,10 @@
 <template>
   <div>
-    <div class="crumbs">
-      <el-breadcrumb separator="/">
-        <el-breadcrumb-item><i class="fa fa-dashboard"></i> 中介</el-breadcrumb-item>
-        <el-breadcrumb-item>门店管理</el-breadcrumb-item>
-      </el-breadcrumb>
-    </div>
-
-    <!--<el-row v-if="staff.staffType !== 'Branch'">-->
-    <!--<el-button type="primary" @click="formVisible = true">新增</el-button>-->
-    <!--<el-button type="primary" :disabled="multipleEditButton" @click="multipleEdit" >修改</el-button>-->
-    <!--<el-button type="primary" @click="dialogVisible = true">删除</el-button>-->
-    <!--<el-button type="primary" @click="dialogVisible2 = true">停用</el-button>-->
-    <!--</el-row>-->
     <el-row>
       <el-form  :inline="true" :model="searchForm">
-        <el-form-item label="城市：">
+        <el-form-item>
           <el-select v-model="searchForm.cityId" filterable>
-            <el-option label="全部" value=""></el-option>
+            <el-option label="选择城市" value=""></el-option>
             <el-option v-for="city in cityList" :key="city.id" :label="city.name"
                        :value="city.id"></el-option>
           </el-select>
@@ -30,12 +17,12 @@
         </el-form-item>
       </el-form>
     </el-row>
-    <el-row style="margin-bottom: 0">
-      <el-checkbox-group v-model="checkList" style="float: left;margin-top: 20px">
+    <el-row style="margin-bottom: 10px">
+      <el-checkbox-group v-model="checkList" style="float: left; margin-top: 12px; min-width: 150px;">
         <el-checkbox label="启用"></el-checkbox>
         <el-checkbox label="停用"></el-checkbox>
       </el-checkbox-group>
-      <div class="pagination" style="float: right">
+      <div class="pagination" style="position: absolute; right: 0; top: 0; margin: 0;">
         <el-pagination
           @current-change="handleCurrentChange"
           layout="total, prev, pager, next"
@@ -80,7 +67,7 @@
             {{ scope.row.enabled ? '启用':'停用' }}
           </template>
         </el-table-column>
-        <el-table-column  min-width="122" label="操作">
+        <el-table-column  min-width="123" label="操作">
           <template scope="scope">
             <el-tooltip v-if="staff.staffType !== 'Branch'" class="item" effect="dark" content="修改" placement="top-end">
               <el-button size="small" type="primary"

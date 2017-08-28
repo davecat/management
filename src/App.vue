@@ -149,7 +149,4 @@ a{text-decoration: none}
 .pure-button{
   background: #20a0ff;
 }
-.el-row {
-  margin-bottom: 20px;
-}
 </style>

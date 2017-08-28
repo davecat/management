@@ -1,43 +1,20 @@
 <template>
   <div>
-    <div class="crumbs">
-      <el-breadcrumb separator="/">
-        <el-breadcrumb-item><i class="fa fa-dashboard"></i> 中介</el-breadcrumb-item>
-        <el-breadcrumb-item>经纪人管理</el-breadcrumb-item>
-      </el-breadcrumb>
-    </div>
-
-    <!--<el-row>-->
-    <!--<el-button type="primary" @click="dialogVisible2 = true">审批通过</el-button>-->
-    <!--<el-button type="primary" @click="dialogVisible3 = true">审批不通过</el-button>-->
-    <!--<el-button type="primary" @click="dialogVisible = true">启用</el-button>-->
-    <!--<el-button type="primary" @click="dialogVisible1 = true">停用</el-button>-->
-    <!--</el-row>-->
     <el-row>
       <el-form :inline="true" :model="form">
-        <el-form-item label="城市：">
+        <el-form-item>
           <el-select v-model="searchForm.cityId" filterable @change="getBranchList(searchForm.cityId)">
-            <el-option label="全部" value=""></el-option>
+            <el-option label="选择城市" value=""></el-option>
             <el-option v-for="city in cityList" :key="city.id" :label="city.name"
                        :value="city.id"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="门店：">
+        <el-form-item>
           <el-select v-model="searchForm.branchId">
-            <el-option label="全部" value=""></el-option>
+            <el-option label="选择城市下的门店" value=""></el-option>
             <el-option v-for="branch in branchList" :key="branch.id" :label="branch.name" :value="branch.id"></el-option>
           </el-select>
         </el-form-item>
-
-        <!--<el-form-item label="人员状态：">-->
-        <!--<el-select v-model="searchForm.status" placeholder="请选择">-->
-        <!--<el-option label="全部" value=""></el-option>-->
-        <!--<el-option label="待审批" value="Pending"></el-option>-->
-        <!--<el-option label="启用" value="Enabled"></el-option>-->
-        <!--<el-option label="停用" value="Disable"></el-option>-->
-        <!--<el-option label="审批不通过" value="NoPass"></el-option>-->
-        <!--</el-select>-->
-        <!--</el-form-item>-->
         <el-form-item>
           <el-button type="primary" @click="Search">查询</el-button>
         </el-form-item>
@@ -46,14 +23,14 @@
         </el-form-item>
       </el-form>
     </el-row>
-    <el-row style="margin-bottom: 0">
-      <el-checkbox-group v-model="checkList" style="float: left;margin-top: 20px">
+    <el-row style="margin-bottom: 10px">
+      <el-checkbox-group v-model="checkList" style="float: left;margin-top: 12px;min-width: 280px">
         <el-checkbox label="待审批"></el-checkbox>
         <el-checkbox label="启用"></el-checkbox>
         <el-checkbox label="停用"></el-checkbox>
         <el-checkbox label="拒绝"></el-checkbox>
       </el-checkbox-group>
-      <div class="pagination" style="float: right">
+      <div class="pagination" style="position: absolute; right: 0; top: 0; margin: 0;">
         <el-pagination
           @current-change="handleCurrentChange"
           layout="total, prev, pager, next"
