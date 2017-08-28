@@ -8,18 +8,18 @@
     </div>
 </template>
 <script>
+  import store from '@/store'
     export default {
         data() {
             return {}
         },
         computed: {
             staff (){
-                return this.$store.state.staff.staff
+                return store.state.staff.staff
             }
         },
         created: function () {
-            //vuex存储数据
-            this.$store.commit('get_staff');
+          console.log(this.staff);
         },
         methods: {
             doLogout() {

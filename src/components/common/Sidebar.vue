@@ -11,6 +11,7 @@
 </template>
 
 <script>
+  import store from '@/store'
     import SidebarItem from "./SidebarItem.vue";
     export default {
         components: { SidebarItem },
@@ -19,7 +20,7 @@
                 return this.$route.path.replace('/', '');
             },
             menus() {
-                return this.$store.state.menus.menus;
+                return store.state.menus.menus;
             }
         },
         methods: {

@@ -33,11 +33,19 @@ router.beforeEach((to, from, next) => {
     if (!token || token === null) {
       next({path: '/login'})
     } else {
+      //vuex menu 赋值
       Vue.axios.get("/api/v1/menu").then((response) => {
         let menus = response.data;
         menus.sort((a,b) => a.sortNum - b.sortNum);
         menus.forEach(m => m.children.sort((a,b) => a.sortNum - b.sortNum));
         store.dispatch('set_menu', menus);
+      }).catch((error) => {
+        console.log(error);
+      });
+      //staff  赋值
+      Vue.axios.get("/api/v1/user/current").then((response) => {
+        let staff = response.data;
+        store.dispatch('get_staff', staff);
       }).catch((error) => {
         console.log(error);
       });
