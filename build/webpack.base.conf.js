@@ -82,4 +82,39 @@ module.exports = {
       }
     ]
   }
+};
+const webpack = require('webpack');
+if (process.env.NODE_ENV === 'production') {
+  module.exports.devtool = '#source-map';
+  // http://vue-loader.vuejs.org/en/workflow/production.html
+  module.exports.plugins = (module.exports.plugins || []).concat([
+    new webpack.DefinePlugin({
+      'process.env': {
+        NODE_ENV: '"production"',
+        QINIU: '"https://libfile1.wezebra.com/"',
+        UPLOAD: '"https://upload-z2.qbox.me"'
+      }
+    }),
+    new webpack.optimize.UglifyJsPlugin({
+      sourceMap: false,
+      compress: {
+        warnings: false
+      }
+    }),
+    new webpack.LoaderOptionsPlugin({
+      minimize: true
+    })
+  ])
+}
+
+if(process.env.NODE_ENV === 'development') {
+  module.exports.plugins = (module.exports.plugins || []).concat([
+    new webpack.DefinePlugin({
+      'process.env': {
+        NODE_ENV: '"development"',
+        QINIU: '"http://7xt1kq.com1.z0.glb.clouddn.com/"',
+        UPLOAD: '"http://upload.qiniu.com"'
+      }
+    }),
+  ])
 }
