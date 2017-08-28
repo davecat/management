@@ -1,11 +1,5 @@
 <template>
   <div style="height: 100%;">
-    <div class="crumbs">
-      <el-breadcrumb separator="/">
-        <el-breadcrumb-item><i class="fa fa-dashboard"></i> 中介</el-breadcrumb-item>
-        <el-breadcrumb-item>分期申请</el-breadcrumb-item>
-      </el-breadcrumb>
-    </div>
     <el-row>
       <el-tabs v-model="searchForm.status"  @tab-click="handleChangeTab(searchForm.status)">
         <el-tab-pane label="待处理" name="Unchecked">
@@ -26,16 +20,16 @@
         <el-form-item>
           <el-input v-model="searchForm.customerName" placeholder="申请编号或租客姓名"></el-input>
         </el-form-item>
-        <el-form-item label="城市：">
+        <el-form-item>
           <el-select v-model="searchForm.cityId" filterable @change="getBranchList(searchForm.cityId)">
-            <el-option label="全部" value=""></el-option>
+            <el-option label="选择城市" value=""></el-option>
             <el-option v-for="city in cityList" :key="city.id" :label="city.name"
                        :value="city.id"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="门店：">
+        <el-form-item>
           <el-select v-model="searchForm.branchId">
-            <el-option label="全部" value=""></el-option>
+            <el-option label="选择城市下的门店" value=""></el-option>
             <el-option v-for="branch in branchList" :key="branch.id" :label="branch.name"
                        :value="branch.id"></el-option>
           </el-select>
@@ -48,16 +42,16 @@
         </el-form-item>
       </el-form>
     </el-row>
-    <el-row style="height: 21px;">
-      <el-checkbox-group  style="float: left;margin-top: 12px" v-if="searchForm.status === 'Unconfirmed'">
+    <el-row style="margin-bottom: 10px">
+      <el-checkbox-group  style="float: left;margin-top: 12px;min-width: 150px" v-if="searchForm.status === 'Unconfirmed'">
         <el-checkbox label="正常"></el-checkbox>
         <el-checkbox label="已逾期"></el-checkbox>
       </el-checkbox-group>
-      <el-checkbox-group  style="float: left;margin-top: 12px" v-if="searchForm.status === 'Canceled'">
+      <el-checkbox-group  style="float: left;margin-top: 12px;min-width: 150px" v-if="searchForm.status === 'Canceled'">
         <el-checkbox label="未退款"></el-checkbox>
         <el-checkbox label="已退款"></el-checkbox>
       </el-checkbox-group>
-      <template v-if="searchForm.status === 'Unchecked'">
+      <template v-if="searchForm.status === 'Unchecked'" style="float: left;margin-top: 12px;">
         <el-radio class="radio" v-model="radio" label="1" style="margin-top: 12px">待补充</el-radio>
         <el-radio class="radio" v-model="radio" label="2" style="margin-top: 12px">待修改</el-radio>
       </template>
@@ -745,7 +739,7 @@
 <script>
   import VueAwesomeSwiper from 'vue-awesome-swiper'
   import { swiper, swiperSlide } from 'vue-awesome-swiper'
-  import json from "../../../static/city.json";
+  import json from "static/city.json";
   import format from 'date-fns/format'
   import {qiniu} from '../mixins/qiniu.js'
   export default {
