@@ -1,6 +1,6 @@
 # management
 
-> my-project
+> 基于Vue+webpack的后台管理系统
 
 ## Build Setup
 
