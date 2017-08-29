@@ -1,3 +1,4 @@
+![](http://img.mp.itc.cn/upload/20161024/d35efa2f6c4842638cf56d63529c8a07_th.png)
 # management
 
 > 基于Vue+webpack的后台管理系统
