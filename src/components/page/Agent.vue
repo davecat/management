@@ -3,15 +3,13 @@
     <el-row>
       <el-form :inline="true" :model="form">
         <el-form-item>
-          <el-select v-model="searchForm.cityId" filterable @change="getBranchList(searchForm.cityId)">
-            <el-option label="选择城市" value=""></el-option>
+          <el-select v-model="searchForm.cityId" filterable @change="getBranchList(searchForm.cityId)" placeholder="选择城市">
             <el-option v-for="city in cityList" :key="city.id" :label="city.name"
                        :value="city.id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-select v-model="searchForm.branchId">
-            <el-option label="选择城市下的门店" value=""></el-option>
+          <el-select v-model="searchForm.branchId" placeholder="选择城市下的门店">
             <el-option v-for="branch in branchList" :key="branch.id" :label="branch.name" :value="branch.id"></el-option>
           </el-select>
         </el-form-item>

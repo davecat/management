@@ -21,15 +21,13 @@
           <el-input v-model="searchForm.customerName" placeholder="申请编号或租客姓名"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-select v-model="searchForm.cityId" filterable @change="getBranchList(searchForm.cityId)">
-            <el-option label="选择城市" value=""></el-option>
+          <el-select v-model="searchForm.cityId" filterable @change="getBranchList(searchForm.cityId)" placeholder="选择城市">
             <el-option v-for="city in cityList" :key="city.id" :label="city.name"
                        :value="city.id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-select v-model="searchForm.branchId">
-            <el-option label="选择城市下的门店" value=""></el-option>
+          <el-select v-model="searchForm.branchId" placeholder="选择城市下的门店">
             <el-option v-for="branch in branchList" :key="branch.id" :label="branch.name"
                        :value="branch.id"></el-option>
           </el-select>
@@ -42,7 +40,7 @@
         </el-form-item>
       </el-form>
     </el-row>
-    <el-row style="margin-bottom: 10px">
+    <el-row style="margin-bottom: 10px;height: 33px;">
       <el-checkbox-group  style="float: left;margin-top: 12px;min-width: 150px" v-if="searchForm.status === 'Unconfirmed'">
         <el-checkbox label="正常"></el-checkbox>
         <el-checkbox label="已逾期"></el-checkbox>
@@ -230,7 +228,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="省市区（县）：" :label-width="formLabelWidthCity" prop="selectedOptions">
+            <el-form-item label="省市区（县）：" :label-width="formLabelWidth" prop="selectedOptions">
               <el-cascader
                 :options="options"
                 v-model="selectedOptions"
@@ -423,11 +421,13 @@
              v-if="pullBloor"
              class="demo-table-expand hiddenForm">
       <div>
-        <el-row style="position: absolute;top: 50%;left: 0;z-index: 999">
+        <el-row style="position: absolute;top: 50%;left: -12px;z-index: 999;margin-top: -24px">
           <el-tooltip class="item" effect="dark" content="隐藏" placement="top-end">
             <el-button size="small" type="primary"
                        @click="hiddenClass()"><i
-              class="fa fa-chevron-right"></i>
+              class="fa fa-chevron-right"
+              style="margin-right: -7px"
+            ></i>
             </el-button>
           </el-tooltip>
         </el-row>
@@ -444,7 +444,7 @@
           <el-button style="float: right;padding: 5px 15px" @click="next()" :disabled="!tableData[index+1]">下一条<i style="font-size: x-large;vertical-align: sub" class="fa fa-angle-right" aria-hidden="true"></i></el-button>
         </div>
         <div style="width: 100%;text-align: center;margin-bottom: 5px;border-bottom: 1px solid #D9D9D9;border-top: 1px solid #D9D9D9;padding: 10px 0">
-          <span>待补充</span>
+          <span style="color: red;">待补充</span>
         </div>
         <el-row>
           <el-col :span="6">
@@ -458,6 +458,18 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
+            <el-form-item label="手机号码：">
+              <span>{{ currentRow.mobile }}</span>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="身份证号：">
+              <span>{{ currentRow.idCardNo }}</span>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="6">
             <el-form-item label="每月租金：">
               <el-input v-model="currentRow.monthlyRent"></el-input>
             </el-form-item>
@@ -467,23 +479,12 @@
               <span>{{ currentRow.startDate | dateFormat }}-{{currentRow.endDate | dateFormat}}</span>
             </el-form-item>
           </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="6">
-            <el-form-item label="手机号码：">
-              <span>{{ currentRow.mobile }}</span>
-            </el-form-item>
-          </el-col>
           <el-col :span="6">
             <el-form-item label="租期合计：">
               <span>{{ currentRow.rentPeriod }}</span>
             </el-form-item>
           </el-col>
-          <el-col :span="6">
-            <el-form-item label="身份证号：">
-              <span>{{ currentRow.idCardNo }}</span>
-            </el-form-item>
-          </el-col>
+
           <el-col :span="6">
             <el-form-item label="尾款合计：">
               <span>{{ currentRow.retainage | currency }}</span>
@@ -537,25 +538,35 @@
               </el-table>
             </el-tab-pane>
             <el-tab-pane label="房屋信息" name="houseInfo">
-              <el-col>
-                <el-form-item label="房屋信息：" :label-width="formLabelWidthCity" prop="selectedOptions">
-                  <el-cascader
-                    :options="options"
-                    v-model="selectedOptions"
-                    @change="handleChange">
-                  </el-cascader>
-                </el-form-item>
-                <el-form-item  :label-width="formLabelWidth" prop="address">
-                  <el-input v-model="currentRow.address" placeholder="详细地址"></el-input>
-                </el-form-item>
-                <el-form-item label="台账号码：" :label-width="formLabelWidth" prop="apartmentNo">
-                  <el-input v-model="form.apartmentNo"></el-input>
-                </el-form-item>
-              </el-col>
+              <el-row>
+                <el-col>
+                  <el-form-item label="房屋信息：" :label-width="formLabelWidth" prop="selectedOptions">
+                    <el-cascader
+                      :options="options"
+                      v-model="selectedOptions"
+                      @change="handleChange">
+                    </el-cascader>
+                  </el-form-item>
+                </el-col>
+              </el-row>
+              <el-row>
+                <el-col>
+                  <el-form-item  label=" " :label-width="formLabelWidth" prop="address">
+                    <el-input v-model="currentRow.address" placeholder="详细地址"></el-input>
+                  </el-form-item>
+                </el-col>
+              </el-row>
+              <el-row>
+                <el-col>
+                  <el-form-item label="台账号码：" :label-width="formLabelWidth" prop="apartmentNo">
+                    <el-input v-model="form.apartmentNo"></el-input>
+                  </el-form-item>
+                </el-col>
+              </el-row>
             </el-tab-pane>
             <el-tab-pane label="租客其他信息" name="customerInfo">
               <el-row>
-                <el-col :span="8">
+                <el-col :span="10">
                   <el-form-item label="学历信息：" :label-width="formLabelWidth" prop="education">
                     <el-select v-model="form.education">
                       <el-option label="专科及以下" value="CollegeDown"></el-option>
@@ -564,29 +575,31 @@
                     </el-select>
                   </el-form-item>
                 </el-col>
-                <el-col :span="8">
-                  <el-form-item label="工作单位：" :label-width="formLabelWidth" prop="companyName">
-                    <el-input v-model="form.companyName"></el-input>
-                  </el-form-item>
-                </el-col>
-                <el-col :span="8">
-                  <el-form-item label="单位地址：" :label-width="formLabelWidth" prop="companyAddress">
-                    <el-input v-model="form.companyAddress"></el-input>
-                  </el-form-item>
-                </el-col>
-              </el-row>
-              <el-row>
-                <el-col :span="8">
+                <el-col :span="10">
                   <el-form-item label="应急联系：" :label-width="formLabelWidth" prop="emergencyContact">
                     <el-input v-model="form.emergencyContact"></el-input>
                   </el-form-item>
                 </el-col>
-                <el-col :span="8">
+              </el-row>
+              <el-row>
+                <el-col :span="10">
+                  <el-form-item label="工作单位：" :label-width="formLabelWidth" prop="companyName">
+                    <el-input v-model="form.companyName"></el-input>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="10">
                   <el-form-item label="联系方式：" :label-width="formLabelWidth" prop="emergencyContactMobile">
                     <el-input v-model="form.emergencyContactMobile"></el-input>
                   </el-form-item>
                 </el-col>
-                <el-col :span="8">
+              </el-row>
+              <el-row>
+                <el-col :span="10">
+                  <el-form-item label="单位地址：" :label-width="formLabelWidth" prop="companyAddress">
+                    <el-input v-model="form.companyAddress"></el-input>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="10">
                   <el-form-item label="双方关系：" :label-width="formLabelWidth" prop="relation">
                     <el-select v-model="form.relation">
                       <el-option label="父母" value="Parent"></el-option>
@@ -647,8 +660,8 @@
                   </el-upload>
                 </el-col>
               </el-row>
-              <el-row :gutter="20">
-                <el-col :span="4">
+              <el-row :gutter="20" style="margin: 10px -10px">
+                <el-col :span="3">
                   <el-form-item label="租房合同照片：">
                   </el-form-item>
                 </el-col>
@@ -716,18 +729,18 @@
           </el-tabs>
         </el-row>
         <hr style="border-bottom-color: #d9d9d9; border-top: none;">
-        <el-row>
-          <el-col :span="8">
+        <el-row style="margin-top: 20px;opacity: .5">
+          <el-col :span="6">
             <el-form-item label="经纪人：">
               <span>{{ currentRow.responsibleAgent }}</span>
             </el-form-item>
           </el-col>
-          <el-col :span="8">
+          <el-col :span="6">
             <el-form-item label="联系方式：">
               <span>1121212121212</span>
             </el-form-item>
           </el-col>
-          <el-col :span="8">
+          <el-col :span="6">
             <el-form-item label="申请日期：">
               <span>{{ currentRow.applyDate | dateFormat }}</span>
             </el-form-item>
@@ -850,8 +863,7 @@
           idCardAndPersonPhoto: '',
           contractPhotos: []
         },
-        formLabelWidth: '100px',
-        formLabelWidthCity: '125px',
+        formLabelWidth: '82px',
         pickerOptions: {
           shortcuts: [
             {
@@ -1527,7 +1539,7 @@
     background: #007aff;
   }
   .swiper-pagination-bullet {
-    width: 71px;
+    width: 8px;
     height: 8px;
     display: inline-block;
     border-radius: 100%;

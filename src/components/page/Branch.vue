@@ -3,8 +3,7 @@
     <el-row>
       <el-form  :inline="true" :model="searchForm">
         <el-form-item>
-          <el-select v-model="searchForm.cityId" filterable>
-            <el-option label="选择城市" value=""></el-option>
+          <el-select v-model="searchForm.cityId" filterable placeholder="选择城市">
             <el-option v-for="city in cityList" :key="city.id" :label="city.name"
                        :value="city.id"></el-option>
           </el-select>

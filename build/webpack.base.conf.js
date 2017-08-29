@@ -112,8 +112,10 @@ if(process.env.NODE_ENV === 'development') {
     new webpack.DefinePlugin({
       'process.env': {
         NODE_ENV: '"development"',
-        QINIU: '"http://7xt1kq.com1.z0.glb.clouddn.com/"',
-        UPLOAD: '"http://upload.qiniu.com"'
+        QINIU: '"https://libfile1.wezebra.com/"',
+        UPLOAD: '"https://upload-z2.qbox.me"'
+        // QINIU: '"http://7xt1kq.com1.z0.glb.clouddn.com/"',
+        // UPLOAD: '"http://upload.qiniu.com"'
       }
     }),
   ])
