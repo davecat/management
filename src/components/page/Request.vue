@@ -420,6 +420,7 @@
     <div v-if="cover" style="width: 100%;height: 100%;opacity: .1;background-color: #666;position: absolute;left: 0;top: 0;z-index: 888"></div>
     <!--拉扇层-->
     <el-form label-position="left" inline
+             v-if="pullBloor"
              class="demo-table-expand hiddenForm">
       <div>
         <el-row style="position: absolute;top: 50%;left: 0;z-index: 999">
@@ -493,10 +494,10 @@
         <el-row>
           <el-tabs v-model="infoTab">
             <el-tab-pane v-if="searchForm.status !== 'Unchecked' && searchForm.status !== 'Unconfirmed'" label="还款账单" name="order">
+              <!--@current-change="handleCurrentRow1"-->
               <el-table
                 ref="multipleTable"
                 highlight-current-row
-                @current-change="handleCurrentRow"
                 tooltip-effect="dark">
                 <el-table-column
                   min-width="140"
@@ -752,6 +753,7 @@
     mixins: [qiniu],
     data() {
       return {
+        pullBloor: false,//控制拉扇是否显示
         current1: 0,//照片初始化旋转角度默认0
         current2: 0,
         current3: 0,
@@ -1113,8 +1115,13 @@
       },
       //隐藏右侧内容
       hiddenClass() {
+        let that = this;
+        clearTimeout(a);//清除延时
         this.cover = false;
         document.querySelector('.hiddenForm').className = 'hiddenForm el-form demo-table-expand el-form--label-left el-form--inline';
+        var a = setTimeout(function () {
+          that.pullBloor = false;
+        },500);
       },
       handleCurrentChange(val){
         this.cur_page = val;
@@ -1299,8 +1306,11 @@
             relation: '',
           }
         } else {
+          this.pullBloor = true;
           this.cover = true;
-          document.querySelector('.hiddenForm').className = 'daveShow hiddenForm el-form demo-table-expand el-form--label-left el-form--inline';
+          Vue.nextTick(function () {
+            document.querySelector('.hiddenForm').className = 'daveShow hiddenForm el-form demo-table-expand el-form--label-left el-form--inline';
+          });
           this.currentRow = val;
           if(this.currentRow.idCardFrontOrVersoPhotoBlur) {
             this.reason.push('idCardFrontOrVersoPhotoBlur')
@@ -1465,8 +1475,9 @@
     color: red;
   }
   .hiddenForm {
+    min-width: 1100px;
+    margin-top: -40px;
     box-shadow: -10px 0px 5px #888888;
-    border-left: 2px dashed #666;
     padding: 15px;
     overflow-y: scroll;
     width: 80%;
@@ -1478,8 +1489,9 @@
     left: 200%;
   }
   .daveShow {
+    min-width: 1100px;
+    margin-top: -40px;
     box-shadow: -10px 0px 5px #888888;
-    border-left: 2px dashed #666;
     padding: 15px;
     overflow-y: scroll;
     width: 80%;
@@ -1488,10 +1500,11 @@
     background-color: #fff;
     position: absolute;
     top: 40px;
-    left:19%;
+    left:18%;
   }
   .content {
-    overflow: hidden;
+    overflow-y: hidden;
+    overflow-x: scroll;
   }
   /*swiper样式*/
   .swiper-container {
