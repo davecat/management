@@ -1,5 +1,8 @@
 <template>
     <div class="header">
+      <el-button type="primary">
+        <i class="fa fa-bars" id="dave"></i>
+      </el-button>
         <div class="logo">后台管理系统</div>
         <div class="user-info">
             <span class="username">你好，{{staff.staffName}}</span>
@@ -34,6 +37,14 @@
 </script>
 
 <style scoped>
+    #dave {
+      transition: all .28s;
+    }
+    .header .el-button {
+      float: left;
+      margin-top: 18px;
+      margin-left: 20px;
+    }
     .header {
         position: relative;
         box-sizing: border-box;
@@ -46,7 +57,7 @@
 
     .header .logo {
         float: left;
-        width: 250px;
+        width: 180px;
         text-align: center;
     }
 
