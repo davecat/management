@@ -29,6 +29,9 @@
 
 <style scoped>
     .fa {
-        margin-right: 10px;
+        margin-right: 13px;
+    }
+    .el-submenu .el-menu-item {
+      padding: 0 45px!important;
     }
 </style>

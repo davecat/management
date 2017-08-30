@@ -54,10 +54,14 @@
             document.getElementById("dave").style.transform = 'rotate(90deg)';
             this.a = !this.a;
             document.getElementsByClassName("app-wrapper")[0].className += " hideSidebar";
+            document.getElementsByClassName("el-menu--dark")[0].style.marginLeft = '-5px';
+            console.log(document.getElementsByClassName("el-menu--dark")[0].childNodes[0].childNodes);
+            console.log(document.getElementsByClassName("fa")[0]);
           } else {
             document.getElementById("dave").style.transform = 'rotate(-0deg)';
             this.a = !this.a;
             document.getElementsByClassName("app-wrapper")[0].className = "app-wrapper";
+            document.getElementsByClassName("el-menu--dark")[0].style.marginLeft = '0'
           }
         }
       }
@@ -78,7 +82,7 @@
   }
   .hideSidebar .sidebar-wrapper:hover{
   /*transform: translate(0, 0);*/
-  width: 200px;
+    width: 200px;
   }
   .hideSidebar .sidebar-container{
     transform: translate(0, 0);
