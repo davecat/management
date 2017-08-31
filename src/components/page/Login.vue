@@ -2,6 +2,10 @@
     <div class="login-wrap">
         <div class="ms-title">后台管理系统</div>
         <div class="ms-login">
+          <div style="position: absolute;top: 0;right: 3px">
+            <i class="fa fa-qrcode" aria-hidden="true" style="font-size: xx-large"></i>
+          </div>
+          <!--密码登陆-->
             <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="0px" class="demo-ruleForm">
                 <el-form-item prop="username">
                     <el-input v-model="ruleForm.username" placeholder="用户名"></el-input>
@@ -24,6 +28,8 @@
                     </el-alert>
                 </el-form-item>
             </el-form>
+          <!--二维码-->
+            <!--<span><img src="static/2.jpg" width="100%"></span>-->
         </div>
     </div>
 </template>
