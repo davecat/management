@@ -18,9 +18,9 @@
       </el-form>
     </el-row>
     <el-row style="margin-bottom: 10px">
-      <el-checkbox-group v-model="checkList" style="float: left; margin-top: 12px; min-width: 150px;">
-        <el-checkbox label="启用"></el-checkbox>
-        <el-checkbox label="停用"></el-checkbox>
+      <el-checkbox-group v-model="searchForm.enabled" @change="Search" style="float: left; margin-top: 12px; min-width: 150px;">
+        <el-checkbox label="true">启用</el-checkbox>
+        <el-checkbox label="false">停用</el-checkbox>
       </el-checkbox-group>
       <div class="pagination" style="position: absolute; right: 0; top: 0; margin: 0;">
         <el-pagination
@@ -195,8 +195,7 @@
     mixins: [pagination],
     data() {
       return {
-        checkList: [],//选中选项
-        url: '/api/v1/branch/getBranchPage',
+        url: '/api.wezebra.com/v2/branchs/getBranchListPageByAgencyId',
         //省市县
         selectedOptions: [],
         formLabelWidthCity: '156px',
@@ -204,11 +203,9 @@
         multipleEditButton: false,
         agencyList: {},
         searchForm: {
-          agencyId: '',
-          code: '',
           name: '',
           cityId: '',
-          enabled: 'true'
+          enabled: ['true','false']
         },
         form: {
           id: '',
@@ -261,6 +258,8 @@
       },
       cityList () {
         let citys = [];
+        let all = {id: ' ',name: '全部'};
+        citys.push(all);
         json.forEach(item => {
           if(item.children){
             item.children.forEach(i => {
@@ -340,7 +339,7 @@
       submitBranch2(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            this.axios.put('/api/v1/branch', this.form2).then((res) => {
+            this.axios.put('/api.wezebra.com/v2/branchs', this.form2).then((res) => {
               this.getData();
               this.$message({
                 message:"修改成功",
