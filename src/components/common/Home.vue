@@ -55,8 +55,6 @@
             this.a = !this.a;
             document.getElementsByClassName("app-wrapper")[0].className += " hideSidebar";
             document.getElementsByClassName("el-menu--dark")[0].style.marginLeft = '-5px';
-            console.log(document.getElementsByClassName("el-menu--dark")[0].childNodes[0].childNodes);
-            console.log(document.getElementsByClassName("fa")[0]);
           } else {
             document.getElementById("dave").style.transform = 'rotate(-0deg)';
             this.a = !this.a;

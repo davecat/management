@@ -12,6 +12,7 @@
           <el-button type="primary" @click="Search">查询</el-button>
         </el-form-item>
         <el-form-item style="float: right">
+          <el-button type="primary" @click="add()">新增</el-button>
           <el-button type="primary" >导出</el-button>
         </el-form-item>
       </el-form>
@@ -97,9 +98,6 @@
             <el-option v-for="agency in agencyList" :key="agency.id" :label="agency.name" :value="agency.id"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="门店编号" :label-width="formLabelWidth" prop="code">
-          <el-input v-model="form.code"></el-input>
-        </el-form-item>
         <el-form-item label="门店名称" :label-width="formLabelWidth" prop="name">
           <el-input v-model="form.name"></el-input>
         </el-form-item>
@@ -113,12 +111,6 @@
         <el-form-item label="详细地址" :label-width="formLabelWidth" prop="address">
           <el-input v-model="form.address"></el-input>
         </el-form-item>
-        <el-form-item label="状态" :label-width="formLabelWidth" prop="enabled">
-          <el-select v-model="form.enabled">
-            <el-option label="启用" value="true"></el-option>
-            <el-option label="停用" value="false"></el-option>
-          </el-select>
-        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="resetForm('form')">取 消</el-button>
@@ -128,9 +120,6 @@
 
     <el-dialog title="修改门店" :visible.sync="formVisible2">
       <el-form :model="form2" ref="form2" :rules="rules">
-        <el-form-item label="门店编号" :label-width="formLabelWidth" prop="code">
-          <el-input v-model="form2.code"></el-input>
-        </el-form-item>
         <el-form-item label="门店名称" :label-width="formLabelWidth" prop="name">
           <el-input v-model="form2.name"></el-input>
         </el-form-item>
@@ -143,12 +132,6 @@
         </el-form-item>
         <el-form-item label="详细地址" :label-width="formLabelWidth" prop="address">
           <el-input v-model="form2.address"></el-input>
-        </el-form-item>
-        <el-form-item label="状态" :label-width="formLabelWidth" prop="enabled">
-          <el-select v-model="form2.enabled">
-            <el-option label="启用" value="true"></el-option>
-            <el-option label="停用" value="false"></el-option>
-          </el-select>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -228,18 +211,14 @@
           enabled: 'true'
         },
         form: {
-          agencyId: '',
-          code: '',
-          name: '',
-          address: '',
-          enabled: 'true'
-        },
-        form2: {
           id: '',
           agencyId: '',
-          code: '',
+          name: ''
+        },
+        form2:{
+          id: '',
           name: '',
-          enabled: 'true'
+          address: ''
         },
         formVisible: false,
         formVisible2: false,
@@ -252,7 +231,6 @@
         formLabelWidth: '156px',
         rules: {
           agencyId: [{required: true, message: '请选择中介', trigger: 'change'}],
-          code: [{required: true, message: '请输入门店编号', trigger: 'blur'}],
           name: [{required: true, message: '请输入门店名称', trigger: 'blur'}],
           address: [{required: true, message: '请输入门店地址', trigger: 'blur'}],
           enabled: [{required: true, message: '请选择状态', trigger: 'change'}]
@@ -339,6 +317,7 @@
           this.$message.error(error.response.data.message);
         })
       },
+      //新增确认
       submitBranch(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
@@ -357,6 +336,7 @@
           }
         });
       },
+      //修改确认
       submitBranch2(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
@@ -386,6 +366,10 @@
       resetForm2(formName) {
         this.$refs[formName].resetFields();
         this.formVisible2 = false;
+      },
+      //新增
+      add() {
+        this.formVisible = true;
       },
       handleEdit(row) {
         //带过来默认的省市区

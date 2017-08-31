@@ -1,6 +1,6 @@
 <template>
     <div class="header">
-      <el-button type="primary">
+      <el-button type="primary" style="background-color: #81d8d0;border-color: #81d8d0">
         <i class="fa fa-bars" id="dave"></i>
       </el-button>
         <div class="logo">后台管理系统</div>
