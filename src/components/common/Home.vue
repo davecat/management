@@ -43,7 +43,7 @@
       created() {
         let that = this;
         Vue.nextTick(function () {
-          document.getElementById("dave").parentNode.parentNode.onclick = function () {
+          document.getElementById("dave").onclick = function () {
             that.bbb();
           }
         })

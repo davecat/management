@@ -210,7 +210,8 @@
         form: {
           id: '',
           agencyId: '',
-          name: ''
+          name: '',
+          address: ''
         },
         form2:{
           id: '',
@@ -320,7 +321,7 @@
       submitBranch(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            this.axios.post('/api/v1/branch', this.form).then((res) => {
+            this.axios.post('/api.wezebra.com/v2/branchs', this.form).then((res) => {
               this.getData();
               this.$refs[formName].resetFields();
               //清空省市区
@@ -339,7 +340,7 @@
       submitBranch2(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            this.axios.put('/api.wezebra.com/v2/branchs', this.form2).then((res) => {
+            this.axios.put('/api.wezebra.com/v2/branchs/update', this.form2).then((res) => {
               this.getData();
               this.$message({
                 message:"修改成功",
@@ -374,10 +375,8 @@
         //带过来默认的省市区
         this.selectedOptions = [row.province,row.city,row.district];
         this.form2.id = row.id;
-        this.form2.code = row.code;
         this.form2.name = row.name;
         this.form2.address = row.address;
-        this.form2.enabled = String(row.enabled);
         this.formVisible2 = true;
       },
       rowDelete(id) {
@@ -385,7 +384,7 @@
         this.deleteId = id;
       },
       handleDelete() {
-        this.axios.put('/api/v1/branch/delete', [this.deleteId]).then((res) => {
+        this.axios.put('/api.wezebra.com/v2/branchs/update', [this.deleteId]).then((res) => {
           this.getData();
           this.dialogVisible3 = false;
         }).catch((error) => {

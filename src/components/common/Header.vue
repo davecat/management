@@ -1,8 +1,6 @@
 <template>
     <div class="header">
-      <el-button type="primary" style="background-color: #81d8d0;border-color: #81d8d0">
         <i class="fa fa-bars" id="dave"></i>
-      </el-button>
         <div class="logo">后台管理系统</div>
         <div class="user-info">
             <span class="username">你好，{{staff.staffName}}</span>
@@ -40,9 +38,9 @@
     #dave {
       transition: all .28s;
     }
-    .header .el-button {
+    .header #dave {
       float: left;
-      margin-top: 18px;
+      margin-top: 25px;
       margin-left: 20px;
     }
     .header {

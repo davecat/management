@@ -60,10 +60,16 @@ module.exports = {
           '^/api/v1': '/api/v1'
         }
       },
+      // 菜单接口
+      '/menus': {
+        target: 'http://47.94.92.60:8080',
+        // target: 'http://192.168.0.128:8080',
+        secure: false
+      },
       // 中介接口
       '/api.wezebra.com/v2': {
         // target: 'http://testbk.wezebra.com',
-        target: 'http://192.168.0.108:8080',
+        target: 'http://192.168.0.107:8080',
         secure: false,
         pathRewrite: {
           '^/api.wezebra.com/v2': '/api.wezebra.com/v2'
