@@ -1,37 +1,33 @@
 <template>
     <div>
-        <div class="crumbs">
-            <el-breadcrumb separator="/">
-                <el-breadcrumb-item><i class="fa fa-dashboard"></i> 控制台</el-breadcrumb-item>
-                <el-breadcrumb-item>中介管理</el-breadcrumb-item>
-            </el-breadcrumb>
-        </div>
-
+        <!--<el-row>-->
+            <!--<el-button type="primary" @click="formVisible = true">新增</el-button>-->
+            <!--<el-button type="primary" :disabled="multipleEditButton" @click="multipleEdit" >修改</el-button>-->
+            <!--<el-button type="primary" @click="dialogVisible = true">删除</el-button>-->
+            <!--<el-button type="primary" @click="dialogVisible4 = true">启用</el-button>-->
+            <!--<el-button type="primary" @click="dialogVisible2 = true">停用</el-button>-->
+        <!--</el-row>-->
         <el-row>
-            <el-button type="primary" @click="formVisible = true">新增</el-button>
-            <el-button type="primary" :disabled="multipleEditButton" @click="multipleEdit" >修改</el-button>
-            <el-button type="primary" @click="dialogVisible = true">删除</el-button>
-            <el-button type="primary" @click="dialogVisible4 = true">启用</el-button>
-            <el-button type="primary" @click="dialogVisible2 = true">停用</el-button>
+          <el-form  :inline="true" :model="searchForm">
+            <el-form-item>
+              <el-input v-model="searchForm.name" placeholder="中介名称"></el-input>
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary" @click="Search">查询</el-button>
+            </el-form-item>
+            <el-form-item style="float: right">
+              <el-button type="primary" @click="add()">新增</el-button>
+            </el-form-item>
+          </el-form>
         </el-row>
-        <el-row>
-            <el-form :inline="true" :model="searchForm">
-                <el-form-item label="中介编号：">
-                    <el-input v-model="searchForm.code" placeholder="支持模糊查询"></el-input>
-                </el-form-item>
-                <el-form-item label="中介名称：">
-                    <el-input v-model="searchForm.name" placeholder="支持模糊查询"></el-input>
-                </el-form-item>
-                <el-form-item label="状态：">
-                    <el-select v-model="searchForm.enabled">
-                        <el-option label="启用" value="true"></el-option>
-                        <el-option label="停用" value="false"></el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item>
-                    <el-button type="primary" @click="Search">查询</el-button>
-                </el-form-item>
-            </el-form>
+        <el-row style="margin-bottom: 10px;height: 33px;">
+          <div class="pagination" style="position: absolute; right: 0; top: 0; margin: 0;">
+            <el-pagination
+              @current-change="handleCurrentChange"
+              layout="total, prev, pager, next"
+              :total="totalElements">
+            </el-pagination>
+          </div>
         </el-row>
         <el-row>
             <el-table
@@ -41,11 +37,6 @@
                     style="width: 100%"
                     @selection-change="handleSelectionChange">
                 <el-table-column type="selection" width="50">
-                </el-table-column>
-                <el-table-column
-                        min-width="100"
-                        prop="code"
-                        label="中介编号">
                 </el-table-column>
                 <el-table-column
                         min-width="100"
@@ -60,22 +51,22 @@
                 <el-table-column
                         min-width="135"
                         prop="payeeBank"
-                        label="开户行（收款）">
+                        label="收款银行">
                 </el-table-column>
                 <el-table-column
                         min-width="150"
                         prop="payeeAccountNumber"
-                        label="银行卡号（收款）">
+                        label="收款账号">
                 </el-table-column>
                 <el-table-column
                         min-width="135"
                         prop="payerBank"
-                        label="开户行（付款）">
+                        label="付款银行">
                 </el-table-column>
                 <el-table-column
                         min-width="150"
                         prop="payerAccountNumber"
-                        label="银行卡号（付款）">
+                        label="付款账号">
                 </el-table-column>
                 <el-table-column
                         min-width="80"
@@ -93,7 +84,7 @@
                                     class="fa fa-pencil-square-o"></i>
                             </el-button>
                         </el-tooltip>
-                        <el-tooltip class="item" effect="dark" content="删除" placement="top-end">
+                        <el-tooltip class="item" effect="dark" content="停用" placement="top-end">
                             <el-button size="small" type="warning"
                                        @click="rowDelete(scope.row.id)"><i class="fa fa-trash"></i>
                             </el-button>
@@ -101,13 +92,6 @@
                     </template>
                 </el-table-column>
             </el-table>
-            <div class="pagination">
-                <el-pagination
-                        @current-change="handleCurrentChange"
-                        layout="total, prev, pager, next"
-                        :total="totalElements">
-                </el-pagination>
-            </div>
         </el-row>
 
         <el-dialog title="新增中介" :visible.sync="formVisible">

@@ -1,16 +1,27 @@
 <template>
     <div>
-        <div class="crumbs">
-            <el-breadcrumb separator="/">
-                <el-breadcrumb-item><i class="fa fa-dashboard"></i> 控制台</el-breadcrumb-item>
-                <el-breadcrumb-item>角色管理</el-breadcrumb-item>
-            </el-breadcrumb>
-        </div>
-
         <el-row>
-            <el-button type="primary" @click="formVisible = true;">新增</el-button>
+          <el-form  :inline="true" :model="searchForm">
+            <el-form-item>
+              <el-input  placeholder="中介名称"></el-input>
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary" @click="Search">查询</el-button>
+            </el-form-item>
+            <el-form-item style="float: right">
+              <el-button type="primary" @click="formVisible = true;">新增</el-button>
+            </el-form-item>
+          </el-form>
         </el-row>
-
+        <el-row style="margin-bottom: 10px;height: 33px;">
+          <div class="pagination" style="position: absolute; right: 0; top: 0; margin: 0;">
+            <el-pagination
+              @current-change="handleCurrentChange"
+              layout="total, prev, pager, next"
+              :total="totalElements">
+            </el-pagination>
+          </div>
+        </el-row>
         <el-row>
             <el-table :data="tableData"
                       style="width: 100%"
@@ -94,6 +105,13 @@
     export default {
         data() {
             return {
+                loading: false,//加载动画
+                tableData: [],
+                cur_page: 1,
+                size: 10,
+                totalElements: 0,
+                url: '/api/v1/role/getRoleAll',
+                searchForm: {},
                 //授权选择的对象
                 permission: {
                     id: '',
@@ -101,7 +119,6 @@
                 },
                 //已有权限的id
                 permissionId: [],
-                tableData: [],
                 defaultProps: {
                     children: 'children',
                     label: 'name'
@@ -136,6 +153,27 @@
             this.getData();
         },
         methods: {
+            handleCurrentChange(val){
+              this.cur_page = val;
+              this.getData();
+            },
+            getData(){
+              this.loading = true;
+              this.axios.post(this.url, {
+                ...this.searchForm,
+                page: this.cur_page - 1,
+                size: this.size
+              }).then((res) => {
+                this.tableData = res.data.content;
+                this.totalElements = res.data.totalElements;
+                this.loading = false;
+              }).catch((error) => {
+                this.$message.error(error.response.data.message);
+              })
+            },
+            Search() {
+              this.getData();
+            },
             //点击授权确定
             getCheckedNodes() {
                 let that = this;
@@ -158,16 +196,6 @@
                 this.warrant = false;
                 this.$forceUpdate();
                 window.location.reload();
-            },
-            //获取数据
-            getData(){
-                let self = this;
-                this.axios.get('/api/v1/role/getRoleAll').then((res) => {
-                    self.tableData = res.data;
-                    console.log(self.tableData);
-                }).catch((error) => {
-                    console.log(error);
-                })
             },
             //删除
             rowDelete(id) {

@@ -1,16 +1,37 @@
 <template>
     <div>
-        <div class="crumbs">
-            <el-breadcrumb separator="/">
-                <el-breadcrumb-item><i class="fa fa-dashboard"></i> 系统管理</el-breadcrumb-item>
-                <el-breadcrumb-item>用户管理</el-breadcrumb-item>
-            </el-breadcrumb>
-        </div>
-
         <el-row>
-            <el-button type="primary" @click="formVisible = true">新增</el-button>
+          <el-form :inline="true" :model="searchForm">
+            <el-form-item>
+              <el-select v-model="searchForm.cityId" filterable @change="getBranchList(searchForm.cityId)" placeholder="员工类型">
+                <el-option v-for="city in cityList" :key="city.id" :label="city.name"
+                           :value="city.id"></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item>
+              <el-input v-model="searchForm.customerName" placeholder="用户昵称"></el-input>
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary" @click="Search">查询</el-button>
+            </el-form-item>
+            <el-form-item style="float: right">
+              <el-button type="primary" @click="formVisible = true">新增</el-button>
+            </el-form-item>
+          </el-form>
         </el-row>
-
+        <el-row style="margin-bottom: 10px">
+          <el-checkbox-group v-model="searchForm.enabled" @change="Search" style="float: left; margin-top: 12px; min-width: 150px;">
+            <el-checkbox label="true">启用</el-checkbox>
+            <el-checkbox label="false">停用</el-checkbox>
+          </el-checkbox-group>
+          <div class="pagination" style="position: absolute; right: 0; top: 0; margin: 0;">
+            <el-pagination
+              @current-change="handleCurrentChange"
+              layout="total, prev, pager, next"
+              :total="totalElements">
+            </el-pagination>
+          </div>
+        </el-row>
         <el-row>
                 <el-table :data="tableData" border width="100%">
                     <el-table-column prop="staffName" label="用户昵称">
@@ -54,56 +75,60 @@
                         </template>
                     </el-table-column>
                 </el-table>
-                <div class="pagination">
-                    <el-pagination
-                            @current-change="handleCurrentChange"
-                            layout="total, prev, pager, next"
-                            :total="totalElements">
-                    </el-pagination>
-                </div>
-
         </el-row>
 
         <el-dialog title="新增用户" :visible.sync="formVisible">
-            <el-form :model="form" ref="form" :rules="rules">
-                <el-form-item label="昵称" :label-width="formLabelWidth" prop="staffName">
-                    <el-input v-model="form.staffName"></el-input>
+            <div class="left">
+              <el-form :model="form" ref="form" :rules="rules">
+                <el-form-item label="用户昵称" :label-width="formLabelWidth" prop="staffName">
+                  <el-input v-model="form.staffName"></el-input>
                 </el-form-item>
                 <el-form-item label="登录名" :label-width="formLabelWidth" prop="username">
-                    <el-input v-model="form.username"></el-input>
+                  <el-input v-model="form.username"></el-input>
                 </el-form-item>
                 <el-form-item label="密码" :label-width="formLabelWidth" prop="password">
+                  <el-col :span="24">
                     <el-input v-model="form.password"></el-input>
+                  </el-col>
                 </el-form-item>
                 <el-form-item label="员工类型" :label-width="formLabelWidth" prop="staffType">
+                  <el-col :span="24">
                     <el-select v-model="form.staffType" @change="staffChange(form.staffType)">
-                        <el-option label="内部员工" value="Interior"></el-option>
-                        <el-option label="中介公司负责人" value="Boss"></el-option>
-                        <el-option label="门店管理员" value="Branch"></el-option>
-                        <el-option label="资金端" value="Loaner"></el-option>
+                      <el-option label="内部员工" value="Interior"></el-option>
+                      <el-option label="中介公司负责人" value="Boss"></el-option>
+                      <el-option label="门店管理员" value="Branch"></el-option>
+                      <el-option label="资金端" value="Loaner"></el-option>
                     </el-select>
+                  </el-col>
                 </el-form-item>
                 <el-form-item label="角色" :label-width="formLabelWidth" prop="role">
-                    <el-select v-model="form.role">
-                        <el-option v-for="role in roleList" :key="role.id"  :value="role" :label="role.name"></el-option>
-                    </el-select>
+                  <el-select v-model="form.role">
+                    <el-option v-for="role in roleList" :key="role.id"  :value="role" :label="role.name"></el-option>
+                  </el-select>
                 </el-form-item>
-                <el-form-item label="所属资金端" :label-width="formLabelWidth" prop="loaner">
-                    <el-select v-model="form.loaner" :disabled="loanerDisable">
-                        <el-option v-for="loaner in loanerList" :value="loaner" :key="loaner.id" :label="loaner.name"></el-option>
-                    </el-select>
-                </el-form-item>
+                <!--<el-form-item label="所属资金端" :label-width="formLabelWidth" prop="loaner">-->
+                  <!--<el-select v-model="form.loaner" :disabled="loanerDisable">-->
+                    <!--<el-option v-for="loaner in loanerList" :value="loaner" :key="loaner.id" :label="loaner.name"></el-option>-->
+                  <!--</el-select>-->
+                <!--</el-form-item>-->
                 <el-form-item label="管辖中介：" :label-width="formLabelWidth" prop="agencies">
-                    <el-select v-model="form.agencies" multiple @change="getBranchListAdd(form.agencies)" :disabled="agenciesDisable">
-                        <el-option v-for="agency in agencyList" :value="agency" :label="agency.name"  :key="agency.id"></el-option>
-                    </el-select>
+                  <el-select v-model="form.agencies" multiple @change="getBranchListAdd(form.agencies)" :disabled="agenciesDisable">
+                    <el-option v-for="agency in agencyList" :value="agency" :label="agency.name"  :key="agency.id"></el-option>
+                  </el-select>
                 </el-form-item>
                 <el-form-item label="管辖门店：" :label-width="formLabelWidth" prop="branches">
-                    <el-select v-model="form.branches" multiple :disabled="agenciesDisable">
-                        <el-option v-for="branch in branchList" :key="branch.id" :value="branch" :label="branch.name"></el-option>
-                    </el-select>
+                  <el-select v-model="form.branches" multiple :disabled="agenciesDisable">
+                    <el-option v-for="branch in branchList" :key="branch.id" :value="branch" :label="branch.name"></el-option>
+                  </el-select>
                 </el-form-item>
-            </el-form>
+              </el-form>
+            </div>
+            <div class="right">
+              <el-row style="margin: 10px 0">
+                <span>管辖人员：</span>
+              </el-row>
+              <el-transfer v-model="value1" :data="data"></el-transfer>
+            </div>
             <div slot="footer" class="dialog-footer">
                 <el-button @click="resetForm('form')">取 消</el-button>
                 <el-button type="primary" @click="submitUser('form')">确 定</el-button>
@@ -161,7 +186,20 @@
     export default {
         mixins: [pagination],
         data() {
+            const generateData = _ => {
+              const data = [];
+              for (let i = 1; i <= 15; i++) {
+                data.push({
+                  key: i,
+                  label: `备选项 ${ i }`,
+                  disabled: i % 4 === 0
+                });
+              }
+              return data;
+            };
             return {
+                data: generateData(),
+                value1: [1, 4],
                 roleId: '',//角色id
                 loanerId: '',//资金端id
                 loanerDisable: true,//用来控制资金端是否能选择
@@ -419,5 +457,25 @@
     }
 </script>
 
-<style>
+<style scoped>
+  .left {
+    margin-right: 30px;
+    background: none repeat scroll 0 0 #fff;
+    box-sizing: border-box;
+    display: inline-block;
+    width: 40%;
+    height: 464px;
+    vertical-align: bottom;
+  }
+  .left .el-select {
+    width:100%;
+  }
+  .right{
+    display: inline-block;
+    background: none repeat scroll 0 0 #fff;
+    width: 53%;
+    height: 464px;
+    box-sizing: border-box;
+    overflow-y: scroll;
+  }
 </style>
