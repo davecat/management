@@ -28,7 +28,6 @@ export const pagination = {
         page: this.cur_page - 1,
         size: this.size
       }).then((res) => {
-        console.log(res);
         this.tableData = res.data.content;
         this.totalElements = res.data.totalElements;
         this.loading = false;

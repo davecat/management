@@ -65,24 +65,27 @@
           label="门店状态"
           show-overflow-tooltip>
           <template scope="scope">
-            {{ scope.row.enabled ? '启用':'停用' }}
+            {{ scope.row.enabled === 'true'? '启用':'停用' }}
           </template>
         </el-table-column>
         <el-table-column  min-width="123" label="操作">
           <template scope="scope">
-            <el-tooltip v-if="staff.staffType !== 'Branch'" class="item" effect="dark" content="修改" placement="top-end">
+            <el-tooltip class="item" effect="dark" content="修改" placement="top-end">
               <el-button size="small" type="primary"
+                         :disabled="scope.row.enabled === 'false'"
                          @click="handleEdit(scope.row)"><i
                 class="fa fa-pencil-square-o"></i>
               </el-button>
             </el-tooltip>
-            <el-tooltip v-if="staff.staffType !== 'Branch'" class="item" effect="dark" content="停用" placement="top-end">
+            <el-tooltip class="item" effect="dark" content="停用" placement="top-end">
               <el-button size="small" type="warning"
+                         :disabled="scope.row.enabled === 'false'"
                          @click="rowDelete(scope.row.id)"><i class="fa fa-trash"></i>
               </el-button>
             </el-tooltip>
             <el-tooltip class="item" effect="dark" content="查看二维码" placement="top-end">
               <el-button size="small" type="success"
+                         :disabled="scope.row.enabled === 'false'"
                          @click="showQRCode(scope.row)"><i class="fa fa-qrcode"></i>
               </el-button>
             </el-tooltip>
@@ -101,7 +104,7 @@
         <el-form-item label="门店名称" :label-width="formLabelWidth" prop="name">
           <el-input v-model="form.name"></el-input>
         </el-form-item>
-        <el-form-item label="省市区（县）" :label-width="formLabelWidthCity" prop="selectedOptions">
+        <el-form-item label="省市区（县）" :label-width="formLabelWidth" prop="selectedOptions">
           <el-cascader
             :options="options"
             v-model="selectedOptions"
@@ -123,7 +126,7 @@
         <el-form-item label="门店名称" :label-width="formLabelWidth" prop="name">
           <el-input v-model="form2.name"></el-input>
         </el-form-item>
-        <el-form-item label="省市区（县）" :label-width="formLabelWidthCity" prop="selectedOptions">
+        <el-form-item label="省市区（县）" :label-width="formLabelWidth" prop="selectedOptions">
           <el-cascader
             :options="options"
             v-model="selectedOptions"
@@ -141,35 +144,13 @@
     </el-dialog>
 
     <el-dialog
-      title="删除"
-      :visible.sync="dialogVisible"
-      size="tiny">
-      <span>此操作将删除选中门店，是否继续？</span>
-      <span slot="footer" class="dialog-footer">
-                <el-button @click="dialogVisible = false">取 消</el-button>
-                <el-button type="primary" @click="multipleDelete">确 定</el-button>
-            </span>
-    </el-dialog>
-
-    <el-dialog
       title="停用"
-      :visible.sync="dialogVisible2"
+      :visible.sync="dialogVisible"
       size="tiny">
       <span>此操作将停用选中门店，是否继续？</span>
       <span slot="footer" class="dialog-footer">
-                <el-button @click="dialogVisible2 = false">取 消</el-button>
-                <el-button type="primary" @click="multipleDisable">确 定</el-button>
-            </span>
-    </el-dialog>
-
-    <el-dialog
-      title="删除"
-      :visible.sync="dialogVisible3"
-      size="tiny">
-      <span>此操作将删除选中门店，是否继续？</span>
-      <span slot="footer" class="dialog-footer">
-                <el-button @click="dialogVisible3 = false">取 消</el-button>
-                <el-button type="primary" @click="handleDelete">确 定</el-button>
+                <el-button @click="dialogVisible = false">取 消</el-button>
+                <el-button type="primary" @click="multipleDelete">确 定</el-button>
             </span>
     </el-dialog>
 
@@ -198,9 +179,6 @@
         url: '/api.wezebra.com/v2/branchs/getBranchListPageByAgencyId',
         //省市县
         selectedOptions: [],
-        formLabelWidthCity: '156px',
-        multipleSelection: [],
-        multipleEditButton: false,
         agencyList: {},
         searchForm: {
           name: '',
@@ -211,7 +189,8 @@
           id: '',
           agencyId: '',
           name: '',
-          address: ''
+          address: '',
+          enabled: 'true'
         },
         form2:{
           id: '',
@@ -221,10 +200,8 @@
         formVisible: false,
         formVisible2: false,
         dialogVisible: false,
-        dialogVisible2: false,
-        dialogVisible3: false,
         dialogQRCode: false,
-        deleteId: '',
+        disabledId: '',
         qrCodeUrl: 'http://images.tmtpost.com/uploads/images/2014/14/report/30519/mac600.jpg',
         formLabelWidth: '156px',
         rules: {
@@ -253,9 +230,6 @@
           this.searchForm.branchId = '';
           this.branchList = [];
         }
-      },
-      staff (){
-        return store.state.staff.staff
       },
       cityList () {
         let citys = [];
@@ -321,7 +295,7 @@
       submitBranch(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            this.axios.post('/api.wezebra.com/v2/branchs', this.form).then((res) => {
+            this.axios.post('/api.wezebra.com/v2/branchs/add', this.form).then((res) => {
               this.getData();
               this.$refs[formName].resetFields();
               //清空省市区
@@ -380,52 +354,26 @@
         this.formVisible2 = true;
       },
       rowDelete(id) {
-        this.dialogVisible3 = true;
-        this.deleteId = id;
+        this.dialogVisible = true;
+        this.disabledId = id;
       },
-      handleDelete() {
-        this.axios.put('/api.wezebra.com/v2/branchs/update', [this.deleteId]).then((res) => {
-          this.getData();
-          this.dialogVisible3 = false;
-        }).catch((error) => {
-          this.$message.error(error.response.data.message);
-        })
-      },
-      multipleEdit() {
-        let row = this.multipleSelection[0];
-        if(row !== undefined) {
-          this.handleEdit(row);
-        }
-      },
+      //禁用
       multipleDelete() {
-        let ids = this.multipleSelection.map(row => {
-          return row.id
-        });
-        if (ids.length === 0) {
+        let form = {
+            ids: [],
+            enabled: 'false'
+          };
+        form.ids.push(this.disabledId);
+        if (form.ids.length === 0) {
           console.log('ids is null');
         } else {
-          this.axios.put('/api/v1/branch/delete', ids).then((res) => {
+          this.axios.put('/api.wezebra.com/v2/branchs/updateEnabled', form).then((res) => {
             this.getData();
           }).catch((error) => {
             this.$message.error(error.response.data.message);
           })
         }
         this.dialogVisible = false;
-      },
-      multipleDisable() {
-        let ids = this.multipleSelection.map(row => {
-          return row.id
-        });
-        if (ids.length === 0) {
-          console.log('ids is null');
-        } else {
-          this.axios.put('/api/v1/branch/disable', ids).then((res) => {
-            this.getData();
-          }).catch((error) => {
-            this.$message.error(error.response.data.message);
-          })
-        }
-        this.dialogVisible2 = false;
       },
       showQRCode(row) {
         this.axios.get('/admin/api/branch/getBranchQRCode', {
@@ -439,10 +387,6 @@
         }).catch((error) => {
           this.$message.error(error.response.data.message);
         });
-      },
-      handleSelectionChange(val) {
-        this.multipleSelection = val;
-        this.multipleEditButton = val.length > 1;
       }
     }
   }
