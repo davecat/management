@@ -134,19 +134,12 @@ export default new Router({
           path: '/rates',
           meta: { requiresAuth: true },
           component: resolve => require(['components/page/Rates'], resolve)
-        },
-        {
-          path: '*',
-          component: resolve => require(['../components/common/404.vue'], resolve),
-          children:[
-            {
-              path: '/',
-              meta: { requiresAuth: false },
-              component: resolve => require(['../components/page/NotFound.vue'], resolve)
-            }
-          ]
         }
       ]
+    },
+    {
+      path: '*',
+      component: resolve => require(['components/common/404.vue'], resolve)
     }
   ]
 })
