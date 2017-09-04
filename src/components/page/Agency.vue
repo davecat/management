@@ -21,6 +21,11 @@
           </el-form>
         </el-row>
         <el-row style="margin-bottom: 10px;height: 33px;">
+          <el-checkbox-group v-model="searchForm.enabled" @change="Search"
+                             style="float: left; margin-top: 12px; min-width: 150px;">
+            <el-checkbox label="true">启用</el-checkbox>
+            <el-checkbox label="false">停用</el-checkbox>
+          </el-checkbox-group>
           <div class="pagination" style="position: absolute; right: 0; top: 0; margin: 0;">
             <el-pagination
               @current-change="handleCurrentChange"

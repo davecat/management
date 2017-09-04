@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-row>
-      <el-form  :inline="true" :model="searchForm">
+      <el-form :inline="true" :model="searchForm">
         <el-form-item>
           <el-select v-model="searchForm.cityId" filterable placeholder="选择城市">
             <el-option v-for="city in cityList" :key="city.id" :label="city.name"
@@ -13,12 +13,13 @@
         </el-form-item>
         <el-form-item style="float: right">
           <el-button type="primary" @click="add()">新增</el-button>
-          <el-button type="primary" >导出</el-button>
+          <el-button type="primary" @click="exportCSV()">导出</el-button>
         </el-form-item>
       </el-form>
     </el-row>
     <el-row style="margin-bottom: 10px">
-      <el-checkbox-group v-model="searchForm.enabled" @change="Search" style="float: left; margin-top: 12px; min-width: 150px;">
+      <el-checkbox-group v-model="searchForm.enabled" @change="Search"
+                         style="float: left; margin-top: 12px; min-width: 150px;">
         <el-checkbox label="true">启用</el-checkbox>
         <el-checkbox label="false">停用</el-checkbox>
       </el-checkbox-group>
@@ -65,10 +66,10 @@
           label="门店状态"
           show-overflow-tooltip>
           <template scope="scope">
-            {{ scope.row.enabled === 'true'? '启用':'停用' }}
+            {{ scope.row.enabled === 'true' ? '启用' : '停用' }}
           </template>
         </el-table-column>
-        <el-table-column  min-width="123" label="操作">
+        <el-table-column min-width="123" label="操作">
           <template scope="scope">
             <el-tooltip class="item" effect="dark" content="修改" placement="top-end">
               <el-button size="small" type="primary"
@@ -96,9 +97,11 @@
 
     <el-dialog title="新增门店" :visible.sync="formVisible">
       <el-form :model="form" ref="form" :rules="rules">
-        <el-form-item label="所属中介" :label-width="formLabelWidth" prop="agencyId">
+        <!--只有当登录人为内部员工时候才显示-->
+        <el-form-item label="所属中介" :label-width="formLabelWidth" prop="agencyId" v-if="staff.staffType === 'Interior'">
           <el-select v-model="form.agencyId">
-            <el-option v-for="agency in agencyList" :key="agency.id" :label="agency.name" :value="agency.id"></el-option>
+            <el-option v-for="agency in agencyList" :key="agency.id" :label="agency.name"
+                       :value="agency.id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="门店名称" :label-width="formLabelWidth" prop="name">
@@ -170,7 +173,7 @@
 
 <script>
   import json from "static/city.json";
-  import { pagination } from '../mixins/pagination.js'
+  import {pagination} from '../mixins/pagination.js'
   import store from '@/store'
   export default {
     mixins: [pagination],
@@ -183,7 +186,7 @@
         searchForm: {
           name: '',
           cityId: '',
-          enabled: ['true','false']
+          enabled: ['true', 'false']
         },
         form: {
           id: '',
@@ -192,7 +195,7 @@
           address: '',
           enabled: 'true'
         },
-        form2:{
+        form2: {
           id: '',
           name: '',
           address: ''
@@ -215,9 +218,10 @@
     created(){
       this.init();
       this.getAgencyList();
+      console.log(this.staff.staffType);
+      console.log(this.staff.agencies[0]);
     },
     computed: {
-      //获取城市列表
       getBranchList(cityId) {
         if (cityId !== '') {
           let param = {city: [cityId]};
@@ -231,28 +235,36 @@
           this.branchList = [];
         }
       },
+      //获取城市列表
       cityList () {
         let citys = [];
-        let all = {id: ' ',name: '全部'};
+        let all = {id: ' ', name: '全部'};
         citys.push(all);
         json.forEach(item => {
-          if(item.children){
+          if (item.children) {
             item.children.forEach(i => {
               citys.push({id: i.value, name: i.label});
             })
           }
         });
         return citys;
+      },
+//      Interior, //内部员工
+//      Boss,     // 中介公司负责人
+//      Branch,   // 门店管理员
+//      Loaner,   // 资金端管理员
+      staff() {
+        return store.state.staff.staff
       }
     },
     filters: {
       districtFormat: function (value) {
-        if(!value){
+        if (!value) {
           return ''
         }
         let district = {};
         let findLabel = (item, value) => {
-          if(item) {
+          if (item) {
             return item.some(i => {
               if (value === i.value) {
                 district = i;
@@ -317,7 +329,7 @@
             this.axios.put('/api.wezebra.com/v2/branchs/update', this.form2).then((res) => {
               this.getData();
               this.$message({
-                message:"修改成功",
+                message: "修改成功",
                 type: 'success'
               });
               this.$refs[formName].resetFields();
@@ -347,7 +359,7 @@
       },
       handleEdit(row) {
         //带过来默认的省市区
-        this.selectedOptions = [row.province,row.city,row.district];
+        this.selectedOptions = [row.province, row.city, row.district];
         this.form2.id = row.id;
         this.form2.name = row.name;
         this.form2.address = row.address;
@@ -360,9 +372,9 @@
       //禁用
       multipleDelete() {
         let form = {
-            ids: [],
-            enabled: 'false'
-          };
+          ids: [],
+          enabled: 'false'
+        };
         form.ids.push(this.disabledId);
         if (form.ids.length === 0) {
           console.log('ids is null');
@@ -385,6 +397,74 @@
           this.qrCodeUrl = 'https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=' + res.data.ticket;
           this.dialogQRCode = true;
         }).catch((error) => {
+          this.$message.error(error.response.data.message);
+        });
+      },
+      districtFormat(value) {
+        if (!value) {
+          return ''
+        }
+        let district = {};
+        let findLabel = (item, value) => {
+          if (item) {
+            return item.some(i => {
+              if (value === i.value) {
+                district = i;
+                return true;
+              } else {
+                return findLabel(i.children, value)
+              }
+            });
+          }
+        };
+        findLabel(json, value);
+        return district.label;
+      },
+      exportCSV() {
+        var head = [["门店名称", "门店城市", "门店地址", "门店状态"]];
+        let param = {};
+        if (this.staff.staffType === 'Interior') {
+          param = {
+            agencyId: '',
+            ...this.searchForm
+          }
+        } else {
+          param = {
+            agencyId: this.staff.agencies[0].id,
+            ...this.searchForm
+          }
+        }
+        this.axios.post('/api.wezebra.com/v2/branchs/getBranchListByAgencyId', param).then((res) => {
+            var rowData = res.data;
+            for (let i = 0; i < rowData.length; i++) {
+              let enabledStatus;
+              switch (rowData[i].enabled) {
+                case 'true':
+                  enabledStatus = '启用';
+                  break;
+                case 'false':
+                  enabledStatus = '停用';
+                  break;
+              }
+              let proName = this.districtFormat(rowData[i].province)+'-'+this.districtFormat(rowData[i].city)+'-'+this.districtFormat(rowData[i].district);
+              head.push([rowData[i].name, proName, rowData[i].address, enabledStatus]);
+            }
+            ;
+            var csvRows = [];
+            head.forEach(item => csvRows.push(item.join(', ')));
+            var csvString = csvRows.join('\n');
+            //BOM的方式解决EXCEL乱码问题
+            var BOM = '\uFEFF';
+            csvString = BOM + csvString;
+            var a = document.createElement('a');
+            a.href = 'data:attachment/csv,' + encodeURI(csvString);
+            a.target = '_blank';
+            a.download = "代客还房租" + ".csv";
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+          }
+        ).catch((error) => {
           this.$message.error(error.response.data.message);
         });
       }
