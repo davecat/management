@@ -110,8 +110,7 @@
         <el-form-item label="省市区（县）" :label-width="formLabelWidth" prop="selectedOptions">
           <el-cascader
             :options="options"
-            v-model="selectedOptions"
-            @change="handleChange">
+            v-model="selectedOptions">
           </el-cascader>
         </el-form-item>
         <el-form-item label="详细地址" :label-width="formLabelWidth" prop="address">
@@ -132,8 +131,7 @@
         <el-form-item label="省市区（县）" :label-width="formLabelWidth" prop="selectedOptions">
           <el-cascader
             :options="options"
-            v-model="selectedOptions"
-            @change="handleChange2">
+            v-model="selectedOptions">
           </el-cascader>
         </el-form-item>
         <el-form-item label="详细地址" :label-width="formLabelWidth" prop="address">
@@ -218,8 +216,6 @@
     created(){
       this.init();
       this.getAgencyList();
-      console.log(this.staff.staffType);
-      console.log(this.staff.agencies[0]);
     },
     computed: {
       getBranchList(cityId) {
@@ -228,7 +224,7 @@
           this.axios.post('/api/v1/branch/getBranchListByLocation', param).then((res) => {
             this.branchList = res.data;
           }).catch((error) => {
-            this.$message.error(error.response.data.message);
+            this.$message.error(error.response.data.error.message);
           })
         } else {
           this.searchForm.branchId = '';
@@ -283,28 +279,19 @@
       init: function () {
         this.options = json;
       },
-      //切换省市区
-      handleChange(value) {
-        //把省市县的值带到后台
-        this.form.province = this.selectedOptions[0];
-        this.form.city = this.selectedOptions[1];
-        this.form.district = this.selectedOptions[2];
-      },
-      handleChange2() {
-        //把省市县的值带到后台
-        this.form2.province = this.selectedOptions[0];
-        this.form2.city = this.selectedOptions[1];
-        this.form2.district = this.selectedOptions[2];
-      },
       getAgencyList() {
-        this.axios.get('/api/v1/agency/getAgencyList').then((res) => {
+        this.axios.get('/api.wezebra.com/v2/agencys/adminAndLib/getIdNameAgencyList').then((res) => {
           this.agencyList = res.data;
         }).catch((error) => {
-          this.$message.error(error.response.data.message);
+          this.$message.error(error.response.data.error.message);
         })
       },
       //新增确认
       submitBranch(formName) {
+        //把省市县的值带到后台
+        this.form.province = this.selectedOptions[0];
+        this.form.city = this.selectedOptions[1];
+        this.form.district = this.selectedOptions[2];
         this.$refs[formName].validate((valid) => {
           if (valid) {
             this.axios.post('/api.wezebra.com/v2/branchs/add', this.form).then((res) => {
@@ -314,7 +301,7 @@
               this.selectedOptions = [];
               this.formVisible = false;
             }).catch((error) => {
-              this.$message.error(error.response.data.message);
+              this.$message.error(error.response.data.error.message);
             })
           } else {
             console.log('error submit!!');
@@ -324,6 +311,11 @@
       },
       //修改确认
       submitBranch2(formName) {
+        //把省市县的值带到后台
+        this.form2.province = this.selectedOptions[0];
+        this.form2.city = this.selectedOptions[1];
+        this.form2.district = this.selectedOptions[2];
+        console.log(this.form2);
         this.$refs[formName].validate((valid) => {
           if (valid) {
             this.axios.put('/api.wezebra.com/v2/branchs/update', this.form2).then((res) => {
@@ -335,7 +327,7 @@
               this.$refs[formName].resetFields();
               this.formVisible2 = false;
             }).catch((error) => {
-              this.$message.error(error.response.data.message);
+              this.$message.error(error.response.data.error.message);
             })
           } else {
             console.log('error submit!!');
@@ -382,7 +374,7 @@
           this.axios.put('/api.wezebra.com/v2/branchs/updateEnabled', form).then((res) => {
             this.getData();
           }).catch((error) => {
-            this.$message.error(error.response.data.message);
+            this.$message.error(error.response.data.error.message);
           })
         }
         this.dialogVisible = false;
@@ -397,7 +389,7 @@
           this.qrCodeUrl = 'https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=' + res.data.ticket;
           this.dialogQRCode = true;
         }).catch((error) => {
-          this.$message.error(error.response.data.message);
+          this.$message.error(error.response.data.error.message);
         });
       },
       districtFormat(value) {
@@ -446,7 +438,7 @@
                   enabledStatus = '停用';
                   break;
               }
-              let proName = this.districtFormat(rowData[i].province)+'-'+this.districtFormat(rowData[i].city)+'-'+this.districtFormat(rowData[i].district);
+              let proName = this.districtFormat(rowData[i].province) + '-' + this.districtFormat(rowData[i].city) + '-' + this.districtFormat(rowData[i].district);
               head.push([rowData[i].name, proName, rowData[i].address, enabledStatus]);
             }
             ;
@@ -465,7 +457,7 @@
             document.body.removeChild(a);
           }
         ).catch((error) => {
-          this.$message.error(error.response.data.message);
+          this.$message.error(error.response.data.error.message);
         });
       }
     }
