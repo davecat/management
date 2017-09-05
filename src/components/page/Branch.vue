@@ -81,7 +81,7 @@
             <el-tooltip class="item" effect="dark" content="停用" placement="top-end">
               <el-button size="small" type="warning"
                          :disabled="scope.row.enabled === 'false'"
-                         @click="rowDelete(scope.row.id)"><i class="fa fa-trash"></i>
+                         @click="rowDisabled(scope.row.id)"><i class="fa fa-trash"></i>
               </el-button>
             </el-tooltip>
             <el-tooltip class="item" effect="dark" content="查看二维码" placement="top-end">
@@ -151,7 +151,7 @@
       <span>此操作将停用选中门店，是否继续？</span>
       <span slot="footer" class="dialog-footer">
                 <el-button @click="dialogVisible = false">取 消</el-button>
-                <el-button type="primary" @click="multipleDelete">确 定</el-button>
+                <el-button type="primary" @click="multipleDisabled">确 定</el-button>
             </span>
     </el-dialog>
 
@@ -357,12 +357,12 @@
         this.form2.address = row.address;
         this.formVisible2 = true;
       },
-      rowDelete(id) {
+      rowDisabled(id) {
         this.dialogVisible = true;
         this.disabledId = id;
       },
       //禁用
-      multipleDelete() {
+      multipleDisabled() {
         let form = {
           ids: [],
           enabled: 'false'

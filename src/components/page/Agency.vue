@@ -16,7 +16,7 @@
               <el-button type="primary" @click="Search">查询</el-button>
             </el-form-item>
             <el-form-item style="float: right">
-              <el-button type="primary" @click="add()">新增</el-button>
+              <el-button type="primary" @click="formVisible = true">新增</el-button>
             </el-form-item>
           </el-form>
         </el-row>
