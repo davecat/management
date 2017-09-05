@@ -83,14 +83,6 @@ module.exports = {
           '^/riskcontrol': '/riskcontrol'
         }
       },
-      '/postlending': {
-        target: 'http://testbk.wezebra.com',
-        // target: 'http://192.168.0.128:8080',
-        secure: false,
-        pathRewrite: {
-          '^/postlending':'/postlending'
-        }
-      },
       '/counter': {
         target: 'http://testbk.wezebra.com',
         // target: 'http://192.168.0.128:8080',
