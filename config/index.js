@@ -69,7 +69,7 @@ module.exports = {
       // 中介接口
       '/api.wezebra.com/v2': {
         // target: 'http://testbk.wezebra.com',
-        target: 'http://192.168.0.107:8080',
+        target: 'http://192.168.0.109:8080',
         secure: false,
         pathRewrite: {
           '^/api.wezebra.com/v2': '/api.wezebra.com/v2'
