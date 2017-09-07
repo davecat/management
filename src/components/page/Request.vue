@@ -1,7 +1,7 @@
 <template>
   <div style="height: 100%;">
     <el-row>
-      <el-tabs v-model="searchForm.status"  @tab-click="handleChangeTab(searchForm.status)">
+      <el-tabs v-model="searchForm.status[0]"  @tab-click="handleChangeTab(searchForm.status[0])">
         <el-tab-pane label="待处理" name="Unchecked">
           <span slot="label">待处理<el-badge :value="pendingNumber" class="item"></el-badge></span>
         </el-tab-pane>
@@ -41,15 +41,15 @@
       </el-form>
     </el-row>
     <el-row style="margin-bottom: 10px;height: 33px;">
-      <el-checkbox-group  style="float: left;margin-top: 12px;min-width: 150px" v-if="searchForm.status === 'Repayment'">
+      <el-checkbox-group  style="float: left;margin-top: 12px;min-width: 150px" v-if="searchForm.status[0] === 'Repayment'">
         <el-checkbox label="正常"></el-checkbox>
         <el-checkbox label="已逾期"></el-checkbox>
       </el-checkbox-group>
-      <el-checkbox-group  style="float: left;margin-top: 12px;min-width: 150px" v-if="searchForm.status === 'Inadvancefinished'">
+      <el-checkbox-group  style="float: left;margin-top: 12px;min-width: 150px" v-if="searchForm.status[0] === 'Inadvancefinished'">
         <el-checkbox label="未退款"></el-checkbox>
         <el-checkbox label="已退款"></el-checkbox>
       </el-checkbox-group>
-      <el-radio-group v-model="radio" @change="radioChange()" v-if="searchForm.status === 'Unchecked'" style="float: left;margin-top: 12px;">
+      <el-radio-group v-model="radio" @change="radioChange()" v-if="searchForm.status[0] === 'Unchecked'" style="float: left;margin-top: 12px;">
         <el-radio label='Unchecked'>待补充</el-radio>
         <el-radio label='Returned'>待修改</el-radio>
       </el-radio-group>
@@ -115,13 +115,13 @@
           </template>
         </el-table-column>
         <el-table-column
-          v-if="radio === 'Returned' || searchForm.status !== 'Unchecked'"
+          v-if="radio === 'Returned' || searchForm.status[0] !== 'Unchecked'"
           min-width="180"
           prop="apartmentNo"
           label="台账号">
         </el-table-column>
         <el-table-column
-          v-if="radio === 'Returned' || searchForm.status !== 'Unchecked'"
+          v-if="radio === 'Returned' || searchForm.status[0] !== 'Unchecked'"
           min-width="180"
           prop="city"
           label="租房城市">
@@ -415,12 +415,12 @@
       <content>
         <div style="width: 100%;text-align: center;margin-bottom: 5px">
           <el-button style="float: left;padding: 5px 15px" @click="prev()" :disabled="!tableData[index-1]"><i style="font-size: x-large;vertical-align: sub" class="fa fa-angle-left" aria-hidden="true"></i>上一条</el-button>
-          <el-button v-if="searchForm.status === 'Unchecked'" type="info" >临时保存</el-button>
-          <el-button v-if="searchForm.status === 'Unchecked'" type="success" >提交审批</el-button>
-          <el-button v-if="searchForm.status === 'Unchecked'" type="warning" >取消申请</el-button>
-          <el-button v-if="searchForm.status === 'Unconfirmed'" type="warning" >撤回</el-button>
-          <el-button v-if="searchForm.status === 'Repayment' || searchForm.status === 'Breach'" type="warning" >提前退租</el-button>
-          <el-button v-if="searchForm.status !== 'Finished' && searchForm.status !== 'Inadvancefinished'">转单</el-button>
+          <el-button v-if="searchForm.status[0] === 'Unchecked'" type="info" >临时保存</el-button>
+          <el-button v-if="searchForm.status[0] === 'Unchecked'" type="success" >提交审批</el-button>
+          <el-button v-if="searchForm.status[0] === 'Unchecked'" type="warning" >取消申请</el-button>
+          <el-button v-if="searchForm.status[0] === 'Unconfirmed'" type="warning" >撤回</el-button>
+          <el-button v-if="searchForm.status[0] === 'Repayment' || searchForm.status[0] === 'Breach'" type="warning" >提前退租</el-button>
+          <el-button v-if="searchForm.status[0] !== 'Finished' && searchForm.status[0] !== 'Inadvancefinished'">转单</el-button>
           <el-button style="float: right;padding: 5px 15px" @click="next()" :disabled="!tableData[index+1]">下一条<i style="font-size: x-large;vertical-align: sub" class="fa fa-angle-right" aria-hidden="true"></i></el-button>
         </div>
         <div style="width: 100%;text-align: center;margin-bottom: 5px;border-bottom: 1px solid #D9D9D9;border-top: 1px solid #D9D9D9;padding: 10px 0">
@@ -474,7 +474,7 @@
         <hr style="border-bottom-color: #d9d9d9; border-top: none;">
         <el-row>
           <el-tabs v-model="infoTab">
-            <el-tab-pane v-if="searchForm.status !== 'Unchecked' && searchForm.status !== 'Unconfirmed'" label="还款账单" name="order">
+            <el-tab-pane v-if="searchForm.status[0] !== 'Unchecked' && searchForm.status[0] !== 'Unconfirmed'" label="还款账单" name="order">
               <!--@current-change="handleCurrentRow1"-->
               <el-table
                 ref="multipleTable"
@@ -591,7 +591,7 @@
                 </el-col>
               </el-row>
             </el-tab-pane>
-            <el-tab-pane v-if="searchForm.status === 'Unchecked'" label="照片资料" name="picInfo">
+            <el-tab-pane v-if="searchForm.status[0] === 'Unchecked'" label="照片资料" name="picInfo">
               <el-row :gutter="20">
                 <el-col :span="3">
                   <el-form-item label="身份证照片：">
@@ -662,7 +662,7 @@
                 </el-col>
               </el-row>
             </el-tab-pane>
-            <el-tab-pane v-else="searchForm.status === 'Unchecked'" label="照片资料" name="picInfo">
+            <el-tab-pane v-else="searchForm.status[0] === 'Unchecked'" label="照片资料" name="picInfo">
               <div style="width: 500px;height: 400px;margin: 0 auto">
                 <div style="width: 100%;text-align: center;margin-bottom: 15px">
                   <el-button @click="hashClick('slide1')" :class="a">身份证正面</el-button>
@@ -812,7 +812,7 @@
           customerOrAppNoValue: '',
           branchId: '',
           cityId: '',
-          status: 'Unchecked'
+          status: ['Unchecked']
         },
         form: {
           responsibleAgent: '',
@@ -1125,6 +1125,7 @@
           size: this.size
         }).then((res) => {
           this.tableData = res.data.data.content;
+          console.log(this.tableData);
           this.totalElements = res.data.data.totalElements;
           this.loading = false;
         }).catch((error) => {
@@ -1220,10 +1221,9 @@
           ...this.searchForm,
           page: this.cur_page - 1,
           size: this.size,
-          status: this.radio
+          status: [this.radio]
         };
         this.loading = true;
-        console.log(form);
         this.axios.post(this.url, form).then((res) => {
           this.tableData = res.data.data.content;
           this.totalElements = res.data.data.totalElements;

@@ -19,7 +19,7 @@
           <el-button type="primary" @click="Search">查询</el-button>
         </el-form-item>
         <el-form-item style="float: right">
-          <el-button type="primary">导出</el-button>
+          <el-button type="primary" @click="exportCSV()">导出</el-button>
         </el-form-item>
       </el-form>
     </el-row>
@@ -385,6 +385,68 @@
           this.$message.error(error.response.data.error.message);
         });
         this.dialogVisible3 = false;
+      },
+      districtFormat(value) {
+        if (!value) {
+          return ''
+        }
+        let district = {};
+        let findLabel = (item, value) => {
+          if (item) {
+            return item.some(i => {
+              if (value === i.value) {
+                district = i;
+                return true;
+              } else {
+                return findLabel(i.children, value)
+              }
+            });
+          }
+        };
+        findLabel(json, value);
+        return district.label;
+      },
+      exportCSV() {
+        var head = [["姓名", "联系电话", "城市", "门店", "人员状态"]];
+        this.axios.post('/api/v2/agents/getAgentList', this.searchForm).then((res) => {
+            var rowData = res.data;
+            for (let i = 0; i < rowData.length; i++) {
+              let Status;
+              switch (rowData[i].status) {
+                case 'Pending':
+                  Status = '待审批';
+                  break;
+                case 'NoPass':
+                  Status = '审批不通过';
+                  break;
+                case 'Enabled':
+                  Status = '启用';
+                  break;
+                case 'Disable':
+                  Status = '停用';
+                  break;
+              }
+              let proName = this.districtFormat(rowData[i].province) + '-' + this.districtFormat(rowData[i].city) + '-' + this.districtFormat(rowData[i].district);
+              head.push([rowData[i].name, rowData[i].tel, proName,rowData[i].branchName,Status]);
+            }
+            ;
+            var csvRows = [];
+            head.forEach(item => csvRows.push(item.join(', ')));
+            var csvString = csvRows.join('\n');
+            //BOM的方式解决EXCEL乱码问题
+            var BOM = '\uFEFF';
+            csvString = BOM + csvString;
+            var a = document.createElement('a');
+            a.href = 'data:attachment/csv,' + encodeURI(csvString);
+            a.target = '_blank';
+            a.download = "经纪人" + ".csv";
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+          }
+        ).catch((error) => {
+          this.$message.error(error.response.data.error.message);
+        });
       }
     }
   }
