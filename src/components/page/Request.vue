@@ -1,7 +1,7 @@
 <template>
   <div style="height: 100%;">
     <el-row>
-      <el-tabs v-model="searchForm.status[0]"  @tab-click="handleChangeTab(searchForm.status[0])">
+      <el-tabs v-model="searchForm.status[0]" @tab-click="handleChangeTab(searchForm.status[0])">
         <el-tab-pane label="待处理" name="Unchecked">
           <span slot="label">待处理<el-badge :value="pendingNumber" class="item"></el-badge></span>
         </el-tab-pane>
@@ -12,7 +12,7 @@
           <span slot="label">已逾期<el-badge :value="overdueNumber" class="item"></el-badge></span>
         </el-tab-pane>
         <el-tab-pane label="已结束" name="Finished"></el-tab-pane>
-        <el-tab-pane label="提前退租" name="Inadvancefinished"></el-tab-pane>
+        <el-tab-pane label="提前退租" name="RetirementFinished"></el-tab-pane>
       </el-tabs>
     </el-row>
     <el-row>
@@ -21,7 +21,8 @@
           <el-input v-model="searchForm.customerOrAppNoValue" placeholder="申请编号或租客姓名"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-select v-model="searchForm.cityId" filterable @change="getBranchList(searchForm.cityId)" placeholder="选择城市">
+          <el-select v-model="searchForm.cityId" filterable @change="getBranchList(searchForm.cityId)"
+                     placeholder="选择城市">
             <el-option v-for="city in cityList" :key="city.id" :label="city.name"
                        :value="city.id"></el-option>
           </el-select>
@@ -36,20 +37,19 @@
           <el-button type="primary" @click="Search">查询</el-button>
         </el-form-item>
         <el-form-item style="float: right">
-          <el-button type="primary">导出</el-button>
+          <el-button type="primary" @click="exportCSV()">导出</el-button>
         </el-form-item>
       </el-form>
     </el-row>
     <el-row style="margin-bottom: 10px;height: 33px;">
-      <el-checkbox-group  style="float: left;margin-top: 12px;min-width: 150px" v-if="searchForm.status[0] === 'Repayment'">
-        <el-checkbox label="正常"></el-checkbox>
-        <el-checkbox label="已逾期"></el-checkbox>
+      <el-checkbox-group v-model="checkboxList" @change="checkboxChange"
+                         style="float: left;margin-top: 12px;min-width: 150px"
+                         v-if="searchForm.status[0] === 'RetirementFinished'">
+        <el-checkbox label="Inadvancefinished">未退款</el-checkbox>
+        <el-checkbox label="EarlyRetirement">已退款</el-checkbox>
       </el-checkbox-group>
-      <el-checkbox-group  style="float: left;margin-top: 12px;min-width: 150px" v-if="searchForm.status[0] === 'Inadvancefinished'">
-        <el-checkbox label="未退款"></el-checkbox>
-        <el-checkbox label="已退款"></el-checkbox>
-      </el-checkbox-group>
-      <el-radio-group v-model="radio" @change="radioChange()" v-if="searchForm.status[0] === 'Unchecked'" style="float: left;margin-top: 12px;">
+      <el-radio-group v-model="radio" @change="radioChange()" v-if="searchForm.status[0] === 'Unchecked'"
+                      style="float: left;margin-top: 12px;">
         <el-radio label='Unchecked'>待补充</el-radio>
         <el-radio label='Returned'>待修改</el-radio>
       </el-radio-group>
@@ -67,7 +67,7 @@
         ref="multipleTable"
         :data="tableData"
         highlight-current-row
-        @current-change="handleCurrentRow"
+        @row-click="handleCurrentRow"
         tooltip-effect="dark">
         <el-table-column
           fixed
@@ -363,7 +363,7 @@
               :on-error="handleUploadError"
               :on-remove="handleRemove">
               <!--<img v-show="contractPhotos" :src="photo(item)" class="avatar">-->
-              <i  class="el-icon-plus"></i>
+              <i class="el-icon-plus"></i>
             </el-upload>
           </el-col>
         </el-row>
@@ -395,7 +395,8 @@
             </span>
     </el-dialog>
     <!--遮罩层-->
-    <div v-if="cover" style="width: 100%;height: 100%;opacity: .1;background-color: #666;position: absolute;left: 0;top: 0;z-index: 888"></div>
+    <div v-if="cover"
+         style="width: 100%;height: 100%;opacity: .1;background-color: #666;position: absolute;left: 0;top: 0;z-index: 888"></div>
     <!--拉扇层-->
     <el-form label-position="left" inline
              v-if="pullBloor"
@@ -414,22 +415,29 @@
       </div>
       <content>
         <div style="width: 100%;text-align: center;margin-bottom: 5px">
-          <el-button style="float: left;padding: 5px 15px" @click="prev()" :disabled="!tableData[index-1]"><i style="font-size: x-large;vertical-align: sub" class="fa fa-angle-left" aria-hidden="true"></i>上一条</el-button>
-          <el-button v-if="searchForm.status[0] === 'Unchecked'" type="info" >临时保存</el-button>
-          <el-button v-if="searchForm.status[0] === 'Unchecked'" type="success" >提交审批</el-button>
-          <el-button v-if="searchForm.status[0] === 'Unchecked'" type="warning" >取消申请</el-button>
-          <el-button v-if="searchForm.status[0] === 'Unconfirmed'" type="warning" >撤回</el-button>
-          <el-button v-if="searchForm.status[0] === 'Repayment' || searchForm.status[0] === 'Breach'" type="warning" >提前退租</el-button>
-          <el-button v-if="searchForm.status[0] !== 'Finished' && searchForm.status[0] !== 'Inadvancefinished'">转单</el-button>
-          <el-button style="float: right;padding: 5px 15px" @click="next()" :disabled="!tableData[index+1]">下一条<i style="font-size: x-large;vertical-align: sub" class="fa fa-angle-right" aria-hidden="true"></i></el-button>
+          <el-button style="float: left;padding: 5px 15px" @click="prev()" :disabled="!tableData[index-1]"><i
+            style="font-size: x-large;vertical-align: sub" class="fa fa-angle-left" aria-hidden="true"></i>上一条
+          </el-button>
+          <el-button v-if="searchForm.status[0] === 'Unchecked'" type="info">临时保存</el-button>
+          <el-button v-if="searchForm.status[0] === 'Unchecked'" type="success">提交审批</el-button>
+          <el-button v-if="searchForm.status[0] === 'Unchecked'" type="warning">取消申请</el-button>
+          <el-button v-if="searchForm.status[0] === 'Unconfirmed'" type="warning">撤回</el-button>
+          <el-button v-if="searchForm.status[0] === 'Repayment' || searchForm.status[0] === 'Breach'" type="warning">
+            提前退租
+          </el-button>
+          <el-button v-if="searchForm.status[0] !== 'Finished' && searchForm.status[0] !== 'Inadvancefinished'">转单
+          </el-button>
+          <el-button style="float: right;padding: 5px 15px" @click="next()" :disabled="!tableData[index+1]">下一条<i
+            style="font-size: x-large;vertical-align: sub" class="fa fa-angle-right" aria-hidden="true"></i></el-button>
         </div>
-        <div style="width: 100%;text-align: center;margin-bottom: 5px;border-bottom: 1px solid #D9D9D9;border-top: 1px solid #D9D9D9;padding: 10px 0">
-          <span style="color: red;">待补充</span>
+        <div
+          style="width: 100%;text-align: center;margin-bottom: 5px;border-bottom: 1px solid #D9D9D9;border-top: 1px solid #D9D9D9;padding: 10px 0">
+          <span style="color: red;">{{currentRow.status | appStatusFormat}}</span>
         </div>
         <el-row>
           <el-col :span="6">
             <el-form-item label="申请编号：">
-              <span>SQ21334444</span>
+              <span>{{ currentRow.applictionNo }}</span>
             </el-form-item>
           </el-col>
           <el-col :span="6">
@@ -474,7 +482,8 @@
         <hr style="border-bottom-color: #d9d9d9; border-top: none;">
         <el-row>
           <el-tabs v-model="infoTab">
-            <el-tab-pane v-if="searchForm.status[0] !== 'Unchecked' && searchForm.status[0] !== 'Unconfirmed'" label="还款账单" name="order">
+            <el-tab-pane v-if="searchForm.status[0] !== 'Unchecked' && searchForm.status[0] !== 'Unconfirmed'"
+                         label="还款账单" name="order">
               <!--@current-change="handleCurrentRow1"-->
               <el-table
                 ref="multipleTable"
@@ -531,7 +540,7 @@
               </el-row>
               <el-row>
                 <el-col>
-                  <el-form-item  label=" " :label-width="formLabelWidth" prop="address">
+                  <el-form-item label=" " :label-width="formLabelWidth" prop="address">
                     <el-input v-model="currentRow.address" placeholder="详细地址"></el-input>
                   </el-form-item>
                 </el-col>
@@ -657,7 +666,7 @@
                     :on-error="handleUploadError"
                     :on-remove="handleRemove">
                     <!--<img v-show="contractPhotos" :src="photo(item)" class="avatar">-->
-                    <i  class="el-icon-plus"></i>
+                    <i class="el-icon-plus"></i>
                   </el-upload>
                 </el-col>
               </el-row>
@@ -674,26 +683,38 @@
                 <swiper :options="swiperOption">
                   <swiper-slide data-hash="slide1" style="overflow-y: scroll">
                     <div class="swiper-zoom-container">
-                      <i class="fa fa-search-plus" aria-hidden="true" style="font-size: x-large;position: absolute;top: 0;right: 0" @click="showBigPhoto(currentRow.idCardFrontPhoto)"></i>
-                      <img :src="showquanPhoto(currentRow.idCardFrontPhoto)" alt=""  @click="imgClick1()" id="idCardFrontPhoto">
+                      <i class="fa fa-search-plus" aria-hidden="true"
+                         style="font-size: x-large;position: absolute;top: 0;right: 0"
+                         @click="showBigPhoto(currentRow.idCardFrontPhoto)"></i>
+                      <img :src="showquanPhoto(currentRow.idCardFrontPhoto)" alt="" @click="imgClick1()"
+                           id="idCardFrontPhoto">
                     </div>
                   </swiper-slide>
                   <swiper-slide data-hash="slide2" style="overflow-y: scroll">
                     <div class="swiper-zoom-container">
-                      <i class="fa fa-search-plus" aria-hidden="true" style="font-size: x-large;position: absolute;top: 0;right: 0" @click="showBigPhoto(currentRow.idCardVersoPhoto)"></i>
-                      <img :src="showquanPhoto(currentRow.idCardVersoPhoto)" alt="" @click="imgClick2()" id="idCardVersoPhoto">
+                      <i class="fa fa-search-plus" aria-hidden="true"
+                         style="font-size: x-large;position: absolute;top: 0;right: 0"
+                         @click="showBigPhoto(currentRow.idCardVersoPhoto)"></i>
+                      <img :src="showquanPhoto(currentRow.idCardVersoPhoto)" alt="" @click="imgClick2()"
+                           id="idCardVersoPhoto">
                     </div>
                   </swiper-slide>
                   <swiper-slide data-hash="slide3" style="overflow-y: scroll">
                     <div class="swiper-zoom-container">
-                      <i class="fa fa-search-plus" aria-hidden="true" style="font-size: x-large;position: absolute;top: 0;right: 0" @click="showBigPhoto(currentRow.idCardAndPersonPhoto)"></i>
-                      <img :src="showquanPhoto(currentRow.idCardAndPersonPhoto)" alt="" @click="imgClick3()" id="idCardAndPersonPhoto">
+                      <i class="fa fa-search-plus" aria-hidden="true"
+                         style="font-size: x-large;position: absolute;top: 0;right: 0"
+                         @click="showBigPhoto(currentRow.idCardAndPersonPhoto)"></i>
+                      <img :src="showquanPhoto(currentRow.idCardAndPersonPhoto)" alt="" @click="imgClick3()"
+                           id="idCardAndPersonPhoto">
                     </div>
                   </swiper-slide>
-                  <swiper-slide v-for="(item,index) in currentRow.contractPhotos" :key="item" data-hash="slide4" style="overflow-y: scroll">
+                  <swiper-slide v-for="(item,index) in currentRow.contractPhotos" :key="item" data-hash="slide4"
+                                style="overflow-y: scroll">
                     <div class="imgContainer">
-                      <i class="fa fa-search-plus" aria-hidden="true" style="font-size: x-large;position: absolute;top: 0;right: 0" @click="showBigPhoto(item)"></i>
-                      <img :src="showquanPhoto(item)" alt="" @click="imgClick4(index)" class="contractPhotos" width="80%" height="100%">
+                      <i class="fa fa-search-plus" aria-hidden="true"
+                         style="font-size: x-large;position: absolute;top: 0;right: 0" @click="showBigPhoto(item)"></i>
+                      <img :src="showquanPhoto(item)" alt="" @click="imgClick4(index)" class="contractPhotos"
+                           width="80%" height="100%">
                     </div>
                   </swiper-slide>
                   <div class="swiper-pagination" slot="pagination"></div>
@@ -717,7 +738,7 @@
           </el-col>
           <el-col :span="6">
             <el-form-item label="联系方式：">
-              <span>1121212121212</span>
+              <span>{{currentRow.responsibleAgentPhone}}</span>
             </el-form-item>
           </el-col>
           <el-col :span="6">
@@ -733,7 +754,7 @@
 
 <script>
   import VueAwesomeSwiper from 'vue-awesome-swiper'
-  import { swiper, swiperSlide } from 'vue-awesome-swiper'
+  import {swiper, swiperSlide} from 'vue-awesome-swiper'
   import json from "static/city.json";
   import format from 'date-fns/format'
   import {qiniu} from '../mixins/qiniu.js'
@@ -746,6 +767,7 @@
     mixins: [qiniu],
     data() {
       return {
+        checkboxList: ['Inadvancefinished', 'EarlyRetirement'],
         pullBloor: false,//控制拉扇是否显示
         current1: 0,//照片初始化旋转角度默认0
         current2: 0,
@@ -934,7 +956,7 @@
         let all = {id: ' ', name: '全部'};
         citys.push(all);
         json.forEach(item => {
-          if(item.children){
+          if (item.children) {
             item.children.forEach(i => {
               citys.push({id: i.value, name: i.label});
             })
@@ -982,7 +1004,7 @@
       dateFormat: function (value) {
         if (typeof value === "string") {
           let date = Date.parse(value.substring(0, value.length - 9));
-          return format(date, 'YYYYMMDD');
+          return format(date, 'YYYY-MM-DD');
         }
       },
       districtFormat: function (value) {
@@ -1007,21 +1029,38 @@
       },
     },
     methods: {
+      //切换多选框
+      checkboxChange() {
+        let form = {
+          ...this.searchForm,
+          page: this.cur_page - 1,
+          size: this.size,
+          status: this.checkboxList
+        };
+        this.loading = true;
+        this.axios.post(this.url, form).then((res) => {
+          this.tableData = res.data.data.content;
+          this.totalElements = res.data.data.totalElements;
+          this.loading = false;
+        }).catch((error) => {
+          this.$message.error(error.response.data.message);
+        })
+      },
       prevClick() {
         console.log(window.location.hash);
-        if(window.location.hash === '#slide4') {
+        if (window.location.hash === '#slide4') {
           this.a = '';
           this.b = '';
           this.c = 'is-active';
           this.d = ''
         }
-        if(window.location.hash === '#slide3') {
+        if (window.location.hash === '#slide3') {
           this.a = '';
           this.b = 'is-active';
           this.c = '';
           this.d = ''
         }
-        if(window.location.hash === '#slide2') {
+        if (window.location.hash === '#slide2') {
           this.a = 'is-active';
           this.b = '';
           this.c = '';
@@ -1030,25 +1069,25 @@
       },
       nextClick() {
         console.log(window.location.hash);
-        if(window.location.hash === '#slide1') {
+        if (window.location.hash === '#slide1') {
           this.a = '';
           this.b = 'is-active';
           this.c = '';
           this.d = ''
         }
-        if(window.location.hash === '#slide2') {
+        if (window.location.hash === '#slide2') {
           this.a = '';
           this.b = '';
           this.c = 'is-active';
           this.d = ''
         }
-        if(window.location.hash === '#slide3') {
+        if (window.location.hash === '#slide3') {
           this.a = '';
           this.b = '';
           this.c = '';
           this.d = 'is-active'
         }
-        if(window.location.hash === '#slide4') {
+        if (window.location.hash === '#slide4') {
           this.a = '';
           this.b = '';
           this.c = '';
@@ -1057,29 +1096,29 @@
       },
       //根据hash来跳转
       hashClick(a) {
-        if(a === 'slide1') {
-          window.location.hash='#slide1';
+        if (a === 'slide1') {
+          window.location.hash = '#slide1';
           this.a = 'is-active';
           this.b = '';
           this.c = '';
           this.d = ''
         }
-        if(a === 'slide2') {
-          window.location.hash='#slide2';
+        if (a === 'slide2') {
+          window.location.hash = '#slide2';
           this.a = '';
           this.b = 'is-active';
           this.c = '';
           this.d = ''
         }
-        if(a === 'slide3') {
-          window.location.hash='#slide3';
+        if (a === 'slide3') {
+          window.location.hash = '#slide3';
           this.a = '';
           this.b = '';
           this.c = 'is-active';
           this.d = ''
         }
-        if(a === 'slide4') {
-          window.location.hash='#slide4';
+        if (a === 'slide4') {
+          window.location.hash = '#slide4';
           this.a = '';
           this.b = '';
           this.c = '';
@@ -1088,20 +1127,20 @@
       },
       //照片旋转
       imgClick1() {
-        this.current1 = (this.current1+90)%360;
-        document.getElementById('idCardFrontPhoto').style.transform = 'rotate('+this.current1+'deg)';
+        this.current1 = (this.current1 + 90) % 360;
+        document.getElementById('idCardFrontPhoto').style.transform = 'rotate(' + this.current1 + 'deg)';
       },
       imgClick2() {
-        this.current2 = (this.current2+90)%360;
-        document.getElementById('idCardVersoPhoto').style.transform = 'rotate('+this.current2+'deg)';
+        this.current2 = (this.current2 + 90) % 360;
+        document.getElementById('idCardVersoPhoto').style.transform = 'rotate(' + this.current2 + 'deg)';
       },
       imgClick3() {
-        this.current3 = (this.current3+90)%360;
-        document.getElementById('idCardAndPersonPhoto').style.transform = 'rotate('+this.current3+'deg)';
+        this.current3 = (this.current3 + 90) % 360;
+        document.getElementById('idCardAndPersonPhoto').style.transform = 'rotate(' + this.current3 + 'deg)';
       },
       imgClick4(index) {
-        this.current4 = (this.current4+90)%360;
-        document.getElementsByClassName('contractPhotos')[index].style.transform = 'rotate('+this.current4+'deg)';
+        this.current4 = (this.current4 + 90) % 360;
+        document.getElementsByClassName('contractPhotos')[index].style.transform = 'rotate(' + this.current4 + 'deg)';
       },
       //隐藏右侧内容
       hiddenClass() {
@@ -1111,7 +1150,7 @@
         document.querySelector('.hiddenForm').className = 'hiddenForm el-form demo-table-expand el-form--label-left el-form--inline';
         var a = setTimeout(function () {
           that.pullBloor = false;
-        },500);
+        }, 500);
       },
       handleCurrentChange(val){
         this.cur_page = val;
@@ -1136,7 +1175,7 @@
         this.getData();
       },
       init: function () {
-          //获取省市区json
+        //获取省市区json
         this.options = json;
         //获取待处理、已逾期单据数量
         this.axios.get('/api/v2/applications/status/count').then((res) => {
@@ -1234,14 +1273,19 @@
       },
       //切换tab
       handleChangeTab(a) {
-        if(a === 'Unchecked') {
+        if (a === 'Unchecked') {
           this.radio = 'Unchecked';
+          this.radioChange();
+        } else if (a === 'RetirementFinished') {
+          this.checkboxList = ['Inadvancefinished', 'EarlyRetirement'];
+          this.getData();
         } else {
           this.getData();
         }
       },
-      //点击每一行显示下面内容
+      //点击每一行
       handleCurrentRow(val) {
+        console.log(val);
         this.reason = [];
         let that = this;
         if (val === null) {
@@ -1272,22 +1316,22 @@
             document.querySelector('.hiddenForm').className = 'daveShow hiddenForm el-form demo-table-expand el-form--label-left el-form--inline';
           });
           this.currentRow = val;
-          if(this.currentRow.idCardFrontOrVersoPhotoBlur) {
+          if (this.currentRow.idCardFrontOrVersoPhotoBlur) {
             this.reason.push('idCardFrontOrVersoPhotoBlur')
           }
-          if(this.currentRow.idCardAndPersonPhotoBlur) {
+          if (this.currentRow.idCardAndPersonPhotoBlur) {
             this.reason.push('idCardAndPersonPhotoBlur')
           }
-          if(this.currentRow.contractPhotoBlur) {
+          if (this.currentRow.contractPhotoBlur) {
             this.reason.push('contractPhotoBlur')
           }
-          if(this.currentRow.addressBlur) {
+          if (this.currentRow.addressBlur) {
             this.reason.push('addressBlur')
           }
-          if(this.currentRow.customerInfoError) {
+          if (this.currentRow.customerInfoError) {
             this.reason.push('customerInfoError')
           }
-          if(this.currentRow.otherException) {
+          if (this.currentRow.otherException) {
             this.reason.push('otherException')
           }
           //这里处理省市县的id
@@ -1361,8 +1405,35 @@
           })
         } else {
           this.searchForm.branchId = '';
-          this.branchList = [{id:'',name:'全部'}];
+          this.branchList = [{id: '', name: '全部'}];
         }
+      },
+      exportCSV() {
+        var head = [["申请编号", "租客姓名", "联系方式", "起止日期", "月租金", "租期", "房租总额", "经纪人", "申请日期"]];
+        this.axios.post('/api/v2/applications/export', this.searchForm).then((res) => {
+            var rowData = res.data.data;
+            for (let i = 0; i < rowData.length; i++) {
+              let startEnd = format(rowData[i].startDate, 'YYYY-MM-DD') + '--' + format(rowData[i].endDate, 'YYYY-MM-DD');
+              head.push([rowData[i].id, rowData[i].customerName, rowData[i].mobile, startEnd, rowData[i].monthlyRent, rowData[i].rentPeriod, rowData[i].totalAmount, rowData[i].responsibleAgent, rowData[i].applyDate]);
+            }
+            ;
+            var csvRows = [];
+            head.forEach(item => csvRows.push(item.join(', ')));
+            var csvString = csvRows.join('\n');
+            //BOM的方式解决EXCEL乱码问题
+            var BOM = '\uFEFF';
+            csvString = BOM + csvString;
+            var a = document.createElement('a');
+            a.href = 'data:attachment/csv,' + encodeURI(csvString);
+            a.target = '_blank';
+            a.download = "分期申请" + ".csv";
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+          }
+        ).catch((error) => {
+          this.$message.error(error.response.data.message);
+        });
       }
     }
   }
@@ -1426,6 +1497,7 @@
     margin-left: 4px;
     vertical-align: sub;
   }
+
   #reasonInputTextarea {
     width: 100%;
   }
@@ -1433,9 +1505,11 @@
   #reasonInputTextarea .el-form-item__content {
     width: 60%;
   }
+
   #reasonInputTextarea .el-form-item__content textarea {
     color: red;
   }
+
   .hiddenForm {
     min-width: 1100px;
     margin-top: -40px;
@@ -1443,13 +1517,14 @@
     padding: 15px;
     overflow-y: scroll;
     width: 80%;
-    height:100%;
+    height: 100%;
     z-index: 999;
-    transition: all 0.5s ;
+    transition: all 0.5s;
     position: absolute;
     top: 40px;
     left: 200%;
   }
+
   .daveShow {
     min-width: 1100px;
     margin-top: -40px;
@@ -1457,21 +1532,23 @@
     padding: 15px;
     overflow-y: scroll;
     width: 80%;
-    height:100%;
+    height: 100%;
     z-index: 999;
     background-color: #fff;
     position: absolute;
     top: 40px;
-    left:18%;
+    left: 18%;
   }
+
   .content {
     overflow-y: hidden;
     overflow-x: scroll;
   }
+
   /*swiper样式*/
   .swiper-container {
-    height:85%;
-    width:100%;
+    height: 85%;
+    width: 100%;
   }
 
   .swiper-pagination-bullet-custom {
@@ -1482,12 +1559,14 @@
     font-size: 12px;
     color: #000;
     opacity: 1;
-    background: rgba(0,0,0,0.2);
+    background: rgba(0, 0, 0, 0.2);
   }
+
   .swiper-pagination-bullet-custom.swiper-pagination-bullet-active {
-    color:#fff;
+    color: #fff;
     background: #007aff;
   }
+
   .swiper-pagination-bullet {
     width: 8px;
     height: 8px;
@@ -1497,8 +1576,9 @@
     opacity: .2;
 
   }
+
   .imgContainer {
-    width:100%;
+    width: 100%;
     text-align: center;
   }
 </style>
