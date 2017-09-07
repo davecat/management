@@ -177,7 +177,7 @@
     mixins: [pagination],
     data() {
       return {
-        url: '/api.wezebra.com/v2/branchs/getBranchListPageByAgencyId',
+        url: '/api/v2/branchs/getBranchListPageByAgencyId',
         //省市县
         selectedOptions: [],
         agencyList: {},
@@ -280,7 +280,7 @@
         this.options = json;
       },
       getAgencyList() {
-        this.axios.get('/api.wezebra.com/v2/agencys/adminAndLib/getIdNameAgencyList').then((res) => {
+        this.axios.get('/api/v2/agencys/adminAndLib/getIdNameAgencyList').then((res) => {
           this.agencyList = res.data;
         }).catch((error) => {
           this.$message.error(error.response.data.error.message);
@@ -294,7 +294,7 @@
         this.form.district = this.selectedOptions[2];
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            this.axios.post('/api.wezebra.com/v2/branchs/add', this.form).then((res) => {
+            this.axios.post('/api/v2/branchs/add', this.form).then((res) => {
               this.getData();
               this.$refs[formName].resetFields();
               //清空省市区
@@ -318,7 +318,7 @@
         console.log(this.form2);
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            this.axios.put('/api.wezebra.com/v2/branchs/update', this.form2).then((res) => {
+            this.axios.put('/api/v2/branchs/update', this.form2).then((res) => {
               this.getData();
               this.$message({
                 message: "修改成功",
@@ -371,7 +371,7 @@
         if (form.ids.length === 0) {
           console.log('ids is null');
         } else {
-          this.axios.put('/api.wezebra.com/v2/branchs/updateEnabled', form).then((res) => {
+          this.axios.put('/api/v2/branchs/updateEnabled', form).then((res) => {
             this.getData();
           }).catch((error) => {
             this.$message.error(error.response.data.error.message);
@@ -426,7 +426,7 @@
             ...this.searchForm
           }
         }
-        this.axios.post('/api.wezebra.com/v2/branchs/getBranchListByAgencyId', param).then((res) => {
+        this.axios.post('/api/v2/branchs/getBranchListByAgencyId', param).then((res) => {
             var rowData = res.data;
             for (let i = 0; i < rowData.length; i++) {
               let enabledStatus;

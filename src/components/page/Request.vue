@@ -3,22 +3,22 @@
     <el-row>
       <el-tabs v-model="searchForm.status"  @tab-click="handleChangeTab(searchForm.status)">
         <el-tab-pane label="待处理" name="Unchecked">
-          <span slot="label">待处理<el-badge :value="uncheckedNumber" class="item"></el-badge></span>
+          <span slot="label">待处理<el-badge :value="pendingNumber" class="item"></el-badge></span>
         </el-tab-pane>
 
-        <el-tab-pane label="待审核" name="Unconfirmed">
-          <span slot="label">待审核<el-badge :value="returnedNumber" class="item"></el-badge></span>
+        <el-tab-pane label="待审核" name="Unconfirmed"></el-tab-pane>
+        <el-tab-pane label="还款中" name="Repayment"></el-tab-pane>
+        <el-tab-pane label="已逾期" name="Breach">
+          <span slot="label">已逾期<el-badge :value="overdueNumber" class="item"></el-badge></span>
         </el-tab-pane>
-        <el-tab-pane label="还款中" name="Returned"></el-tab-pane>
-        <el-tab-pane label="已逾期" name="Accepted"></el-tab-pane>
-        <el-tab-pane label="已结束" name="Rejected"></el-tab-pane>
-        <el-tab-pane label="提前退租" name="Canceled"></el-tab-pane>
+        <el-tab-pane label="已结束" name="Finished"></el-tab-pane>
+        <el-tab-pane label="提前退租" name="Inadvancefinished"></el-tab-pane>
       </el-tabs>
     </el-row>
     <el-row>
       <el-form :inline="true" :model="searchForm">
         <el-form-item>
-          <el-input v-model="searchForm.customerName" placeholder="申请编号或租客姓名"></el-input>
+          <el-input v-model="searchForm.customerOrAppNoValue" placeholder="申请编号或租客姓名"></el-input>
         </el-form-item>
         <el-form-item>
           <el-select v-model="searchForm.cityId" filterable @change="getBranchList(searchForm.cityId)" placeholder="选择城市">
@@ -41,18 +41,18 @@
       </el-form>
     </el-row>
     <el-row style="margin-bottom: 10px;height: 33px;">
-      <el-checkbox-group  style="float: left;margin-top: 12px;min-width: 150px" v-if="searchForm.status === 'Unconfirmed'">
+      <el-checkbox-group  style="float: left;margin-top: 12px;min-width: 150px" v-if="searchForm.status === 'Repayment'">
         <el-checkbox label="正常"></el-checkbox>
         <el-checkbox label="已逾期"></el-checkbox>
       </el-checkbox-group>
-      <el-checkbox-group  style="float: left;margin-top: 12px;min-width: 150px" v-if="searchForm.status === 'Canceled'">
+      <el-checkbox-group  style="float: left;margin-top: 12px;min-width: 150px" v-if="searchForm.status === 'Inadvancefinished'">
         <el-checkbox label="未退款"></el-checkbox>
         <el-checkbox label="已退款"></el-checkbox>
       </el-checkbox-group>
-      <template v-if="searchForm.status === 'Unchecked'" style="float: left;margin-top: 12px;">
-        <el-radio class="radio" v-model="radio" label="1" style="margin-top: 12px">待补充</el-radio>
-        <el-radio class="radio" v-model="radio" label="2" style="margin-top: 12px">待修改</el-radio>
-      </template>
+      <el-radio-group v-model="radio" @change="radioChange()" v-if="searchForm.status === 'Unchecked'" style="float: left;margin-top: 12px;">
+        <el-radio label='Unchecked'>待补充</el-radio>
+        <el-radio label='Returned'>待修改</el-radio>
+      </el-radio-group>
       <div class="pagination" style="position: absolute;right: 0;top: 0;margin: 0">
         <el-pagination
           @current-change="handleCurrentChange"
@@ -115,39 +115,19 @@
           </template>
         </el-table-column>
         <el-table-column
-          v-if="radio === '2' || searchForm.status !== 'Unchecked'"
+          v-if="radio === 'Returned' || searchForm.status !== 'Unchecked'"
           min-width="180"
           prop="apartmentNo"
           label="台账号">
         </el-table-column>
         <el-table-column
-          v-if="radio === '2' || searchForm.status !== 'Unchecked'"
+          v-if="radio === 'Returned' || searchForm.status !== 'Unchecked'"
           min-width="180"
           prop="city"
           label="租房城市">
           <template scope="scope">
             {{ scope.row.province | districtFormat }}-{{ scope.row.city | districtFormat }}-{{
             scope.row.district | districtFormat }}
-          </template>
-        </el-table-column>
-        <el-table-column
-          fixed="right"
-          min-width="82"
-          prop="enabled"
-          label="操作">
-          <template scope="scope">
-            <el-tooltip class="item" effect="dark" content="补充／修改分期申请" placement="top-end">
-              <el-button size="small" type="primary"
-                         @click="handleEdit(scope.row)"><i
-                class="fa fa-pencil-square-o"></i>
-              </el-button>
-            </el-tooltip>
-            <el-tooltip class="item" effect="dark" content="取消申请" placement="top-end" v-if="searchForm.status === 'Unchecked'">
-              <el-button size="small" type="danger"
-                         @click="handleEdit1(scope.row)"><i
-                class="fa fa-pencil-square-o"></i>
-              </el-button>
-            </el-tooltip>
           </template>
         </el-table-column>
         <el-table-column
@@ -439,8 +419,8 @@
           <el-button v-if="searchForm.status === 'Unchecked'" type="success" >提交审批</el-button>
           <el-button v-if="searchForm.status === 'Unchecked'" type="warning" >取消申请</el-button>
           <el-button v-if="searchForm.status === 'Unconfirmed'" type="warning" >撤回</el-button>
-          <el-button v-if="searchForm.status === 'Returned' || searchForm.status === 'Accepted'" type="warning" >提前退租</el-button>
-          <el-button v-if="searchForm.status !== 'Rejected' && searchForm.status !== 'Canceled'">转单</el-button>
+          <el-button v-if="searchForm.status === 'Repayment' || searchForm.status === 'Breach'" type="warning" >提前退租</el-button>
+          <el-button v-if="searchForm.status !== 'Finished' && searchForm.status !== 'Inadvancefinished'">转单</el-button>
           <el-button style="float: right;padding: 5px 15px" @click="next()" :disabled="!tableData[index+1]">下一条<i style="font-size: x-large;vertical-align: sub" class="fa fa-angle-right" aria-hidden="true"></i></el-button>
         </div>
         <div style="width: 100%;text-align: center;margin-bottom: 5px;border-bottom: 1px solid #D9D9D9;border-top: 1px solid #D9D9D9;padding: 10px 0">
@@ -722,7 +702,7 @@
                 </swiper>
               </div>
             </el-tab-pane>
-            <el-tab-pane v-if="radio === '2'" label="审批备注" name="remarks">
+            <el-tab-pane v-if="radio === 'Returned'" label="审批备注" name="remarks">
               <!--{{currentRow.confirmRemarks}}-->
               <span style="color: red;">身份证已过期</span>
             </el-tab-pane>
@@ -789,7 +769,7 @@
         },
         infoTab: 'houseInfo',//拉扇层tab
         cover: false,//拉扇层
-        radio: '1',//单选按钮
+        radio: 'Unchecked',//单选按钮
         fileList2: [],
         reason: [],
         reasonOption: [
@@ -822,18 +802,14 @@
         cur_page: 1,
         size: 10,
         totalElements: 0,
-        url: '/api/v1/application/getApplicationPage',
+        url: '/api/v2/applications',
         agencyList: {},
         branchList: {},
         //省市县
         selectedOptions: [],
         options: [],
         searchForm: {
-          applyDate: '',
-          startDate: '',
-          endDate: '',
-          customerName: '',
-          agencyId: '',
+          customerOrAppNoValue: '',
           branchId: '',
           cityId: '',
           status: 'Unchecked'
@@ -941,8 +917,8 @@
         idCardVersoPhoto: '',
         idCardAndPersonPhoto: '',
         contractPhotos: [],
-        uncheckedNumber: 0,//待补充单据数量
-        returnedNumber: 0//待修改单据数量
+        pendingNumber: 0,//待处理单据数量
+        overdueNumber: 0//已逾期单据数量
       }
     },
     created(){
@@ -955,6 +931,8 @@
       },
       cityList () {
         let citys = [];
+        let all = {id: ' ', name: '全部'};
+        citys.push(all);
         json.forEach(item => {
           if(item.children){
             item.children.forEach(i => {
@@ -1139,22 +1117,16 @@
         this.cur_page = val;
         this.getData();
       },
-      getData(a){
+      getData(){
         this.loading = true;
         this.axios.post(this.url, {
           ...this.searchForm,
           page: this.cur_page - 1,
           size: this.size
         }).then((res) => {
-          this.tableData = res.data.content;
-          this.totalElements = res.data.totalElements;
+          this.tableData = res.data.data.content;
+          this.totalElements = res.data.data.totalElements;
           this.loading = false;
-          if (a === 'Unchecked') {
-            this.uncheckedNumber = res.data.totalElements;
-          }
-          if (a === 'Returned') {
-            this.returnedNumber = res.data.totalElements;
-          }
         }).catch((error) => {
           this.$message.error(error.response.data.message);
         })
@@ -1163,35 +1135,15 @@
         this.getData();
       },
       init: function () {
+          //获取省市区json
         this.options = json;
-        //获取待补充、待修改单据数量
-        this.axios.post(this.url, {
-          ...this.searchForm,
-          page: this.cur_page - 1,
-          size: this.size
-        }).then((res) => {
-          this.uncheckedNumber = res.data.totalElements;
+        //获取待处理、已逾期单据数量
+        this.axios.get('/api/v2/applications/status/count').then((res) => {
+          this.pendingNumber = Number(res.data.data.Pending.count);
+          this.overdueNumber = Number(res.data.data.Breach.count);
         }).catch((error) => {
           this.$message.error(error.response.data.message);
         });
-        let searchForm1 = {
-          applyDate: '',
-          startDate: '',
-          endDate: '',
-          customerName: '',
-          agencyId: '',
-          branchId: '',
-          status: 'Returned'
-        };
-        this.axios.post(this.url, {
-          ...searchForm1,
-          page: this.cur_page - 1,
-          size: this.size
-        }).then((res) => {
-          this.returnedNumber = res.data.totalElements;
-        }).catch((error) => {
-          this.$message.error(error.response.data.message);
-        })
       },
       //切换省市区
       handleChange(value) {
@@ -1210,29 +1162,6 @@
         if (token !== undefined && token !== '' && token !== null) {
           return this.qiniu + token + '?imageMogr2/auto-orient|imageView2/1';
         }
-      },
-      handleEdit(row) {
-        this.fileList2 = [];//清空已有数据，防止累加
-        let that = this;
-        this.form = Object.assign({}, row);
-        console.log(this.form);
-        //把省市区县带过来
-        this.selectedOptions = [this.form.province,this.form.city,this.form.district];
-        //照片回显
-        this.idCardFrontPhoto = row.idCardFrontPhoto;
-        this.idCardVersoPhoto = row.idCardVersoPhoto;
-        this.idCardAndPersonPhoto = row.idCardAndPersonPhoto;
-        this.contractPhotos = row.contractPhotos;
-        this.contractPhotos.forEach(item => {
-          let obj = {};
-          obj.url = that.photo(item);
-          that.fileList2.push(obj);
-        });
-        this.formVisible = true;
-      },
-      //取消分期申请
-      handleEdit1(row) {
-        this.dialogVisible = true
       },
       submitApp(formName) {
         this.$refs[formName].validate((valid) => {
@@ -1285,11 +1214,30 @@
         this.$refs[formName].resetFields();
         this.formVisible = false;
       },
+      //切换radio
+      radioChange() {
+        let form = {
+          ...this.searchForm,
+          page: this.cur_page - 1,
+          size: this.size,
+          status: this.radio
+        };
+        this.loading = true;
+        console.log(form);
+        this.axios.post(this.url, form).then((res) => {
+          this.tableData = res.data.data.content;
+          this.totalElements = res.data.data.totalElements;
+          this.loading = false;
+        }).catch((error) => {
+          this.$message.error(error.response.data.message);
+        })
+      },
+      //切换tab
       handleChangeTab(a) {
-        this.getData(a);
-        //待审核
-        if(a === 'Unconfirmed') {
-          this.radio = '1'
+        if(a === 'Unchecked') {
+          this.radio = 'Unchecked';
+        } else {
+          this.getData();
         }
       },
       //点击每一行显示下面内容
@@ -1402,7 +1350,9 @@
         })
       },
       getBranchList(cityId) {
-        if (cityId !== '') {
+        if (cityId !== ' ') {
+          this.searchForm.branchId = '';
+          this.branchList = [];
           let param = {city: [cityId]};
           this.axios.post('/api/v1/branch/getBranchListByLocation', param).then((res) => {
             this.branchList = res.data;
@@ -1411,7 +1361,7 @@
           })
         } else {
           this.searchForm.branchId = '';
-          this.branchList = [];
+          this.branchList = [{id:'',name:'全部'}];
         }
       }
     }

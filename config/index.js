@@ -62,17 +62,17 @@ module.exports = {
       },
       // 菜单接口
       '/menus': {
-        target: 'http://47.94.92.60:8080',
+        target: 'http://192.168.0.106:8083',
         // target: 'http://192.168.0.128:8080',
         secure: false
       },
-      // 中介接口
-      '/api.wezebra.com/v2': {
-        // target: 'http://testbk.wezebra.com',
-        target: 'http://192.168.0.109:8080',
+      //中介接口
+      '/api/v2': {
+        target: 'http://192.168.0.111:8080',
+        // target: 'http://192.168.0.114:8001',
         secure: false,
         pathRewrite: {
-          '^/api.wezebra.com/v2': '/api.wezebra.com/v2'
+          '^/api/v2': '/api/v2'
         }
       },
       '/riskcontrol': {

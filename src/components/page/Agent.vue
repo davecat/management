@@ -3,30 +3,33 @@
     <el-row>
       <el-form :inline="true" :model="form">
         <el-form-item>
-          <el-select v-model="searchForm.cityId" filterable @change="getBranchList(searchForm.cityId)" placeholder="选择城市">
+          <el-select v-model="searchForm.cityId" filterable @change="getBranchList(searchForm.cityId)"
+                     placeholder="选择城市">
             <el-option v-for="city in cityList" :key="city.id" :label="city.name"
                        :value="city.id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item>
           <el-select v-model="searchForm.branchId" placeholder="选择城市下的门店">
-            <el-option v-for="branch in branchList" :key="branch.id" :label="branch.name" :value="branch.id"></el-option>
+            <el-option v-for="branch in branchList" :key="branch.id" :label="branch.name"
+                       :value="branch.id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="Search">查询</el-button>
         </el-form-item>
         <el-form-item style="float: right">
-          <el-button type="primary" >导出</el-button>
+          <el-button type="primary">导出</el-button>
         </el-form-item>
       </el-form>
     </el-row>
     <el-row style="margin-bottom: 10px">
-      <el-checkbox-group v-model="checkList" style="float: left;margin-top: 12px;min-width: 280px">
-        <el-checkbox label="待审批"></el-checkbox>
-        <el-checkbox label="启用"></el-checkbox>
-        <el-checkbox label="停用"></el-checkbox>
-        <el-checkbox label="拒绝"></el-checkbox>
+      <el-checkbox-group v-model="searchForm.status" @change="Search"
+                         style="float: left;margin-top: 12px;min-width: 280px">
+        <el-checkbox label="Pending">待审批</el-checkbox>
+        <el-checkbox label="Enabled">启用</el-checkbox>
+        <el-checkbox label="Disable">停用</el-checkbox>
+        <el-checkbox label="NoPass">拒绝</el-checkbox>
       </el-checkbox-group>
       <div class="pagination" style="position: absolute; right: 0; top: 0; margin: 0;">
         <el-pagination
@@ -43,7 +46,7 @@
         :data="tableData"
         tooltip-effect="dark"
         style="width: 100%"
-        @selection-change="handleSelectionChange">
+      >
         <el-table-column type="selection" width="50">
         </el-table-column>
         <el-table-column
@@ -78,12 +81,39 @@
             {{ scope.row.status | agentStatusFormat }}
           </template>
         </el-table-column>
-        <el-table-column  min-width="50" label="操作">
+        <el-table-column min-width="80" label="操作">
           <template scope="scope">
-            <el-tooltip class="item" effect="dark" content="修改" placement="top-end">
+            <el-tooltip class="item" effect="dark" content="修改" placement="top-end"
+                        v-if="scope.row.status === 'Enabled' || scope.row.status === 'Disable'">
               <el-button size="small" type="primary"
                          @click="handleEdit(scope.row)"><i
                 class="fa fa-pencil-square-o"></i>
+              </el-button>
+            </el-tooltip>
+            <el-tooltip class="item" effect="dark" content="通过" placement="top-end"
+                        v-if="scope.row.status === 'Pending'">
+              <el-button size="small" type="success"
+                         @click="pass(scope.row.id)"><i
+                class="fa fa-pencil-square-o"></i>
+              </el-button>
+            </el-tooltip>
+            <el-tooltip class="item" effect="dark" content="拒绝" placement="top-end"
+                        v-if="scope.row.status === 'Pending'">
+              <el-button size="small" type="danger"
+                         @click="noPass(scope.row.id)"><i
+                class="fa fa-pencil-square-o"></i>
+              </el-button>
+            </el-tooltip>
+            <el-tooltip class="item" effect="dark" content="停用" placement="top-end"
+                        v-if="scope.row.status === 'Enabled'">
+              <el-button size="small" type="danger"
+                         @click="disabledEdit(scope.row.id)"><i class="fa fa-lock" aria-hidden="true"></i>
+              </el-button>
+            </el-tooltip>
+            <el-tooltip class="item" effect="dark" content="启用" placement="top-end"
+                        v-if="scope.row.status === 'Disable'">
+              <el-button size="small" type="primary"
+                         @click="openEdit(scope.row.id)"><i class="fa fa-unlock" aria-hidden="true"></i>
               </el-button>
             </el-tooltip>
           </template>
@@ -91,28 +121,13 @@
       </el-table>
     </el-row>
 
-    <el-dialog title="修改经纪人" :visible.sync="formVisible">
+    <el-dialog title="修改" :visible.sync="formVisible" size="tiny">
       <el-form :model="form" ref="form" :rules="rules">
-        <el-form-item label="所属中介：">
-          <span>{{ form.agencyName }}</span>
-        </el-form-item>
-        <el-form-item label="所属门店：">
-          <span>{{ form.branchName }}</span>
-        </el-form-item>
-        <el-form-item label="人员编号" :label-width="formLabelWidth">
-          <span>{{ form.id }}</span>
-        </el-form-item>
         <el-form-item label="人员姓名" :label-width="formLabelWidth" prop="name">
           <el-input v-model="form.name"></el-input>
         </el-form-item>
         <el-form-item label="联系电话" :label-width="formLabelWidth" prop="tel">
           <el-input v-model="form.tel"></el-input>
-        </el-form-item>
-        <el-form-item label="工号" :label-width="formLabelWidth" prop="staffNo">
-          <el-input v-model="form.staffNo"></el-input>
-        </el-form-item>
-        <el-form-item label="人员状态：" :label-width="formLabelWidth" prop="status">
-          <span>{{ form.status | agentStatusFormat }}</span>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -155,10 +170,10 @@
     </el-dialog>
 
     <el-dialog
-      title="审批不通过"
+      title="审批拒绝"
       :visible.sync="dialogVisible3"
       size="tiny">
-      <span>此操作将审批不通过选中人员，是否继续？</span>
+      <span>此操作将审批拒绝选中人员，是否继续？</span>
       <span slot="footer" class="dialog-footer">
                 <el-button @click="dialogVisible3 = false">取 消</el-button>
                 <el-button type="primary" @click="multipleNoPass">确 定</el-button>
@@ -169,43 +184,39 @@
 </template>
 
 <script>
-  import { pagination } from '../mixins/pagination.js'
+  import {pagination} from '../mixins/pagination.js'
   import json from "../../../static/city.json";
   export default {
     mixins: [pagination],
     data() {
       return {
-        checkList: [],//选择的数组
-        url: '/api/v1/agent/getAgentPage',
+        url: '/api/v2/agents/getAgentListPage',
         branchList: [],
         searchForm: {
-          name: '',
           branchId: '',
           cityId: '',
-          tel: '',
-          status: '',
+          status: ["Pending", "NoPass", "Enabled", "Disable"],
         },
         form: {
+          id: '',
           name: '',
-          tel: '',
-          staffNo: '',
-          status: ''
+          tel: ''
         },
         formVisible: false,
         dialogVisible: false,
         dialogVisible1: false,
         dialogVisible2: false,
         dialogVisible3: false,
+        passId: '',
+        noPassId: '',
+        disabledId: '',
+        openId: '',
         formLabelWidth: '100px',
         rules: {
           name: [{required: true, message: '请输入经纪人姓名', trigger: 'blur'}],
-          tel: [{required: true, message: '请输入经纪人电话', trigger: 'blur'}],
-          staffNo: [{required: true, message: '请输入经纪人工号', trigger: 'blur'}],
-          status: [{required: true, message: '请选择状态', trigger: 'change'}]
+          tel: [{required: true, message: '请输入经纪人电话', trigger: 'blur'}]
         }
       }
-    },
-    created(){
     },
     computed: {
       staff (){
@@ -213,8 +224,10 @@
       },
       cityList () {
         let citys = [];
+        let all = {id: ' ', name: '全部'};
+        citys.push(all);
         json.forEach(item => {
-          if(item.children){
+          if (item.children) {
             item.children.forEach(i => {
               citys.push({id: i.value, name: i.label});
             })
@@ -227,7 +240,7 @@
       agentStatusFormat: function (value) {
         if (value === "Pending") {
           return "待审批";
-        } else if(value === "NoPass"){
+        } else if (value === "NoPass") {
           return "审批不通过";
         } else if (value === "Enabled") {
           return "启用";
@@ -236,12 +249,12 @@
         }
       },
       districtFormat: function (value) {
-        if(!value){
+        if (!value) {
           return ''
         }
         let district = {};
         let findLabel = (item, value) => {
-          if(item) {
+          if (item) {
             return item.some(i => {
               if (value === i.value) {
                 district = i;
@@ -258,36 +271,37 @@
     },
     methods: {
       getBranchList(cityId) {
-        if (cityId !== '') {
+        if (cityId !== ' ') {
+          this.searchForm.branchId = '';
+          this.branchList = [];
           let param = {city: [cityId]};
           this.axios.post('/api/v1/branch/getBranchListByLocation', param).then((res) => {
             this.branchList = res.data;
           }).catch((error) => {
-            this.$message.error(error.response.data.message);
+            this.$message.error(error.response.data.error.data.message);
           })
         } else {
           this.searchForm.branchId = '';
-          this.branchList = [];
+          this.branchList = [{id: '', name: '全部'}];
         }
       },
       handleEdit(row) {
         this.form.id = row.id;
         this.form.tel = row.tel;
         this.form.name = row.name;
-        this.form.staffNo = row.staffNo;
-        this.form.status = row.status;
-        this.form.branchName = row.branchName;
         this.formVisible = true;
       },
+      //修改确认
       submitAgent(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            this.axios.put('/api/v1/agent', this.form).then((res) => {
+            this.axios.put('/api/v2/agents/update', this.form).then((res) => {
               this.getData();
+              this.$message.success("修改成功！");
               this.$refs[formName].resetFields();
               this.formVisible = false;
             }).catch((error) => {
-              this.$message.error(error.response.data.message);
+              this.$message.error(error.response.data.error.data.message);
             })
           } else {
             console.log('error submit!!');
@@ -295,72 +309,82 @@
           }
         });
       },
+      //通过
+      pass(id) {
+        this.passId = id;
+        this.dialogVisible2 = true;
+      },
+      //拒绝
+      noPass(id) {
+        this.noPassId = id;
+        this.dialogVisible3 = true;
+      },
+      //停用
+      disabledEdit(id) {
+        this.disabledId = id;
+        this.dialogVisible1 = true;
+      },
+      //启用
+      openEdit(id) {
+        this.openId = id;
+        this.dialogVisible = true;
+      },
       resetForm(formName) {
         this.$refs[formName].resetFields();
         this.formVisible = false;
       },
+//      启用确认
       multipleEnable() {
-        let ids = this.multipleSelection.map(row => {
-          return row.id
+        let form = {
+          ids: [this.openId],
+          enabled: 'true'
+        };
+        this.axios.put('/api/v2/agents/enabled', form).then((res) => {
+          this.getData();
+        }).catch((error) => {
+          this.$message.error(error.response.data.error.message);
         });
-        if (ids.length === 0) {
-          console.log('ids is null');
-        } else {
-          this.axios.put('/api/v1/agent/enabled', ids).then((res) => {
-            this.getData();
-          }).catch((error) => {
-            this.$message.error(error.response.data.message);
-          })
-        }
         this.dialogVisible = false;
       },
+      //停用确认
       multipleDisable() {
-        let ids = this.multipleSelection.map(row => {
-          return row.id
+        let form = {
+          ids: [this.disabledId],
+          enabled: 'false'
+        };
+        this.axios.put('/api/v2/agents/enabled', form).then((res) => {
+          this.getData();
+        }).catch((error) => {
+          this.$message.error(error.response.data.error.message);
         });
-        if (ids.length === 0) {
-          console.log('ids is null');
-        } else {
-          this.axios.put('/api/v1/agent/disable', ids).then((res) => {
-            this.getData();
-          }).catch((error) => {
-            this.$message.error(error.response.data.message);
-          })
-        }
         this.dialogVisible1 = false;
       },
+      //审批通过确认
       multiplePass() {
-        let ids = this.multipleSelection.map(row => {
-          return row.id
+        let form = {
+          ids: [this.passId],
+          pass: 'true'
+        };
+        this.axios.put('/api/v2/agents/passAndNopass', form).then((res) => {
+          this.getData();
+          this.$message.success("已通过！");
+        }).catch((error) => {
+          this.$message.error(error.response.data.error);
         });
-        if (ids.length === 0) {
-          console.log('ids is null');
-        } else {
-          this.axios.put('/api/v1/agent/pass', ids).then((res) => {
-            this.getData();
-          }).catch((error) => {
-            this.$message.error(error.response.data.message);
-          })
-        }
         this.dialogVisible2 = false;
       },
+      //审批拒绝确认
       multipleNoPass() {
-        let ids = this.multipleSelection.map(row => {
-          return row.id
+        let form = {
+          ids: [this.noPassId],
+          pass: 'false'
+        };
+        this.axios.put('/api/v2/agents/passAndNopass', form).then((res) => {
+          this.getData();
+        }).catch((error) => {
+          this.$message.error(error.response.data.error.message);
         });
-        if (ids.length === 0) {
-          console.log('ids is null');
-        } else {
-          this.axios.put('/api/v1/agent/noPass', ids).then((res) => {
-            this.getData();
-          }).catch((error) => {
-            this.$message.error(error.response.data.message);
-          })
-        }
         this.dialogVisible3 = false;
-      },
-      handleSelectionChange(val) {
-        this.multipleSelection = val;
       }
     }
   }

@@ -211,7 +211,7 @@
           payerAccountNumber: [{required: true, message: '请输入账号', trigger: 'blur'}],
           enabled: [{required: true, message: '请选择状态', trigger: 'blur'}],
         },
-        url: '/api.wezebra.com/v2/agencys/getAgencyPage'
+        url: '/api/v2/agencys/getAgencyPage'
       }
     },
     methods: {
@@ -219,7 +219,7 @@
       submitAgency(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            this.axios.post('/api.wezebra.com/v2/agencys/add', this.form).then((res) => {
+            this.axios.post('/api/v2/agencys/add', this.form).then((res) => {
               this.getData();
               this.$refs[formName].resetFields();
               this.formVisible = false;
@@ -235,7 +235,7 @@
       submitAgency2(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            this.axios.put('/api.wezebra.com/v2/agencys/update', this.form2).then((res) => {
+            this.axios.put('/api/v2/agencys/update', this.form2).then((res) => {
               this.getData();
               this.$refs[formName].resetFields();
               this.formVisible2 = false;
@@ -276,7 +276,7 @@
           agencyIds: [this.disabledId],
           enabled: 'false'
         };
-        this.axios.put('/api.wezebra.com/v2/agencys/enabled', form).then((res) => {
+        this.axios.put('/api/v2/agencys/enabled', form).then((res) => {
           this.getData();
         }).catch((error) => {
           this.$message.error(error.response.data.message);
@@ -289,7 +289,7 @@
           agencyIds: [this.openId],
           enabled: 'true'
         };
-        this.axios.put('/api.wezebra.com/v2/agencys/enabled', form).then((res) => {
+        this.axios.put('/api/v2/agencys/enabled', form).then((res) => {
           this.getData();
         }).catch((error) => {
           this.$message.error(error.response.data.message);
