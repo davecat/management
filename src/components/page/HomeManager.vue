@@ -95,7 +95,7 @@
       </el-table>
     </el-row>
 
-    <el-dialog title="新增房源" :visible.sync="formVisible">
+    <el-dialog title="新增房源" :visible.sync="formVisible" size="tiny">
       <el-form :model="form" ref="form" :rules="rules">
         <el-radio-group v-model="form.rentalType">
           <el-radio label='Entire'>整租</el-radio>
@@ -108,11 +108,26 @@
                        :value="agency.id"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="城市：" :label-width="formLabelWidth" prop="selectedOptions">
-          <el-cascader
-            :options="options"
-            v-model="selectedOptions">
-          </el-cascader>
+        <!--<el-form-item label="城市：" :label-width="formLabelWidth" prop="selectedOptions">-->
+          <!--<el-cascader-->
+            <!--:options="options"-->
+            <!--v-model="selectedOptions">-->
+          <!--</el-cascader>-->
+        <!--</el-form-item>-->
+        <el-form-item label="省：" :label-width="formLabelWidth" prop="province">
+          <el-col :span="24">
+            <el-input v-model="form.province"></el-input>
+          </el-col>
+        </el-form-item>
+        <el-form-item label="市：" :label-width="formLabelWidth" prop="city">
+          <el-col :span="24">
+            <el-input v-model="form.city"></el-input>
+          </el-col>
+        </el-form-item>
+        <el-form-item label="区()：" :label-width="formLabelWidth" prop="district">
+          <el-col :span="24">
+            <el-input v-model="form.district"></el-input>
+          </el-col>
         </el-form-item>
         <el-form-item label="详细地址：" :label-width="formLabelWidth" prop="address">
           <el-input v-model="form.address"></el-input>
@@ -188,13 +203,13 @@
     </el-dialog>
 
     <el-dialog
-      title="停用"
+      title="删除房源"
       :visible.sync="dialogVisible"
       size="tiny">
-      <span>此操作将停用选中门店，是否继续？</span>
+      <span>此操作将删除当前房源，是否继续？</span>
       <span slot="footer" class="dialog-footer">
                 <el-button @click="dialogVisible = false">取 消</el-button>
-                <el-button type="primary" @click="multipleDisabled">确 定</el-button>
+                <el-button type="primary" @click="multipleDelete">确 定</el-button>
             </span>
     </el-dialog>
 
@@ -237,7 +252,10 @@
           name: '',
           address: '',
           roomAmount: '2',
-          rentalType: 'Entire'
+          rentalType: 'Entire',
+          city: '',
+          district: '',
+          province: ''
         },
         form2: {
           id: '',
@@ -248,7 +266,10 @@
           name: '',
           address: '',
           roomAmount: '',
-          rentalType: ''
+          rentalType: '',
+          city: '',
+          district: '',
+          province: ''
         },
         formVisible: false,
         formVisible2: false,
@@ -411,22 +432,14 @@
         this.dialogVisible = true;
         this.deleteId = id;
       },
-      //禁用
-      multipleDisabled() {
-        let form = {
-          ids: [],
-          enabled: 'false'
-        };
-        form.ids.push(this.disabledId);
-        if (form.ids.length === 0) {
-          console.log('ids is null');
-        } else {
-          this.axios.put('/api/v2/branchs/updateEnabled', form).then((res) => {
-            this.getData();
-          }).catch((error) => {
-            this.$message.error(error.response.data.error.message);
-          })
-        }
+      //删除
+      multipleDelete() {
+        this.axios.put('/api/v2/apartments/del',[this.deleteId]).then((res) => {
+          this.getData();
+
+        }).catch((error) => {
+          this.$message.error(error.response.data.error.message);
+        });
         this.dialogVisible = false;
       },
       districtFormat(value) {
@@ -501,9 +514,9 @@
   }
 </script>
 
-<style scoped>
+<style>
   #dave .el-form-item__content{
-    width: 300px;
+    width: 200px;
   }
 
 </style>
