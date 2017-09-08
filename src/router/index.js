@@ -59,6 +59,11 @@ export default new Router({
           path: '/statement',
           meta: { requiresAuth: true },
           component: resolve => require(['components/page/Statement'], resolve)
+        },
+        {
+          path: '/homeManager',
+          meta: { requiresAuth: true },
+          component: resolve => require(['components/page/HomeManager'], resolve)
         }
       ]
     },
