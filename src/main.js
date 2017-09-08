@@ -34,7 +34,7 @@ router.beforeEach((to, from, next) => {
       next({path: '/login'})
     } else {
       //vuex menu 赋值
-      Vue.axios.get("/menus").then((response) => {
+      Vue.axios.get("/api/v2/menus").then((response) => {
         let menus = response.data;
         menus.sort((a,b) => a.sortNum - b.sortNum);
         menus.forEach(m => m.children.sort((a,b) => a.sortNum - b.sortNum));
