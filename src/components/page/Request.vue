@@ -149,231 +149,7 @@
       </el-table>
     </el-row>
 
-    <el-dialog title="补充／修改分期申请" :visible.sync="formVisible">
-      <el-form :model="form" ref="form" :rules="rules">
-        <el-row>
-          <el-col :span="8">
-            <el-form-item label="经纪人：" :label-width="formLabelWidth">
-              <span>{{ form.responsibleAgent }}</span>
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item label="申请日期：" :label-width="formLabelWidth">
-              <span>{{ form.applyDate | dateFormat }}</span>
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item label="申请状态：" :label-width="formLabelWidth">
-              <span>{{ form.status | appStatusFormat }}</span>
-            </el-form-item>
-          </el-col>
-          <hr style="border-bottom-color: #d9d9d9; border-top: none;">
-        </el-row>
-        <el-row>
-          <el-col :span="8">
-            <el-form-item label="月租金：" :label-width="formLabelWidth" prop="monthlyRent">
-              <el-input v-model="form.monthlyRent"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item label="起租日期：" :label-width="formLabelWidth" prop="startDate">
-              <el-date-picker
-                v-model="form.startDate"
-                type="date"
-                placeholder="选择日期"
-                :default-value="form.startDate">
-              </el-date-picker>
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item label="退租日期：" :label-width="formLabelWidth" prop="endDate">
-              <el-date-picker
-                v-model="form.endDate"
-                type="date"
-                placeholder="退租日期"
-                :default-value="form.endDate">
-              </el-date-picker>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="8">
-            <el-form-item label="租期：" :label-width="formLabelWidth" prop="rentPeriod">
-              <span>{{ form.rentPeriod }} 个月</span>
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item label="台账号：" :label-width="formLabelWidth" prop="apartmentNo">
-              <el-input v-model="form.apartmentNo"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item label="省市区（县）：" :label-width="formLabelWidth" prop="selectedOptions">
-              <el-cascader
-                :options="options"
-                v-model="selectedOptions"
-                @change="handleChange">
-              </el-cascader>
-            </el-form-item>
-          </el-col>
-          <!--<hr style="border-bottom-color: #d9d9d9; border-top: none;">-->
-        </el-row>
-        <el-row>
-          <el-col :span="16">
-            <el-form-item label="房屋信息：" :label-width="formLabelWidth" prop="address">
-              <el-input v-model="form.address"></el-input>
-            </el-form-item>
-          </el-col>
-          <!--<hr style="border-bottom-color: #d9d9d9; border-top: none;">-->
-        </el-row>
-        <el-row>
-          <el-col :span="8">
-            <el-form-item label="租客姓名：" :label-width="formLabelWidth">
-              <span>{{ form.customerName }}</span>
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item label="身份证号：" :label-width="formLabelWidth">
-              <span>{{ form.idCardNo }}</span>
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item label="手机号：" :label-width="formLabelWidth">
-              <span>{{ form.mobile }}</span>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="8">
-            <el-form-item label="最高学历：" :label-width="formLabelWidth" prop="education">
-              <el-select v-model="form.education">
-                <el-option label="专科及以下" value="CollegeDown"></el-option>
-                <el-option label="本科" value="Undergraduate"></el-option>
-                <el-option label="硕士及以上" value="PostgraduateUp"></el-option>
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item label="工作单位：" :label-width="formLabelWidth" prop="companyName">
-              <el-input v-model="form.companyName"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item label="单位地址：" :label-width="formLabelWidth" prop="companyAddress">
-              <el-input v-model="form.companyAddress"></el-input>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="8">
-            <el-form-item label="开户银行：" :label-width="formLabelWidth" prop="bankAccount">
-              <span>{{ form.bankAccount }}</span>
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item label="银行卡号：" :label-width="formLabelWidth" prop="bankCard">
-              <span>{{ form.bankCard }}</span>
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item label="应急联系人：" :label-width="formLabelWidth" prop="emergencyContact">
-              <el-input v-model="form.emergencyContact"></el-input>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="8">
-            <el-form-item label="手机号：" :label-width="formLabelWidth" prop="emergencyContactMobile">
-              <el-input v-model="form.emergencyContactMobile"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item label="关系：" :label-width="formLabelWidth" prop="relation">
-              <el-select v-model="form.relation">
-                <el-option label="父母" value="Parent"></el-option>
-                <el-option label="同事" value="Fellow"></el-option>
-                <el-option label="朋友" value="Friend"></el-option>
-                <el-option label="其他" value="Relatives"></el-option>
-              </el-select>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row :gutter="20">
-          <el-col :span="3">
-            <el-form-item label="身份证照片：">
-            </el-form-item>
-          </el-col>
-          <el-col :span="7">
-            <el-upload
-              class="avatar-uploader"
-              :action="uploadUrl"
-              :data="postData"
-              :show-file-list="false"
-              :before-upload="beforeUpload"
-              :on-success="uploadFrontSuccess"
-              :on-error="handleUploadError">
-              <img v-show="idCardFrontPhoto" :src="photo(idCardFrontPhoto)" class="avatar">
-              <i v-show="!idCardFrontPhoto" class="el-icon-plus avatar-uploader-icon"></i>
-              <div class="el-upload__tip" slot="tip">身份证正面</div>
-            </el-upload>
-          </el-col>
-          <el-col :span="7">
-            <el-upload
-              class="avatar-uploader"
-              :action="uploadUrl"
-              :data="postData"
-              :show-file-list="false"
-              :before-upload="beforeUpload"
-              :on-success="uploadVersoSuccess"
-              :on-error="handleUploadError">
-              <img v-show="idCardVersoPhoto" :src="photo(idCardVersoPhoto)" class="avatar">
-              <i v-show="!idCardVersoPhoto" class="el-icon-plus avatar-uploader-icon"></i>
-              <div class="el-upload__tip" slot="tip">身份证反面</div>
-            </el-upload>
-          </el-col>
-          <el-col :span="7">
-            <el-upload
-              class="avatar-uploader"
-              :action="uploadUrl"
-              :data="postData"
-              :show-file-list="false"
-              :before-upload="beforeUpload"
-              :on-success="uploadPersonSuccess"
-              :on-error="handleUploadError">
-              <img v-show="idCardAndPersonPhoto" :src="photo(idCardAndPersonPhoto)" class="avatar">
-              <i v-show="!idCardAndPersonPhoto" class="el-icon-plus avatar-uploader-icon"></i>
-              <div class="el-upload__tip" slot="tip">手持身份证照片</div>
-            </el-upload>
-          </el-col>
-        </el-row>
-        <el-row :gutter="20">
-          <el-col :span="4">
-            <el-form-item label="租房合同照片：">
-            </el-form-item>
-          </el-col>
-          <el-col :span="20">
-            <el-upload
-              :file-list="fileList2"
-              :action="uploadUrl"
-              :data="postData"
-              list-type="picture-card"
-              :on-preview="handlePreview"
-              :before-upload="beforeUpload"
-              :on-success="uploadContractSuccess"
-              :on-error="handleUploadError"
-              :on-remove="handleRemove">
-              <!--<img v-show="contractPhotos" :src="photo(item)" class="avatar">-->
-              <i class="el-icon-plus"></i>
-            </el-upload>
-          </el-col>
-        </el-row>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="resetForm('form')">取 消</el-button>
-        <el-button type="primary" @click="submitApp('form')">保 存</el-button>
-        <el-button type="primary" @click="submitApp2('form')">提交审核</el-button>
-      </div>
-    </el-dialog>
+
 
     <el-dialog
       title="大图"
@@ -391,7 +167,7 @@
       <p>此操作将取消该申请，确认操作？</p>
       <span slot="footer" class="dialog-footer">
                 <el-button @click="dialogVisible=false">取 消</el-button>
-                <el-button type="primary">确 定</el-button>
+                <el-button type="primary" @click="cancel()">确 定</el-button>
             </span>
     </el-dialog>
     <!--遮罩层-->
@@ -415,19 +191,19 @@
       </div>
       <content>
         <div style="width: 100%;text-align: center;margin-bottom: 5px">
-          <el-button style="float: left;padding: 5px 15px" @click="prev()" :disabled="!tableData[index-1]"><i
+          <el-button style="float: left;padding: 5px 15px" @click="prev()" :disabled="!tableData[currentIndex-1]"><i
             style="font-size: x-large;vertical-align: sub" class="fa fa-angle-left" aria-hidden="true"></i>上一条
           </el-button>
           <el-button v-if="searchForm.status[0] === 'Unchecked'" type="info">临时保存</el-button>
-          <el-button v-if="searchForm.status[0] === 'Unchecked'" type="success">提交审批</el-button>
-          <el-button v-if="searchForm.status[0] === 'Unchecked'" type="warning">取消申请</el-button>
+          <el-button v-if="searchForm.status[0] === 'Unchecked'" type="success" @click="submit">提交审批</el-button>
+          <el-button v-if="searchForm.status[0] === 'Unchecked'" type="warning" @click="dialogVisible = true">取消申请</el-button>
           <el-button v-if="searchForm.status[0] === 'Unconfirmed'" type="warning">撤回</el-button>
           <el-button v-if="searchForm.status[0] === 'Repayment' || searchForm.status[0] === 'Breach'" type="warning">
             提前退租
           </el-button>
           <el-button v-if="searchForm.status[0] !== 'Finished' && searchForm.status[0] !== 'Inadvancefinished'">转单
           </el-button>
-          <el-button style="float: right;padding: 5px 15px" @click="next()" :disabled="!tableData[index+1]">下一条<i
+          <el-button style="float: right;padding: 5px 15px" @click="next()" :disabled="!tableData[currentIndex+1]">下一条<i
             style="font-size: x-large;vertical-align: sub" class="fa fa-angle-right" aria-hidden="true"></i></el-button>
         </div>
         <div
@@ -532,8 +308,7 @@
                   <el-form-item label="房屋信息：" :label-width="formLabelWidth" prop="selectedOptions">
                     <el-cascader
                       :options="options"
-                      v-model="selectedOptions"
-                      @change="handleChange">
+                      v-model="selectedOptions">
                     </el-cascader>
                   </el-form-item>
                 </el-col>
@@ -548,7 +323,7 @@
               <el-row>
                 <el-col>
                   <el-form-item label="台账号码：" :label-width="formLabelWidth" prop="apartmentNo">
-                    <el-input v-model="form.apartmentNo"></el-input>
+                    <el-input v-model="currentRow.apartmentNo"></el-input>
                   </el-form-item>
                 </el-col>
               </el-row>
@@ -557,7 +332,7 @@
               <el-row>
                 <el-col :span="10">
                   <el-form-item label="学历信息：" :label-width="formLabelWidth" prop="education">
-                    <el-select v-model="form.education">
+                    <el-select v-model="currentRow.education">
                       <el-option label="专科及以下" value="CollegeDown"></el-option>
                       <el-option label="本科" value="Undergraduate"></el-option>
                       <el-option label="硕士及以上" value="PostgraduateUp"></el-option>
@@ -566,31 +341,31 @@
                 </el-col>
                 <el-col :span="10">
                   <el-form-item label="应急联系：" :label-width="formLabelWidth" prop="emergencyContact">
-                    <el-input v-model="form.emergencyContact"></el-input>
+                    <el-input v-model="currentRow.emergencyContact"></el-input>
                   </el-form-item>
                 </el-col>
               </el-row>
               <el-row>
                 <el-col :span="10">
                   <el-form-item label="工作单位：" :label-width="formLabelWidth" prop="companyName">
-                    <el-input v-model="form.companyName"></el-input>
+                    <el-input v-model="currentRow.companyName"></el-input>
                   </el-form-item>
                 </el-col>
                 <el-col :span="10">
                   <el-form-item label="联系方式：" :label-width="formLabelWidth" prop="emergencyContactMobile">
-                    <el-input v-model="form.emergencyContactMobile"></el-input>
+                    <el-input v-model="currentRow.emergencyContactMobile"></el-input>
                   </el-form-item>
                 </el-col>
               </el-row>
               <el-row>
                 <el-col :span="10">
                   <el-form-item label="单位地址：" :label-width="formLabelWidth" prop="companyAddress">
-                    <el-input v-model="form.companyAddress"></el-input>
+                    <el-input v-model="currentRow.companyAddress"></el-input>
                   </el-form-item>
                 </el-col>
                 <el-col :span="10">
                   <el-form-item label="双方关系：" :label-width="formLabelWidth" prop="relation">
-                    <el-select v-model="form.relation">
+                    <el-select v-model="currentRow.relation">
                       <el-option label="父母" value="Parent"></el-option>
                       <el-option label="同事" value="Fellow"></el-option>
                       <el-option label="朋友" value="Friend"></el-option>
@@ -615,8 +390,8 @@
                     :before-upload="beforeUpload"
                     :on-success="uploadFrontSuccess"
                     :on-error="handleUploadError">
-                    <img v-show="idCardFrontPhoto" :src="photo(idCardFrontPhoto)" class="avatar">
-                    <i v-show="!idCardFrontPhoto" class="el-icon-plus avatar-uploader-icon"></i>
+                    <img v-show="currentRow.idCardFrontPhoto" :src="photo(currentRow.idCardFrontPhoto)" class="avatar">
+                    <i v-show="!currentRow.idCardFrontPhoto" class="el-icon-plus avatar-uploader-icon"></i>
                     <div class="el-upload__tip" slot="tip">身份证正面</div>
                   </el-upload>
                 </el-col>
@@ -629,8 +404,8 @@
                     :before-upload="beforeUpload"
                     :on-success="uploadVersoSuccess"
                     :on-error="handleUploadError">
-                    <img v-show="idCardVersoPhoto" :src="photo(idCardVersoPhoto)" class="avatar">
-                    <i v-show="!idCardVersoPhoto" class="el-icon-plus avatar-uploader-icon"></i>
+                    <img v-show="currentRow.idCardVersoPhoto" :src="photo(currentRow.idCardVersoPhoto)" class="avatar">
+                    <i v-show="!currentRow.idCardVersoPhoto" class="el-icon-plus avatar-uploader-icon"></i>
                     <div class="el-upload__tip" slot="tip">身份证反面</div>
                   </el-upload>
                 </el-col>
@@ -643,8 +418,8 @@
                     :before-upload="beforeUpload"
                     :on-success="uploadPersonSuccess"
                     :on-error="handleUploadError">
-                    <img v-show="idCardAndPersonPhoto" :src="photo(idCardAndPersonPhoto)" class="avatar">
-                    <i v-show="!idCardAndPersonPhoto" class="el-icon-plus avatar-uploader-icon"></i>
+                    <img v-show="currentRow.idCardAndPersonPhoto" :src="photo(currentRow.idCardAndPersonPhoto)" class="avatar">
+                    <i v-show="!currentRow.idCardAndPersonPhoto" class="el-icon-plus avatar-uploader-icon"></i>
                     <div class="el-upload__tip" slot="tip">手持身份证照片</div>
                   </el-upload>
                 </el-col>
@@ -725,7 +500,7 @@
             </el-tab-pane>
             <el-tab-pane v-if="radio === 'Returned'" label="审批备注" name="remarks">
               <!--{{currentRow.confirmRemarks}}-->
-              <span style="color: red;">身份证已过期</span>
+              <span style="color: red;">{{currentRow.confirmRemarks}}</span>
             </el-tab-pane>
           </el-tabs>
         </el-row>
@@ -767,6 +542,7 @@
     mixins: [qiniu],
     data() {
       return {
+        currentIndex: 0,//选中当前行的索引
         checkboxList: ['Inadvancefinished', 'EarlyRetirement'],
         pullBloor: false,//控制拉扇是否显示
         current1: 0,//照片初始化旋转角度默认0
@@ -837,29 +613,21 @@
           status: ['Unchecked']
         },
         form: {
-          responsibleAgent: '',
-          applyDate: '',
-          status: '',
-          monthlyRent: '',
-          rentPeriod: '',
-          startDate: '',
-          endDate: '',
-          address: '',
-          customerName: '',
-          idCardNo: '',
-          mobile: '',
+          applicationNo: '',
+          address:'',
+          apartmentNo:'',
           education: '',
-          companyName: '',
-          companyAddress: '',
-          bankAccount: '',
-          bankCard: '',
           emergencyContact: '',
+          companyName: '',
           emergencyContactMobile: '',
+          companyAddress: '',
           relation: '',
-          idCardFrontPhoto: '',
-          idCardVersoPhoto: '',
           idCardAndPersonPhoto: '',
-          contractPhotos: []
+          idCardVersoPhoto: '',
+          contractPhotos: [],
+          province:'',
+          city: '',
+          district: ''
         },
         formLabelWidth: '82px',
         pickerOptions: {
@@ -1029,6 +797,45 @@
       },
     },
     methods: {
+      //上一条
+      prev() {
+        //跳转到上一条
+        this.currentIndex = this.currentIndex - 1;
+        this.currentRow = this.tableData[this.currentIndex]
+      },
+      //下一条
+      next() {
+        //跳转到下一条
+        this.currentIndex = this.currentIndex + 1;
+        this.currentRow = this.tableData[this.currentIndex]
+      },
+      //取消申请
+      cancel() {
+        this.axios.put('/api/v2/applications/cancle/'+this.currentRow.id).then((res) => {
+          this.dialogVisible = false;
+          this.loading = true;
+          this.axios.post(this.url, {
+            ...this.searchForm,
+            page: this.cur_page - 1,
+            size: this.size
+          }).then((res) => {
+            this.tableData = res.data.data.content;
+            this.currentRow = this.tableData[this.currentIndex];
+            this.totalElements = res.data.data.totalElements;
+            this.loading = false;
+            console.log(this.currentIndex);
+            console.log(this.currentRow);
+            //跳转到下一条 请求成功时才执行
+            if(this.tableData[this.currentIndex] === undefined) {
+              this.$message.success('数据处理完毕！');
+            }
+          }).catch((error) => {
+            this.$message.error(error.response.data.message);
+          });
+        }).catch((error) => {
+          this.$message.error(error.response.data.message);
+        })
+      },
       //切换多选框
       checkboxChange() {
         let form = {
@@ -1185,13 +992,6 @@
           this.$message.error(error.response.data.message);
         });
       },
-      //切换省市区
-      handleChange(value) {
-        //把省市县的值带到后台
-        this.form.province = this.selectedOptions[0];
-        this.form.city = this.selectedOptions[1];
-        this.form.district = this.selectedOptions[2];
-      },
       //显示大图
       showBigPhoto(token) {
         this.bigPhotoUrl = this.qiniu + token + '?imageMogr2/auto-orient';
@@ -1203,9 +1003,13 @@
           return this.qiniu + token + '?imageMogr2/auto-orient|imageView2/1';
         }
       },
-      submitApp(formName) {
+      submit(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
+            //把省市县的值带到后台
+            this.form.province = this.selectedOptions[0];
+            this.form.city = this.selectedOptions[1];
+            this.form.district = this.selectedOptions[2];
             let application = this.form;
             application.idCardFrontPhoto = this.idCardFrontPhoto;
             application.idCardVersoPhoto = this.idCardVersoPhoto;
@@ -1214,30 +1018,6 @@
             application.startDate = format(this.form.startDate, 'YYYY-MM-DD');
             application.endDate = format(this.form.endDate, 'YYYY-MM-DD');
             this.axios.put('/api/v1/application', application).then((res) => {
-              this.getData();
-              this.$refs[formName].resetFields();
-              this.formVisible = false;
-            }).catch((error) => {
-              this.$message.error(error.response.data.message);
-            })
-          } else {
-            console.log('error submit!!');
-            return false;
-          }
-        });
-      },
-      submitApp2(formName) {
-        this.$refs[formName].validate((valid) => {
-          if (valid) {
-            let application = this.form;
-            application.idCardFrontPhoto = this.idCardFrontPhoto;
-            application.idCardVersoPhoto = this.idCardVersoPhoto;
-            application.idCardAndPersonPhoto = this.idCardAndPersonPhoto;
-            application.contractPhotos = this.contractPhotos;
-            application.startDate = format(this.form.startDate, 'YYYY-MM-DD');
-            application.endDate = format(this.form.endDate, 'YYYY-MM-DD');
-            application.commit = true;
-            this.axios.post('/api/v1/application/commit', application).then((res) => {
               this.getData();
               this.$refs[formName].resetFields();
               this.formVisible = false;
@@ -1285,74 +1065,63 @@
       },
       //点击每一行
       handleCurrentRow(val) {
-        console.log(val);
+        this.fileList2 = [];//清空已有数据，防止合同照片累加
+        this.currentIndex = this.tableData.indexOf(val);
         this.reason = [];
         let that = this;
-        if (val === null) {
-          this.currentRow = {
-            responsibleAgent: '',
-            applyDate: '',
-            status: '',
-            monthlyRent: '',
-            rentPeriod: '',
-            startDate: '',
-            address: '',
-            customerName: '',
-            idCardNo: '',
-            mobile: '',
-            education: '',
-            companyName: '',
-            companyAddress: '',
-            bankAccount: '',
-            bankCard: '',
-            emergencyContact: '',
-            emergencyContactMobile: '',
-            relation: '',
+        this.pullBloor = true;
+        this.cover = true;
+        Vue.nextTick(function () {
+          document.querySelector('.hiddenForm').className = 'daveShow hiddenForm el-form demo-table-expand el-form--label-left el-form--inline';
+        });
+        if (this.currentRow.idCardFrontOrVersoPhotoBlur) {
+          this.reason.push('idCardFrontOrVersoPhotoBlur')
+        }
+        if (this.currentRow.idCardAndPersonPhotoBlur) {
+          this.reason.push('idCardAndPersonPhotoBlur')
+        }
+        if (this.currentRow.contractPhotoBlur) {
+          this.reason.push('contractPhotoBlur')
+        }
+        if (this.currentRow.addressBlur) {
+          this.reason.push('addressBlur')
+        }
+        if (this.currentRow.customerInfoError) {
+          this.reason.push('customerInfoError')
+        }
+        if (this.currentRow.otherException) {
+          this.reason.push('otherException')
+        }
+        //这里处理省市县的id
+        json.forEach((item) => {
+          //省
+          if (that.currentRow.province === item.value) {
+            that.currentRow.provinceName = item.label + '/';
+            //市
+            item.children.forEach((item) => {
+              if (that.currentRow.city === item.value) {
+                that.currentRow.cityName = item.label + '/';
+                //县
+                item.children.forEach((item) => {
+                  if (that.currentRow.district === item.value) {
+                    that.currentRow.districtName = item.label;
+                  }
+                })
+              }
+            })
           }
-        } else {
-          this.pullBloor = true;
-          this.cover = true;
-          Vue.nextTick(function () {
-            document.querySelector('.hiddenForm').className = 'daveShow hiddenForm el-form demo-table-expand el-form--label-left el-form--inline';
-          });
-          this.currentRow = val;
-          if (this.currentRow.idCardFrontOrVersoPhotoBlur) {
-            this.reason.push('idCardFrontOrVersoPhotoBlur')
-          }
-          if (this.currentRow.idCardAndPersonPhotoBlur) {
-            this.reason.push('idCardAndPersonPhotoBlur')
-          }
-          if (this.currentRow.contractPhotoBlur) {
-            this.reason.push('contractPhotoBlur')
-          }
-          if (this.currentRow.addressBlur) {
-            this.reason.push('addressBlur')
-          }
-          if (this.currentRow.customerInfoError) {
-            this.reason.push('customerInfoError')
-          }
-          if (this.currentRow.otherException) {
-            this.reason.push('otherException')
-          }
-          //这里处理省市县的id
-          json.forEach((item) => {
-            //省
-            if (that.currentRow.province === item.value) {
-              that.currentRow.provinceName = item.label + '/';
-              //市
-              item.children.forEach((item) => {
-                if (that.currentRow.city === item.value) {
-                  that.currentRow.cityName = item.label + '/';
-                  //县
-                  item.children.forEach((item) => {
-                    if (that.currentRow.district === item.value) {
-                      that.currentRow.districtName = item.label;
-                    }
-                  })
-                }
-              })
-            }
 
+        });
+        console.log(val);
+        this.currentRow = Object.assign({}, val);
+        //回显省市区
+        this.selectedOptions = [this.currentRow.province,this.currentRow.city,this.currentRow.district];
+        //照片回显
+        if(val.contractPhotos) {
+          val.contractPhotos.forEach(item => {
+            let obj = {};
+            obj.url = that.photo(item);
+            that.fileList2.push(obj);
           });
         }
       },
