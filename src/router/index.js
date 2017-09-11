@@ -64,6 +64,11 @@ export default new Router({
           path: '/homeManager',
           meta: { requiresAuth: true },
           component: resolve => require(['components/page/HomeManager'], resolve)
+        },
+        {
+          path: '/log',
+          meta: { requiresAuth: true },
+          component: resolve => require(['components/page/Log'], resolve)
         }
       ]
     },
