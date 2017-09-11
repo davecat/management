@@ -1,25 +1,25 @@
 <template>
   <div>
-    <el-row>
+    <el-row style="margin-bottom: -15px">
       <el-form :inline="true" :model="searchForm">
         <el-form-item>
           <el-input v-model="searchForm.name" placeholder="中介名称"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="Search">查询</el-button>
+          <el-button  @click="Search">查询</el-button>
         </el-form-item>
-        <el-form-item style="float: right">
-          <el-button type="primary" @click="formVisible = true">新增</el-button>
+        <el-form-item style="float: right;margin-right: 0">
+          <el-button type="success" @click="formVisible = true">新增中介</el-button>
         </el-form-item>
       </el-form>
     </el-row>
     <el-row style="margin-bottom: 10px;height: 33px;">
       <el-checkbox-group v-model="searchForm.enabled" @change="Search"
-                         style="float: left; margin-top: 12px; min-width: 150px;">
+                         style="float: left; margin-top: 7px; min-width: 150px;">
         <el-checkbox label="true">启用</el-checkbox>
         <el-checkbox label="false">停用</el-checkbox>
       </el-checkbox-group>
-      <div class="pagination" style="position: absolute; right: 0; top: 0; margin: 0;">
+      <div class="pagination" style="position: absolute; right: 0; top: 2px; margin: 0;">
         <el-pagination
           @current-change="handleCurrentChange"
           layout="total, prev, pager, next"
@@ -33,7 +33,9 @@
         :data="tableData"
         tooltip-effect="dark"
         style="width: 100%">
-        <el-table-column type="selection" width="50">
+        <el-table-column
+          type="index"
+          width="50">
         </el-table-column>
         <el-table-column
           min-width="100"
@@ -75,7 +77,7 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="操作" min-width="81">
+        <el-table-column label="操作" min-width="82">
           <template scope="scope">
             <el-tooltip class="item" effect="dark" content="修改" placement="top-end">
               <el-button size="small" type="primary"

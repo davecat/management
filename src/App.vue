@@ -30,9 +30,14 @@ a{text-decoration: none}
 .content{
   background: none repeat scroll 0 0 #fff;
   width: auto;
-  padding:40px;
+  padding:30px;
   box-sizing: border-box;
-  overflow-y: scroll;
+  overflow: auto;
+  /*min-width: 700px;*/
+
+}
+.el-pagination {
+  padding: 2px 0;
 }
 .crumbs{
   margin-bottom: 20px;
