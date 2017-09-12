@@ -103,22 +103,22 @@
     <el-dialog title="新增门店" :visible.sync="formVisible">
       <el-form :model="form" ref="form" :rules="rules">
         <!--只有当登录人为内部员工时候才显示-->
-        <el-form-item label="所属中介" :label-width="formLabelWidth" prop="agencyId" v-if="staff.staffType === 'Interior'">
+        <el-form-item label="所属中介：" :label-width="formLabelWidth" prop="agencyId" v-if="staff.staffType === 'Interior'">
           <el-select v-model="form.agencyId">
             <el-option v-for="agency in agencyList" :key="agency.id" :label="agency.name"
                        :value="agency.id"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="门店名称" :label-width="formLabelWidth" prop="name">
+        <el-form-item label="门店名称：" :label-width="formLabelWidth" prop="name">
           <el-input v-model="form.name"></el-input>
         </el-form-item>
-        <el-form-item label="省市区（县）" :label-width="formLabelWidth" prop="selectedOptions">
+        <el-form-item label="省市区（县）：" :label-width="formLabelWidth" prop="selectedOptions">
           <el-cascader
             :options="options"
             v-model="selectedOptions">
           </el-cascader>
         </el-form-item>
-        <el-form-item label="详细地址" :label-width="formLabelWidth" prop="address">
+        <el-form-item label="详细地址：" :label-width="formLabelWidth" prop="address">
           <el-input v-model="form.address"></el-input>
         </el-form-item>
       </el-form>
@@ -130,16 +130,16 @@
 
     <el-dialog title="修改门店" :visible.sync="formVisible2">
       <el-form :model="form2" ref="form2" :rules="rules">
-        <el-form-item label="门店名称" :label-width="formLabelWidth" prop="name">
+        <el-form-item label="门店名称：" :label-width="formLabelWidth" prop="name">
           <el-input v-model="form2.name"></el-input>
         </el-form-item>
-        <el-form-item label="省市区（县）" :label-width="formLabelWidth" prop="selectedOptions">
+        <el-form-item label="省市区（县）：" :label-width="formLabelWidth" prop="selectedOptions">
           <el-cascader
             :options="options"
             v-model="selectedOptions">
           </el-cascader>
         </el-form-item>
-        <el-form-item label="详细地址" :label-width="formLabelWidth" prop="address">
+        <el-form-item label="详细地址：" :label-width="formLabelWidth" prop="address">
           <el-input v-model="form2.address"></el-input>
         </el-form-item>
       </el-form>
@@ -209,7 +209,7 @@
         dialogQRCode: false,
         disabledId: '',
         qrCodeUrl: 'http://images.tmtpost.com/uploads/images/2014/14/report/30519/mac600.jpg',
-        formLabelWidth: '156px',
+        formLabelWidth: '120px',
         rules: {
           agencyId: [{required: true, message: '请选择中介', trigger: 'change'}],
           name: [{required: true, message: '请输入门店名称', trigger: 'blur'}],
@@ -479,5 +479,8 @@
     font-size: 14px;
     background-color: transparent;
     color: #000;
+  }
+  .el-cascader {
+    width: 100%;
   }
 </style>
