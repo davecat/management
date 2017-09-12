@@ -7,7 +7,19 @@ import router from './router'
 import VueAxios from 'vue-axios';
 // 设置axios支持set cookies
 axios.defaults.withCredentials = true;
+// 添加axios全局拦截器-请求
+axios.interceptors.request.use(function (config) {
+    if (localStorage.getItem('token')) {  // 判断是否存在token，如果存在的话，则每个http header都加上token
+        config.headers.Authorization = localStorage.getItem('token');
+    }
+    return config;
+}, function (error) {
+    // Do something with request error
+    return Promise.reject(error);
+});
+//返回拦截器
 axios.interceptors.response.use(function (response) {
+  localStorage.setItem('token',response.headers.auth)
   return response;
 }, function (error) {
   if  (401 === error.response.status) {
@@ -30,8 +42,10 @@ router.beforeEach((to, from, next) => {
   }
   if(to.matched.some(record => record.meta.requiresAuth)) {
     const token = localStorage.getItem('token');
+    console.log(token);
+    // next({path: '/login'});
     if (!token || token === null) {
-      next({path: '/login'})
+      next({path: '/home'})
     } else {
       //vuex menu 赋值
       Vue.axios.get("/api/v2/menus").then((response) => {
@@ -43,7 +57,7 @@ router.beforeEach((to, from, next) => {
         console.log(error);
       });
       //staff  赋值
-      Vue.axios.get("/api/v1/user/current").then((response) => {
+      Vue.axios.get("/api/v2/users/current").then((response) => {
         let staff = response.data;
         store.dispatch('get_staff', staff);
       }).catch((error) => {

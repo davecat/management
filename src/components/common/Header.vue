@@ -3,7 +3,7 @@
         <i class="fa fa-bars" id="dave"></i>
         <div class="logo">后台管理系统</div>
         <div class="user-info">
-            <span class="username">你好，{{staff.staffName}}</span>
+            <span class="username">你好，{{staff.nickname}}</span>
             <i class="fa fa-sign-out logout" @click="doLogout"></i>
         </div>
     </div>

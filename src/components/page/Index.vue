@@ -267,11 +267,12 @@
         },
         created() {
             this.init();
-            this.axios.get("/api/v1/user/current").then((response) => {
+            this.axios.get("/api/v2/users/current").then((response) => {
                 this.staff = response.data;
-                if(this.staff.staffType === 'Interior') {
-                    this.getWeekData();
-                    this.getMapByWeek();
+              console.log(this.staff);
+              if(this.staff.staffType === 'Interior') {
+//                    this.getWeekData();
+//                    this.getMapByWeek();
                 }
             }).catch((error) => {
                 console.log(error);
@@ -581,14 +582,14 @@
                 }
             },
             init() {
-                this.axios.get('/api/v1/application/getAgentApplicationStatistics').then((res) => {
-                    this.total = res.data.total;
-                    this.today = res.data.today;
-                    this.week = res.data.week;
-                    this.month = res.data.month;
-                }).catch((error) => {
-                    console.log(error);
-                });
+//                this.axios.get('/api/v1/application/getAgentApplicationStatistics').then((res) => {
+//                    this.total = res.data.total;
+//                    this.today = res.data.today;
+//                    this.week = res.data.week;
+//                    this.month = res.data.month;
+//                }).catch((error) => {
+//                    console.log(error);
+//                });
             },
             drawLine(id) {
                 let that = this;
