@@ -238,7 +238,7 @@
             submitRole(formName) {
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
-                        this.axios.post('/api/v1/role', this.form).then((res) => {
+                        this.axios.post('/api/v2/roles', this.form).then((res) => {
                             this.getData();
                             this.$refs[formName].resetFields();
                             this.formVisible = false;
