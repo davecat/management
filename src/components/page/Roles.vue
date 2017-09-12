@@ -1,20 +1,20 @@
 <template>
     <div>
-        <el-row>
+        <el-row style="margin-bottom: -15px">
           <el-form  :inline="true" :model="searchForm">
             <el-form-item>
               <el-input  placeholder="角色名称"></el-input>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" @click="Search">查询</el-button>
+              <el-button @click="Search">查询</el-button>
             </el-form-item>
-            <el-form-item style="float: right">
-              <el-button type="primary" @click="formVisible = true;">新增</el-button>
+            <el-form-item style="float: right;margin-right: 0">
+              <el-button type="success" @click="formVisible = true;">新增角色</el-button>
             </el-form-item>
           </el-form>
         </el-row>
-        <el-row style="margin-bottom: 10px;height: 33px;">
-          <div class="pagination" style="position: absolute; right: 0; top: 0; margin: 0;">
+        <el-row style="margin-bottom: 10px;height: 28px;">
+          <div class="pagination" style="position: absolute; right: 0; top: -1px; margin: 0;">
             <el-pagination
               @current-change="handleCurrentChange"
               layout="total, prev, pager, next"

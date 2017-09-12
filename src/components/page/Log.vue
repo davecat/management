@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-row>
+    <el-row style="margin-bottom: -15px">
       <el-form :inline="true" :model="searchForm">
         <el-form-item>
           <el-date-picker
@@ -21,8 +21,8 @@
         </el-form-item>
       </el-form>
     </el-row>
-    <el-row style="margin-bottom: 10px;height: 33px">
-      <div class="pagination" style="position: absolute;right: 0;top: 0;margin: 0">
+    <el-row style="margin-bottom: 10px;height: 28px">
+      <div class="pagination" style="position: absolute;right: 0;top: -1px;margin: 0">
         <el-pagination
           @current-change="handleCurrentChange"
           layout="total, prev, pager, next"

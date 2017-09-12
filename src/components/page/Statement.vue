@@ -6,7 +6,7 @@
         <el-tab-pane label="中退清算" name="Canceled"></el-tab-pane>
       </el-tabs>
     </el-row>
-    <el-row>
+    <el-row style="margin-bottom: -15px">
       <el-form :inline="true" :model="searchForm">
         <el-form-item>
           <el-date-picker
@@ -21,18 +21,20 @@
           <el-input v-model="searchForm.customerName" placeholder="申请编号或租客姓名"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="Search">查询</el-button>
+          <el-button @click="Search">查询</el-button>
         </el-form-item>
-        <el-form-item style="float: right">
-          <el-button type="primary" @click="exportCSV()">导出</el-button>
+        <el-form-item style="float: right;margin-right: 0">
+          <el-tooltip class="item" effect="dark" content="导出" placement="top-start">
+            <el-button type="info" @click="exportCSV()"><i class="fa fa-download" aria-hidden="true"></i></el-button>
+          </el-tooltip>
         </el-form-item>
       </el-form>
     </el-row>
     <el-row style="margin-bottom: 10px">
-      <el-col :span="4" style="float: left;margin-top: 12px;color: red;min-width: 150px">
+      <el-col :span="4" style="float: left;margin-top: 7px;color: red;min-width: 150px">
         应收合计:{{ sumPayeeAmount | currency}}
       </el-col>
-      <div class="pagination" style="position: absolute;right: 0;top: 0;margin: 0">
+      <div class="pagination" style="position: absolute;right: 0;top: -1px;margin: 0">
         <el-pagination
           @current-change="handleCurrentChange"
           layout="total, prev, pager, next"

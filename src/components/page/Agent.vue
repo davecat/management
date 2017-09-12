@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-row>
+    <el-row style="margin-bottom: -15px">
       <el-form :inline="true" :model="form">
         <el-form-item>
           <el-select v-model="searchForm.cityId" filterable @change="getBranchList(searchForm.cityId)"
@@ -16,22 +16,24 @@
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="Search">查询</el-button>
+          <el-button  @click="Search">查询</el-button>
         </el-form-item>
-        <el-form-item style="float: right">
-          <el-button type="primary" @click="exportCSV()">导出</el-button>
+        <el-form-item style="float: right;margin-right: 0">
+          <el-tooltip class="item" effect="dark" content="导出" placement="top-start">
+            <el-button type="info" @click="exportCSV()"><i class="fa fa-download" aria-hidden="true"></i></el-button>
+          </el-tooltip>
         </el-form-item>
       </el-form>
     </el-row>
     <el-row style="margin-bottom: 10px">
       <el-checkbox-group v-model="searchForm.status" @change="Search"
-                         style="float: left;margin-top: 12px;min-width: 280px">
+                         style="float: left;margin-top: 7px;min-width: 280px">
         <el-checkbox label="Pending">待审批</el-checkbox>
         <el-checkbox label="Enabled">启用</el-checkbox>
         <el-checkbox label="Disable">停用</el-checkbox>
         <el-checkbox label="NoPass">拒绝</el-checkbox>
       </el-checkbox-group>
-      <div class="pagination" style="position: absolute; right: 0; top: 0; margin: 0;">
+      <div class="pagination" style="position: absolute; right: 0; top: -1px; margin: 0;">
         <el-pagination
           @current-change="handleCurrentChange"
           layout="total, prev, pager, next"

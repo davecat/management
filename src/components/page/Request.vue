@@ -15,7 +15,7 @@
         <el-tab-pane label="提前退租" name="RetirementFinished"></el-tab-pane>
       </el-tabs>
     </el-row>
-    <el-row>
+    <el-row style="margin-bottom: -15px">
       <el-form :inline="true" :model="searchForm">
         <el-form-item>
           <el-input v-model="searchForm.customerOrAppNoValue" placeholder="申请编号或租客姓名"></el-input>
@@ -34,26 +34,28 @@
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="Search">查询</el-button>
+          <el-button @click="Search">查询</el-button>
         </el-form-item>
-        <el-form-item style="float: right">
-          <el-button type="primary" @click="exportCSV()">导出</el-button>
+        <el-form-item style="float: right;margin-right: 0">
+          <el-tooltip class="item" effect="dark" content="导出" placement="top-start">
+            <el-button type="info" @click="exportCSV()"><i class="fa fa-download" aria-hidden="true"></i></el-button>
+          </el-tooltip>
         </el-form-item>
       </el-form>
     </el-row>
-    <el-row style="margin-bottom: 10px;height: 33px;">
+    <el-row style="margin-bottom: 10px;height: 28px;">
       <el-checkbox-group v-model="checkboxList" @change="checkboxChange"
-                         style="float: left;margin-top: 12px;min-width: 150px"
+                         style="float: left;margin-top: 7px;min-width: 150px"
                          v-if="searchForm.status[0] === 'RetirementFinished'">
         <el-checkbox label="Inadvancefinished">未退款</el-checkbox>
         <el-checkbox label="EarlyRetirement">已退款</el-checkbox>
       </el-checkbox-group>
       <el-radio-group v-model="radio" @change="radioChange()" v-if="searchForm.status[0] === 'Unchecked'"
-                      style="float: left;margin-top: 12px;">
+                      style="float: left;margin-top: 7px;">
         <el-radio label='Unchecked'>待补充</el-radio>
         <el-radio label='Returned'>待修改</el-radio>
       </el-radio-group>
-      <div class="pagination" style="position: absolute;right: 0;top: 0;margin: 0">
+      <div class="pagination" style="position: absolute;right: 0;top: -1px;margin: 0">
         <el-pagination
           @current-change="handleCurrentChange"
           layout="total, prev, pager, next"
