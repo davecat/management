@@ -13,13 +13,13 @@
         </el-form-item>
       </el-form>
     </el-row>
-    <el-row style="margin-bottom: 10px;height: 33px;">
+    <el-row style="margin-bottom: 10px;height: 28px;">
       <el-checkbox-group v-model="searchForm.enabled" @change="Search"
                          style="float: left; margin-top: 7px; min-width: 150px;">
         <el-checkbox label="true">启用</el-checkbox>
         <el-checkbox label="false">停用</el-checkbox>
       </el-checkbox-group>
-      <div class="pagination" style="position: absolute; right: 0; top: 2px; margin: 0;">
+      <div class="pagination" style="position: absolute; right: 0; top: -1px; margin: 0;">
         <el-pagination
           @current-change="handleCurrentChange"
           layout="total, prev, pager, next"

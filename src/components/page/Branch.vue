@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-row>
+    <el-row style="margin-bottom: -15px">
       <el-form :inline="true" :model="searchForm">
         <el-form-item>
           <el-select v-model="searchForm.cityId" filterable placeholder="选择城市">
@@ -9,21 +9,23 @@
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="Search">查询</el-button>
+          <el-button  @click="Search">查询</el-button>
         </el-form-item>
-        <el-form-item style="float: right">
-          <el-button type="primary" @click="add()">新增</el-button>
-          <el-button type="primary" @click="exportCSV()">导出</el-button>
+        <el-form-item style="float: right;margin-right: 0">
+          <el-button type="success" @click="add()">新增门店</el-button>
+          <el-tooltip class="item" effect="dark" content="导出" placement="top-start">
+            <el-button type="info" @click="exportCSV()"><i class="fa fa-download" aria-hidden="true"></i></el-button>
+          </el-tooltip>
         </el-form-item>
       </el-form>
     </el-row>
     <el-row style="margin-bottom: 10px">
       <el-checkbox-group v-model="searchForm.enabled" @change="Search"
-                         style="float: left; margin-top: 12px; min-width: 150px;">
+                         style="float: left; margin-top: 7px; min-width: 150px;">
         <el-checkbox label="true">启用</el-checkbox>
         <el-checkbox label="false">停用</el-checkbox>
       </el-checkbox-group>
-      <div class="pagination" style="position: absolute; right: 0; top: 0; margin: 0;">
+      <div class="pagination" style="position: absolute; right: 0; top: -1px; margin: 0;">
         <el-pagination
           @current-change="handleCurrentChange"
           layout="total, prev, pager, next"
@@ -37,9 +39,10 @@
         ref="multipleTable"
         :data="tableData"
         tooltip-effect="dark"
-        style="width: 100%"
-        @selection-change="handleSelectionChange">
-        <el-table-column type="selection" width="50">
+        style="width: 100%">
+        <el-table-column
+          type="index"
+          width="50">
         </el-table-column>
         <el-table-column
           min-width="100"
@@ -66,7 +69,9 @@
           label="门店状态"
           show-overflow-tooltip>
           <template scope="scope">
-            {{ scope.row.enabled === 'true' ? '启用' : '停用' }}
+            <div slot="reference" :class="scope.row.enabled === 'false'? 'name-wrapper-1':'name-wrapper-normal'">
+              <el-tag>{{ scope.row.enabled === 'true' ? '启用' : '停用' }}</el-tag>
+            </div>
           </template>
         </el-table-column>
         <el-table-column min-width="123" label="操作">
@@ -464,6 +469,15 @@
   }
 </script>
 
-<style>
-
+<style scoped>
+  .name-wrapper-1 .el-tag {
+    font-size: 14px;
+    background-color: transparent;
+    color: red;
+  }
+  .name-wrapper-normal .el-tag {
+    font-size: 14px;
+    background-color: transparent;
+    color: #000;
+  }
 </style>

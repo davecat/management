@@ -33,7 +33,7 @@ a{text-decoration: none}
   padding:30px;
   box-sizing: border-box;
   overflow: auto;
-  /*min-width: 700px;*/
+  min-width: 700px;
 
 }
 .el-pagination {
@@ -148,5 +148,11 @@ a{text-decoration: none}
 }
 .pure-button{
   background: #20a0ff;
+}
+.el-pager li.active {
+  border-color: #dfe6ec;
+  background-color: #dfe6ec;
+  color: #000;
+  cursor: default;
 }
 </style>
