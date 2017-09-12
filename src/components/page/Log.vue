@@ -4,21 +4,20 @@
       <el-form :inline="true" :model="searchForm">
         <el-form-item>
           <el-date-picker
-            v-model="searchForm.applyDate"
+            v-model="searchForm.logDate"
             align="right"
             type="date"
-            placeholder="选择日期"
-            @change="selectedData">
+            placeholder="选择日期">
           </el-date-picker>
         </el-form-item>
         <el-form-item>
-          <el-input v-model="searchForm.customerName" placeholder="关键字"></el-input>
+          <el-input v-model="searchForm.logContent" placeholder="关键字"></el-input>
         </el-form-item>
         <!--<el-form-item>-->
           <!--<el-button type="primary" @click="Search">查询</el-button>-->
         <!--</el-form-item>-->
-        <el-form-item style="float: right">
-          <el-button type="primary" @click="Search">查询</el-button>
+        <el-form-item style="float: right;margin-right: 0">
+          <el-button type="success" @click="Search">查询日志</el-button>
         </el-form-item>
       </el-form>
     </el-row>
@@ -38,23 +37,23 @@
         :default-sort="{prop: 'payeeDate', order: 'descending'}"
         style="width: 100%">
         <el-table-column
-          prop="payeeDate"
+          prop="logDate"
           sortable
           width="130"
           label="日志时间">
           <template scope="scope">
             <div slot="reference" class="name-wrapper-normal">
-              <el-tag>{{ scope.row.payeeDate | dateFormat }}</el-tag>
+              <el-tag>{{ scope.row.logDate | dateFormat }}</el-tag>
             </div>
           </template>
         </el-table-column>
         <el-table-column
           min-width="136"
-          prop="applicationNo"
+          prop="logContent"
           label="日志内容">
           <template scope="scope">
             <div slot="reference" class="name-wrapper-normal">
-              <el-tag>{{ scope.row.applicationNo }}</el-tag>
+              <el-tag>{{ scope.row.logContent }}</el-tag>
             </div>
           </template>
         </el-table-column>
@@ -77,10 +76,10 @@
         size: 10,
         totalElements: 0,
         sumPayeeAmount: 0,
-        url: '/counter/api/v1/payee/lib/getPayeeLibPage',
+        url: '/api/v2/logs/getLogsPage',
         searchForm: {
-          applyDate: '',
-          customerName: ''
+          logDate: '',
+          logContent: ''
         },
         formLabelWidth: '120px',
       }
@@ -89,84 +88,14 @@
       dateFormat: function (value) {
         if (typeof value === "string") {
           let date = Date.parse(value.substring(0, value.length - 9));
-          return format(date, 'YYYYMMDD');
+          return format(date, 'YYYY-MM-DD');
         }
       },
-      districtFormat: function (value) {
-        if (!value) {
-          return ''
-        }
-        let district = {};
-        let findLabel = (item, value) => {
-          if (item) {
-            return item.some(i => {
-              if (value === i.value) {
-                district = i;
-                return true;
-              } else {
-                return findLabel(i.children, value)
-              }
-            });
-          }
-        };
-        findLabel(json, value);
-        return district.label;
-      },
-    },
-    computed: {
-//            totalAmount() {
-//                let totalAmount = 0;
-//                this.tableData.forEach(item => {
-//                    totalAmount += item.payeeAmount;
-//                });
-//                return totalAmount;
-//            }
     },
     created() {
       this.getData();
     },
     methods: {
-      //导出全部
-      exportCSV() {
-        var head = [["应收款日期","申请编号","应收金额","分期总金额", "租客姓名", "联系方式", "租期", "起租时间","结束时间", "月租金","所属店","经纪人"]];
-        let param = {
-          ...this.searchForm,
-          page: this.cur_page - 1,
-          size: this.size
-        };
-        this.axios.post('/counter/api/v1/payee/lib/getPayeeLibList',param).then((res) => {
-            var rowData = res.data;
-            console.log(rowData);
-            for (let i = 0; i < rowData.length; i++) {
-              let payeeType;
-              switch (rowData[i].payeeType){
-                case 'WeChat': payeeType =  '微信';break;
-                case 'Alipay': payeeType = '支付宝';break;
-                case 'DepositCard': payeeType = '储蓄卡';break;
-                case 'CreditCard': payeeType = '信用卡';break;
-                case 'Cash': payeeType = '现金';break;
-                case 'Other': payeeType = '其他';break
-              }
-              head.push([rowData[i].payeeDate, rowData[i].applicationNo, rowData[i].payeeAmount, rowData[i].totalAmount, rowData[i].customerName, rowData[i].mobile,rowData[i].rentPeriod,rowData[i].startDate,rowData[i].endDate,rowData[i].monthlyRent,rowData[i].responsibleBranch, rowData[i].responsibleAgent]);
-            };
-            var csvRows = [];
-            head.forEach(item => csvRows.push(item.join(',')));
-            var csvString = csvRows.join('\n');
-            //BOM的方式解决EXCEL乱码问题
-            var BOM = '\uFEFF';
-            csvString = BOM + csvString;
-            var a = document.createElement('a');
-            a.href = 'data:attachment/csv,' + encodeURI(csvString);
-            a.target = '_blank';
-            a.download = '用户还款' +".csv";
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-          }
-        ).catch((error) => {
-          this.$message.error(error.response.data.message);
-        });
-      },
       handleCurrentChange(val){
         this.cur_page = val;
         this.getData();
@@ -191,42 +120,12 @@
         })
       },
       Search() {
-        this.searchForm.applyDate = format(this.searchForm.applyDate, 'YYYY-MM-DD');
+        this.searchForm.logDate = format(this.searchForm.logDate, 'YYYY-MM-DD');
         this.getData();
-      },
-      selectedData() {
-        if (this.searchForm.applyDate !== undefined && this.searchForm.applyDate !== 'Invalid Date' && this.searchForm.applyDate !== '') {
-          this.searchForm.applyDate = format(this.searchForm.applyDate, 'YYYY-MM-DD');
-        } else {
-          this.searchForm.applyDate = format(Date.now(), 'YYYY-MM-DD');
-        }
-      },
+      }
     }
   }
 </script>
 
 <style>
-  .payerAmountFont {
-    color: #1D8CE0
-  }
-
-  .statusAlert {
-    color: #F7BA2A
-  }
-
-  .statusGood {
-    color: #13CE66
-  }
-
-  .el-tag {
-    font-size: 14px;
-    background-color: transparent;
-    color: #1D8CE0
-  }
-
-  .name-wrapper-normal .el-tag {
-    font-size: 14px;
-    background-color: transparent;
-    color: black;
-  }
 </style>

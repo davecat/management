@@ -77,7 +77,7 @@
                 </el-table>
         </el-row>
 
-        <el-dialog title="新增用户" :visible.sync="formVisible">
+        <el-dialog title="新增用户" :visible.sync="formVisible" id="formVisible">
             <div class="left">
               <el-form :model="form" ref="form" :rules="rules">
                 <el-form-item label="用户昵称" :label-width="formLabelWidth" prop="staffName">
@@ -94,10 +94,11 @@
                 <el-form-item label="员工类型" :label-width="formLabelWidth" prop="staffType">
                   <el-col :span="24">
                     <el-select v-model="form.staffType" @change="staffChange(form.staffType)">
+                      <el-option label="管理员" value="Admin"></el-option>
                       <el-option label="内部员工" value="Interior"></el-option>
-                      <el-option label="中介公司负责人" value="Boss"></el-option>
-                      <el-option label="门店管理员" value="Branch"></el-option>
-                      <el-option label="资金端" value="Loaner"></el-option>
+                      <el-option label="门店经理" value="BranchManager"></el-option>
+                      <el-option label="门店主管" value="BrachDirector"></el-option>
+                      <el-option label="门店业务员" value="BrachSalesman"></el-option>
                     </el-select>
                   </el-col>
                 </el-form-item>
@@ -145,10 +146,11 @@
                 </el-form-item>
                 <el-form-item label="员工类型" :label-width="formLabelWidth" prop="staffType">
                     <el-select v-model="form2.staffType" disabled>
-                        <el-option label="内部员工" value="Interior"></el-option>
-                        <el-option label="中介公司负责人" value="Boss"></el-option>
-                        <el-option label="门店管理员" value="Branch"></el-option>
-                        <el-option label="资金端" value="Loaner"></el-option>
+                      <el-option label="管理员" value="Admin"></el-option>
+                      <el-option label="内部员工" value="Interior"></el-option>
+                      <el-option label="门店经理" value="BranchManager"></el-option>
+                      <el-option label="门店主管" value="BrachDirector"></el-option>
+                      <el-option label="门店业务员" value="BrachSalesman"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="角色" :label-width="formLabelWidth" prop="role">
@@ -247,7 +249,7 @@
                     staffType: [{required: true, message: '请输入员工类型', trigger: 'change'}],
                     loanerId: [{required: true, message: '请输入员工类型', trigger: 'change'}],
                 },
-                url: '/api/v1/user/getList'
+                url: '/api/v2/users/getList'
             }
         },
         created(){
@@ -257,7 +259,12 @@
         },
         filters: {
             staffTypeFormat: function (value) {
-                if (value === "Interior") {
+//              <el-option label="管理员" value="Admin"></el-option>
+//                <el-option label="内部员工" value="Interior"></el-option>
+//                <el-option label="门店经理" value="BranchManager"></el-option>
+//                <el-option label="门店主管" value="BrachDirector"></el-option>
+//                <el-option label="门店业务员" value="BrachSalesman"></el-option>
+                if (value === "Admin") {
                     return "内部员工";
                 } else if (value === "Boss") {
                     return "中介公司负责人";
@@ -271,7 +278,7 @@
         methods: {
             //获取角色
             getRoleList() {
-                this.axios.get('/api/v1/role/getRoleAll').then((res) => {
+                this.axios.get('/api/v2/roles/getRoleAll').then((res) => {
                     this.roleList = res.data;
                 }).catch((error) => {
                     this.$message.error(error.response.data.message);
@@ -279,8 +286,9 @@
             },
             //获取中介
             getAgencyList() {
-                this.axios.get('/api/v1/admin/agency/getAgencyList').then((res) => {
+                this.axios.get('/api/v2/agencys/adminAndLib/getIdNameAgencyList').then((res) => {
                     this.agencyList = res.data;
+                  console.log(this.agencyList);
                 }).catch((error) => {
                     this.$message.error(error.response.data.message);
                 })
@@ -301,7 +309,7 @@
                 let array = item.map((item) => {
                     return item.id
                 });
-                this.axios.post('/api/v1/admin/branch/getBranchListByAgencyIdList', array).then((res) => {
+                this.axios.post('/api/v2/admin/branch/getBranchListByAgencyIdList', array).then((res) => {
                     this.branchList = res.data;
                 }).catch((error) => {
                     this.$message.error(error.response.data.message);
@@ -316,14 +324,14 @@
                 })
             },
             //获取资金端
-            getLoanerList() {
-                let self = this;
-                this.axios.get('/riskcontrol/api/v1/loaner/getLoanerList').then((res) => {
-                    self.loanerList = res.data;
-                }).catch((error) => {
-                    this.$message.error(error.response.data.message);
-                })
-            },
+//            getLoanerList() {
+//                let self = this;
+//                this.axios.get('/riskcontrol/api/v1/loaner/getLoanerList').then((res) => {
+//                    self.loanerList = res.data;
+//                }).catch((error) => {
+//                    this.$message.error(error.response.data.message);
+//                })
+//            },
             //修改
             handleEdit(row) {
                 //获取指定用户的详细信息
@@ -457,7 +465,7 @@
     }
 </script>
 
-<style scoped>
+<style>
   .left {
     margin-right: 30px;
     background: none repeat scroll 0 0 #fff;
@@ -477,5 +485,8 @@
     height: 464px;
     box-sizing: border-box;
     overflow-y: scroll;
+  }
+  #formVisible .el-dialog {
+    min-width: 922px;
   }
 </style>

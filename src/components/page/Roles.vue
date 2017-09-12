@@ -3,7 +3,7 @@
         <el-row>
           <el-form  :inline="true" :model="searchForm">
             <el-form-item>
-              <el-input  placeholder="中介名称"></el-input>
+              <el-input  placeholder="角色名称"></el-input>
             </el-form-item>
             <el-form-item>
               <el-button type="primary" @click="Search">查询</el-button>
@@ -27,8 +27,6 @@
                       style="width: 100%"
                       highlight-current-row
                       @current-change="handleCurrentRow">
-                <el-table-column prop="id" label="ID">
-                </el-table-column>
                 <el-table-column prop="name" label="角色名称">
                 </el-table-column>
                 <el-table-column prop="description" label="描述">
@@ -110,7 +108,7 @@
                 cur_page: 1,
                 size: 10,
                 totalElements: 0,
-                url: '/api/v1/role/getRoleAll',
+                url: '/api/v2/roles/getRoleAll',
                 searchForm: {},
                 //授权选择的对象
                 permission: {

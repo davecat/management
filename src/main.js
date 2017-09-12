@@ -22,10 +22,10 @@ axios.interceptors.response.use(function (response) {
   localStorage.setItem('token',response.headers.auth)
   return response;
 }, function (error) {
-  if  (401 === error.response.status) {
-    localStorage.removeItem('token');
-    window.location = '/';
-  }
+  // if  (401 === error.response.status) {
+  //   localStorage.removeItem('token');
+  //   window.location = '/';
+  // }
   return Promise.reject(error);
 });
 Vue.use(VueAxios, axios);
@@ -45,7 +45,7 @@ router.beforeEach((to, from, next) => {
     console.log(token);
     // next({path: '/login'});
     if (!token || token === null) {
-      next({path: '/home'})
+      next({path: '/login'})
     } else {
       //vuex menu 赋值
       Vue.axios.get("/api/v2/menus").then((response) => {
