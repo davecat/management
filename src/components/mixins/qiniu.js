@@ -13,7 +13,7 @@ export const qiniu = {
     },
     methods: {
         getUploadToken() {
-            return this.axios.get('/api/upload/getToken').then((res) => {
+            return this.axios.get('/api/v2/upload/getToken').then((res) => {
                 this.postData.token = res.data;
             }).catch((error) => {
                 this.$message.error(error.response.data.message);;

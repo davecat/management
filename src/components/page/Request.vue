@@ -7,6 +7,7 @@
         </el-tab-pane>
 
         <el-tab-pane label="待审核" name="Unconfirmed"></el-tab-pane>
+        <!--<el-tab-pane label="待放款" name="Unconfirmed"></el-tab-pane>-->
         <el-tab-pane label="还款中" name="Repayment"></el-tab-pane>
         <el-tab-pane label="已逾期" name="Breach">
           <span slot="label">已逾期<el-badge :value="overdueNumber" class="item"></el-badge></span>
@@ -196,7 +197,7 @@
           <el-button style="float: left;padding: 5px 15px" @click="prev()" :disabled="!tableData[currentIndex-1]"><i
             style="font-size: x-large;vertical-align: sub" class="fa fa-angle-left" aria-hidden="true"></i>上一条
           </el-button>
-          <el-button v-if="searchForm.status[0] === 'Unchecked'" type="info">临时保存</el-button>
+          <el-button v-if="searchForm.status[0] === 'Unchecked'" type="info" @click="currentSave">临时保存</el-button>
           <el-button v-if="searchForm.status[0] === 'Unchecked'" type="success" @click="submit">提交审批</el-button>
           <el-button v-if="searchForm.status[0] === 'Unchecked'" type="warning" @click="dialogVisible = true">取消申请</el-button>
           <el-button v-if="searchForm.status[0] === 'Unconfirmed'" type="warning">撤回</el-button>
@@ -799,6 +800,14 @@
       },
     },
     methods: {
+      //临时保存
+      currentSave() {
+        this.axios.put('/api/v2/applications/apply/temp', this.currentRow).then((res) => {
+          this.$message.success("保存成功！");
+        }).catch((error) => {
+          this.$message.error(error.response.data.message);
+        })
+      },
       //上一条
       prev() {
         //跳转到上一条

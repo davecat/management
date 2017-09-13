@@ -230,22 +230,21 @@
       title="批量导入"
       :visible.sync="importVisible"
       size="tiny">
-      <!--只有当登录人为内部员工时候才显示-->
-      <el-select v-model="form3.agencyId">
+      <span style="display: block">1，使用“下载模板”填写房源数据</span><br>
+      <div style="margin-bottom: 10px">2，保存后点击“上传”进行数据批量导入</div>
+      <el-select v-model="form3.agencyId" placeholder="请选择中介">
         <el-option v-for="agency in agencyList" :key="agency.id" :label="agency.name"
                    :value="agency.id"></el-option>
       </el-select>
-      <span style="margin-bottom: 10px;display: block">1，使用“下载模板”填写房源数据</span><br>
-      <span>2，保存后点击“上传”进行数据批量导入</span>
-      <input type="file" id="import">
       <el-upload
         class="upload-demo"
         :data="form3"
         action="/api/v2/apartments/uploadBatchApartment"
         :on-preview="handlePreview"
         :on-remove="handleRemove"
+        :on-success="uploadSuccess"
         :file-list="fileList">
-        <el-button size="small" type="primary">点击上传</el-button>
+        <el-button size="small" type="primary">上传</el-button>
       </el-upload>
       <span slot="footer" class="dialog-footer">
                 <el-button @click="importVisible = false">取 消</el-button>
@@ -386,6 +385,10 @@
       }
     },
     methods: {
+      uploadSuccess() {
+          this.importVisible = false;
+          this.getData();
+      },
       handleRemove(file, fileList) {
         console.log(file, fileList);
       },
@@ -543,6 +546,11 @@
     width: 200px;
   }
  .el-upload--text {
+   width: 50px;
    height: 33px;
  }
+  .upload-demo {
+    display: inline-block;
+    vertical-align: middle;
+  }
 </style>
