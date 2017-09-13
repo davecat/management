@@ -3,10 +3,10 @@
     <el-row style="margin-bottom: -15px">
       <el-form :inline="true" :model="searchForm">
         <el-form-item>
-          <el-select v-model="searchForm.cityId" filterable @change="getBranchList(searchForm.cityId)"
+          <el-select v-model="searchForm.cityId" filterable
                      placeholder="员工类型">
-            <el-option v-for="city in cityList" :key="city.id" :label="city.name"
-                       :value="city.id"></el-option>
+            <el-option v-for="city in staffTypeList" :key="city" :label="city"
+                       :value="city"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item>
@@ -199,6 +199,7 @@
         return data;
       };
       return {
+        staffTypeList: [],//人员类型
         data: generateData(),
         value1: [1, 4],
         roleId: '',//角色id
@@ -252,6 +253,7 @@
       }
     },
     created(){
+      this.getStaffTypeList();
       this.getRoleList();
       this.getAgencyList();
     },
@@ -276,11 +278,11 @@
     methods: {
       //获取角色
       getRoleList() {
-//                this.axios.get('/api/v2/roles/getRoleAll').then((res) => {
-//                    this.roleList = res.data;
-//                }).catch((error) => {
-//                    this.$message.error(error.response.data.message);
-//                })
+//        this.axios.get('/api/v2/roles/getRoleAll').then((res) => {
+//            this.roleList = res.data;
+//        }).catch((error) => {
+//            this.$message.error(error.response.data.message);
+//        })
       },
       //获取中介
       getAgencyList() {
@@ -300,6 +302,14 @@
           this.loanerDisable = true;
           this.agenciesDisable = false;
         }
+      },
+      getStaffTypeList() {
+        this.axios.get('/api/v2/users/getStafftype').then((res) => {
+          this.staffTypeList = res.data;
+          console.log(this.staffTypeList);
+        }).catch((error) => {
+          this.$message.error(error.response.data.message);
+        })
       },
       //只有当选择了中介，才能选择门店
       //新增

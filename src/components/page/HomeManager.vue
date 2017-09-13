@@ -1,4 +1,4 @@
-<template>
+<template xmlns="http://www.w3.org/1999/html">
   <div>
     <el-row style="margin-bottom: -15px">
       <el-form :inline="true" :model="searchForm">
@@ -16,8 +16,8 @@
         </el-form-item>
         <el-form-item style="float: right;margin-right: 0">
           <el-button type="success" @click="add()">新增房源</el-button>
-          <el-tooltip class="item" effect="dark" content="导出" placement="top-start">
-            <el-button type="info" @click="exportCSV()"><i class="fa fa-download" aria-hidden="true"></i></el-button>
+          <el-tooltip class="item" effect="dark" content="批量导入" placement="top-start">
+            <el-button type="info" @click="batchImport()"><i class="fa fa-download" aria-hidden="true"></i></el-button>
           </el-tooltip>
         </el-form-item>
       </el-form>
@@ -226,6 +226,33 @@
             </span>
     </el-dialog>
 
+    <el-dialog
+      title="批量导入"
+      :visible.sync="importVisible"
+      size="tiny">
+      <!--只有当登录人为内部员工时候才显示-->
+      <el-select v-model="form3.agencyId">
+        <el-option v-for="agency in agencyList" :key="agency.id" :label="agency.name"
+                   :value="agency.id"></el-option>
+      </el-select>
+      <span style="margin-bottom: 10px;display: block">1，使用“下载模板”填写房源数据</span><br>
+      <span>2，保存后点击“上传”进行数据批量导入</span>
+      <input type="file" id="import">
+      <el-upload
+        class="upload-demo"
+        :data="form3"
+        action="/api/v2/apartments/uploadBatchApartment"
+        :on-preview="handlePreview"
+        :on-remove="handleRemove"
+        :file-list="fileList">
+        <el-button size="small" type="primary">点击上传</el-button>
+      </el-upload>
+      <span slot="footer" class="dialog-footer">
+                <el-button @click="importVisible = false">取 消</el-button>
+                <el-button type="primary" @click="exportCSV">下载模板</el-button>
+                <!--<el-button type="primary" @click="importCSV">上传</el-button>-->
+            </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -237,10 +264,12 @@
     mixins: [pagination],
     data() {
       return {
+        form3:{agencyId: ''},
+        fileList: [],
         url: '/api/v2/apartments/getBranchListPage',
         //省市县
         selectedOptions: [],
-        agencyList: {},
+        agencyList: [],
         searchForm: {
           cityId: '',
           rentalType: ['Entire', 'Joint']
@@ -273,6 +302,7 @@
           district: '',
           province: ''
         },
+        importVisible: false,
         formVisible: false,
         formVisible2: false,
         dialogVisible: false,
@@ -292,8 +322,12 @@
     created(){
       this.init();
       this.getAgencyList();
+      console.log(this.staff);
     },
     computed: {
+      staff() {
+          return this.$store.state.staff.staff
+      },
       getBranchList(cityId) {
         if (cityId !== '') {
           let param = {city: [cityId]};
@@ -352,12 +386,23 @@
       }
     },
     methods: {
-      init: function () {
+      handleRemove(file, fileList) {
+        console.log(file, fileList);
+      },
+      handlePreview(file) {
+        console.log(file);
+      },
+      batchImport() {
+          this.importVisible = true
+
+      },
+      init() {
         this.options = json;
       },
       getAgencyList() {
         this.axios.get('/api/v2/agencys/adminAndLib/getIdNameAgencyList').then((res) => {
           this.agencyList = res.data;
+          console.log(this.agencyList);
         }).catch((error) => {
           this.$message.error(error.response.data.error.message);
         })
@@ -465,50 +510,27 @@
         return district.label;
       },
       exportCSV() {
-        var head = [["门店名称", "门店城市", "门店地址", "门店状态"]];
-        let param = {};
-        if (this.staff.staffType === 'Interior') {
-          param = {
-            agencyId: '',
-            ...this.searchForm
-          }
-        } else {
-          param = {
-            agencyId: this.staff.agencies[0].id,
-            ...this.searchForm
-          }
-        }
-        this.axios.post('/api/v2/branchs/getBranchListByAgencyId', param).then((res) => {
-            var rowData = res.data;
-            for (let i = 0; i < rowData.length; i++) {
-              let enabledStatus;
-              switch (rowData[i].enabled) {
-                case 'true':
-                  enabledStatus = '启用';
-                  break;
-                case 'false':
-                  enabledStatus = '停用';
-                  break;
-              }
-              let proName = this.districtFormat(rowData[i].province) + '-' + this.districtFormat(rowData[i].city) + '-' + this.districtFormat(rowData[i].district);
-              head.push([rowData[i].name, proName, rowData[i].address, enabledStatus]);
-            }
-            ;
-            var csvRows = [];
-            head.forEach(item => csvRows.push(item.join(', ')));
-            var csvString = csvRows.join('\n');
-            //BOM的方式解决EXCEL乱码问题
-            var BOM = '\uFEFF';
-            csvString = BOM + csvString;
-            var a = document.createElement('a');
-            a.href = 'data:attachment/csv,' + encodeURI(csvString);
-            a.target = '_blank';
-            a.download = "代客还房租" + ".csv";
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-          }
-        ).catch((error) => {
+        var head = [["小区名称", "门牌号", "省","市","区","详细地址","房间数量","台账号","整租或合租（“0”表示整租“1”表示合租）"]];
+        var csvRows = [];
+        head.forEach(item => csvRows.push(item.join(', ')));
+        var csvString = csvRows.join('\n');
+        //BOM的方式解决EXCEL乱码问题
+        var BOM = '\uFEFF';
+        csvString = BOM + csvString;
+        var a = document.createElement('a');
+        a.href = 'data:attachment/csv,' + encodeURI(csvString);
+        a.target = '_blank';
+        a.download = "模板" + ".csv";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+      },
+      importCSV() {
+        console.log(document.getElementById("import").files[0]);
+        this.axios.post('/api/v2/apartments/uploadBatchApartment ',{file:document.getElementById("import").files[0]}).then((res) => {
+
+
+        }).catch((error) => {
           this.$message.error(error.response.data.error.message);
         });
       }
@@ -520,5 +542,7 @@
   #dave .el-form-item__content{
     width: 200px;
   }
-
+ .el-upload--text {
+   height: 33px;
+ }
 </style>
