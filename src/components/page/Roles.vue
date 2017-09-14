@@ -223,15 +223,17 @@
                 });
             },
             gcd(menu) {
-                let that = this;
-                return menu.forEach(function (item) {
+                if(menu){
+                  let that = this;
+                  return menu.forEach(function (item) {
                     if(item.hasPermission) {
 //                        return item.id;
-                        that.permissionId.push(item.id);
+                      that.permissionId.push(item.id);
                     } else {
-                        that.gcd(item.children)
+                      that.gcd(item.children)
                     }
-                });
+                  });
+                }
             },
             handleDelete() {
                 this.axios.delete('/api/v2/roles/' + this.deleteId).then((res) => {

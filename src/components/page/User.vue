@@ -287,7 +287,7 @@
       },
       //修改
       handleEdit(row) {
-        console.log(row);
+//        console.log(row);
         //获取指定用户的详细信息
         this.axios.get('/api/v2/users/assign/' + row.id).then((res) => {
           console.log(res.data);
