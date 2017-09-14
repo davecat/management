@@ -3,7 +3,7 @@
         <el-row style="margin-bottom: -15px">
           <el-form  :inline="true" :model="searchForm">
             <el-form-item>
-              <el-input  placeholder="角色名称"></el-input>
+              <el-input v-model="searchForm.roleName" placeholder="角色名称"></el-input>
             </el-form-item>
             <el-form-item>
               <el-button @click="Search">查询</el-button>
@@ -100,6 +100,7 @@
 </template>
 
 <script>
+  import store from '@/store'
     export default {
         data() {
             return {
@@ -109,7 +110,9 @@
                 size: 10,
                 totalElements: 0,
                 url: '/api/v2/roles/getRoleAll',
-                searchForm: {},
+                searchForm: {
+                    roleName: ''
+                },
                 //授权选择的对象
                 permission: {
                     id: '',
@@ -144,11 +147,11 @@
         },
         computed: {
             menus() {
-                return this.$store.state.menus.menus;
+                return store.state.menus.menus;
             }
         },
         created(){
-            this.getData();
+          this.getData();
         },
         methods: {
             handleCurrentChange(val){
@@ -180,7 +183,7 @@
                 checked.forEach((item) => {
                     that.permission.permissions.push(item.permission)
                 });
-                this.axios.put('/api/v1/role/setPermission', that.permission).then((res) => {
+                this.axios.put('/api/v2/roles/setPermission', that.permission).then((res) => {
                     if (res.data.status === 200) {
                         this.$message({
                             message: '授权成功！',
@@ -203,17 +206,20 @@
 
             //授权
             rowWarrant(id) {
-                let that = this;
+              let that = this;
                 this.testMenus = this.menus;
-                this.permission.id = id;
+              console.log(this.testMenus);
+              this.permission.id = id;
 //                获取用户已有权限
-                this.axios.get('/api/v1/role/getRolePermission/' + id).then((res) => {
+                this.axios.get('/api/v2/roles/getRolePermission/' + id).then((res) => {
                     //清空已有权限的id数组
                     this.permissionId = [];
-                    that.gcd(res.data);
+                  console.log(res.data);
+                  that.gcd(res.data);
                     that.warrant = true;
                 }).catch((error) => {
-                    console.log(error);
+                  console.log('a');
+                  console.log(error);
                 });
             },
             gcd(menu) {
@@ -228,7 +234,7 @@
                 });
             },
             handleDelete() {
-                this.axios.delete('/api/v1/role/' + this.deleteId).then((res) => {
+                this.axios.delete('/api/v2/roles/' + this.deleteId).then((res) => {
                     this.getData();
                     this.dialogVisible = false;
                 }).catch((error) => {
