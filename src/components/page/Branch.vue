@@ -12,8 +12,8 @@
           <el-button  @click="Search">查询</el-button>
         </el-form-item>
         <el-form-item style="float: right;margin-right: 0">
-          <el-button type="success" @click="add()">新增门店</el-button>
-          <el-tooltip class="item" effect="dark" content="导出" placement="top-start">
+          <el-button type="success" @click="add()" v-if="addButton">新增门店</el-button>
+          <el-tooltip class="item" effect="dark" content="导出" placement="top-start" v-if="importButton">
             <el-button type="info" @click="exportCSV()"><i class="fa fa-download" aria-hidden="true"></i></el-button>
           </el-tooltip>
         </el-form-item>
@@ -182,6 +182,9 @@
     mixins: [pagination],
     data() {
       return {
+        //按钮权限控制
+        importButton: false,
+        addButton:false,
         url: '/api/v2/branchs/getBranchListPageByAgencyId',
         //省市县
         selectedOptions: [],
@@ -223,6 +226,9 @@
       this.getAgencyList();
     },
     computed: {
+      button() {
+        return store.state.button;
+      },
       getBranchList(cityId) {
         if (cityId !== '') {
           let param = {city: [cityId]};
@@ -282,7 +288,16 @@
     },
     methods: {
       init: function () {
+        let that = this;
         this.options = json;
+        console.log(this.button.button);
+        console.log(this.button.button.indexOf('新增'));
+        if(this.button.button.indexOf('新增') > 0) {
+            this.addButton = true;
+        }
+        if(this.button.button.indexOf('新增') > 0) {
+          this.importButton = true;
+        }
       },
       getAgencyList() {
         this.axios.get('/api/v2/agencys/adminAndLib/getIdNameAgencyList').then((res) => {

@@ -1,7 +1,7 @@
 <template>
     <div class="sidebar">
         <!-- Sidebar Menu -->
-        <el-menu :default-active="onRoutes" class="el-menu-vertical-demo" theme="dark" unique-opened router>
+        <el-menu :default-active="onRoutes" class="el-menu-vertical-demo" theme="dark" unique-opened router @select="treeSelect">
             <sidebar-item :routes='menus'></sidebar-item>
         </el-menu>
 
@@ -24,7 +24,13 @@
             }
         },
         methods: {
-
+          treeSelect(index) {
+            this.axios.get('api/v2/roles/getRolePermission/buttons/'+index).then((res) => {
+              store.dispatch('get_button', res.data);
+            }).catch((error) => {
+              this.$message.error(error.response.data.message);
+            })
+          }
         }
     }
 </script>
