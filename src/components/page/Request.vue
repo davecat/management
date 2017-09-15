@@ -7,7 +7,7 @@
         </el-tab-pane>
 
         <el-tab-pane label="待审核" name="Unconfirmed"></el-tab-pane>
-        <!--<el-tab-pane label="待放款" name="Unconfirmed"></el-tab-pane>-->
+        <el-tab-pane label="待放款" name="Loan"></el-tab-pane>
         <el-tab-pane label="还款中" name="Repayment"></el-tab-pane>
         <el-tab-pane label="已逾期" name="Breach">
           <span slot="label">已逾期<el-badge :value="overdueNumber" class="item"></el-badge></span>
@@ -173,6 +173,22 @@
                 <el-button type="primary" @click="cancel()">确 定</el-button>
             </span>
     </el-dialog>
+    <el-dialog
+      title="转单"
+      :visible.sync="dialogTransfer"
+      size="tiny">
+      <el-form>
+        <el-form-item label="转单给：" :label-width="formLabelWidth"  prop="agencies">
+          <el-select v-model="transferId">
+            <el-option v-for="item in agentList" :key="item.agentId" :label="item.agentName" :value="item.agentId"></el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+                <el-button @click="dialogTransfer=false">取 消</el-button>
+                <el-button type="primary" @click="transfer()">确 定</el-button>
+            </span>
+    </el-dialog>
     <!--遮罩层-->
     <div v-if="cover"
          style="width: 100%;height: 100%;opacity: .1;background-color: #666;position: absolute;left: 0;top: 0;z-index: 888"></div>
@@ -201,10 +217,10 @@
           <el-button v-if="searchForm.status[0] === 'Unchecked'" type="success" @click="submit">提交审批</el-button>
           <el-button v-if="searchForm.status[0] === 'Unchecked'" type="warning" @click="dialogVisible = true">取消申请</el-button>
           <el-button v-if="searchForm.status[0] === 'Unconfirmed'" type="warning">撤回</el-button>
-          <el-button v-if="searchForm.status[0] === 'Repayment' || searchForm.status[0] === 'Breach'" type="warning">
+          <el-button v-if="searchForm.status[0] === 'Repayment' || searchForm.status[0] === 'Breach' || searchForm.status[0] === 'Loan'" type="warning">
             提前退租
           </el-button>
-          <el-button v-if="searchForm.status[0] !== 'Finished' && searchForm.status[0] !== 'Inadvancefinished'">转单
+          <el-button v-if="searchForm.status[0] !== 'Finished' && searchForm.status[0] !== 'Inadvancefinished'" @click="dialogTransfer = true;transferId=''">转单
           </el-button>
           <el-button style="float: right;padding: 5px 15px" @click="next()" :disabled="!tableData[currentIndex+1]">下一条<i
             style="font-size: x-large;vertical-align: sub" class="fa fa-angle-right" aria-hidden="true"></i></el-button>
@@ -243,7 +259,11 @@
           </el-col>
           <el-col :span="6">
             <el-form-item label="起止日期：">
-              <span>{{ currentRow.startDate | dateFormat }}-{{currentRow.endDate | dateFormat}}</span>
+              <el-date-picker
+                v-model="dateRange"
+                type="daterange"
+                placeholder="选择日期范围">
+              </el-date-picker>
             </el-form-item>
           </el-col>
           <el-col :span="6">
@@ -545,6 +565,8 @@
     mixins: [qiniu],
     data() {
       return {
+        transferId: '',
+        dateRange: [],
         currentIndex: 0,//选中当前行的索引
         checkboxList: ['Inadvancefinished', 'EarlyRetirement'],
         pullBloor: false,//控制拉扇是否显示
@@ -604,8 +626,8 @@
         size: 10,
         totalElements: 0,
         url: '/api/v2/applications',
-        agencyList: {},
-        branchList: {},
+        agentList: [],
+        branchList: [],
         //省市县
         selectedOptions: [],
         options: [],
@@ -673,6 +695,7 @@
           ]
         },
         bigPhotoUrl: '',
+        dialogTransfer: false,
         formVisible: false,
         dialogBigPhoto: false,
         dialogVisible: false,
@@ -800,10 +823,47 @@
       },
     },
     methods: {
+      //转单确认
+      transfer() {
+        this.axios.post('/api/v2/applications/transfer/'+this.currentRow.applicationNo+'/'+this.transferId).then((res) => {
+          this.loading = true;
+          this.axios.post(this.url, {
+            ...this.searchForm,
+            page: this.cur_page - 1,
+            size: this.size
+          }).then((res) => {
+            this.$message.success("转单成功！");
+            this.dialogTransfer = false;
+            this.tableData = res.data.data.content;
+            this.currentRow = this.tableData[this.currentIndex];
+            this.totalElements = res.data.data.totalElements;
+            this.loading = false;
+          }).catch((error) => {
+            this.$message.error(error.response.data.message);
+          });
+        }).catch((error) => {
+          this.$message.error(error.response.data.message);
+        })
+      },
       //临时保存
       currentSave() {
+        this.currentRow.startDate = format(this.dateRange[0],'YYYY-MM-DD')+' 00:00:00';
+        this.currentRow.endDate = format(this.dateRange[1],'YYYY-MM-DD')+' 00:00:00';
         this.axios.put('/api/v2/applications/apply/temp', this.currentRow).then((res) => {
-          this.$message.success("保存成功！");
+          this.loading = true;
+          this.axios.post(this.url, {
+            ...this.searchForm,
+            page: this.cur_page - 1,
+            size: this.size
+          }).then((res) => {
+            this.$message.success("保存成功！");
+            this.tableData = res.data.data.content;
+            this.currentRow = this.tableData[this.currentIndex];
+            this.totalElements = res.data.data.totalElements;
+            this.loading = false;
+          }).catch((error) => {
+            this.$message.error(error.response.data.message);
+          });
         }).catch((error) => {
           this.$message.error(error.response.data.message);
         })
@@ -856,13 +916,18 @@
           status: this.checkboxList
         };
         this.loading = true;
-        this.axios.post(this.url, form).then((res) => {
-          this.tableData = res.data.data.content;
-          this.totalElements = res.data.data.totalElements;
+        if(form.status.length >0) {
+          this.axios.post(this.url, form).then((res) => {
+            this.tableData = res.data.data.content;
+            this.totalElements = res.data.data.totalElements;
+            this.loading = false;
+          }).catch((error) => {
+            this.$message.error(error.response.data.message);
+          })
+        } else {
+          this.tableData = [];
           this.loading = false;
-        }).catch((error) => {
-          this.$message.error(error.response.data.message);
-        })
+        }
       },
       prevClick() {
         console.log(window.location.hash);
@@ -1121,10 +1186,17 @@
               }
             })
           }
-
         });
         console.log(val);
         this.currentRow = Object.assign({}, val);
+        //获取该人所属门店下的所有经纪人
+        this.axios.get('api/v2/agents/getByAgentIdAgents/'+this.currentRow.agentId).then((res) => {
+          this.agentList = res.data;
+        }).catch((error) => {
+          this.$message.error(error.response.data.message);
+        });
+        //日期默认值
+        this.dateRange=[this.currentRow.startDate,this.currentRow.endDate];
         //回显省市区
         this.selectedOptions = [this.currentRow.province,this.currentRow.city,this.currentRow.district];
         //照片回显
@@ -1165,13 +1237,6 @@
       },
       handlePreview(file) {
         console.log(file);
-      },
-      getAgencyList() {
-        this.axios.get('/api/v1/agency/getAgencyList').then((res) => {
-          this.agencyList = res.data;
-        }).catch((error) => {
-          this.$message.error(error.response.data.message);
-        })
       },
       getBranchList(cityId) {
         if (cityId !== ' ') {

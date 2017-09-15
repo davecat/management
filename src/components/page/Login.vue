@@ -50,7 +50,7 @@
         error: '',
         captchaUrl: '',
         ruleForm: {
-          cellphone: '13041385766',
+          cellphone: '',
           verifyCode: ''
         },
         rules: {
