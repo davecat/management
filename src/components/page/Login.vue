@@ -2,19 +2,23 @@
   <div class="login-wrap">
     <div class="ms-title">后台管理系统</div>
     <div class="ms-login">
-      <div style="position: absolute;top: 0;right: 3px">
-        <i class="fa fa-qrcode" aria-hidden="true" style="font-size: xx-large"></i>
-      </div>
+
+      <el-tooltip class="item" effect="dark" :content="tipContent" placement="top-start">
+        <div style="position: absolute;top: 0;right: 3px;cursor: pointer" @click="checkLogin">
+          <i :class="checkClass" aria-hidden="true" style="font-size: xx-large"></i>
+        </div>
+      </el-tooltip>
       <!--密码登陆-->
-      <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="0px" class="demo-ruleForm">
+      <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="0px" class="demo-ruleForm" v-if="checkForm">
         <el-form-item prop="cellphone">
-          <el-input v-model="ruleForm.cellphone" placeholder="手机号"></el-input>
+          <el-input v-model="ruleForm.cellphone" placeholder="请输入手机号"></el-input>
         </el-form-item>
+        <el-button @click="getCaptcha('ruleForm')" id="captcha" :disabled="captchaBloor">获取验证码</el-button>
         <!--<el-form-item prop="password">-->
         <!--<el-input type="password" placeholder="密码" v-model="ruleForm.password" @keyup.enter.native="submitForm('ruleForm')"></el-input>-->
         <!--</el-form-item>-->
         <el-form-item prop="verifyCode">
-          <el-input type="captcha" placeholder="验证码" v-model="ruleForm.verifyCode"
+          <el-input type="captcha" placeholder="请输入验证码" v-model="ruleForm.verifyCode"
                     @keyup.enter.native="submitForm('ruleForm')"></el-input>
         </el-form-item>
         <div class="login-btn">
@@ -29,7 +33,7 @@
         </el-form-item>
       </el-form>
       <!--二维码-->
-      <!--<span><img src="static/2.jpg" width="100%"></span>-->
+      <span v-if="!checkForm"><img src="static/2.jpg" width="100%"></span>
     </div>
   </div>
 </template>
@@ -38,6 +42,11 @@
   export default {
     data: function () {
       return {
+        tipContent: '扫码登陆更安全哦~',
+        checkForm: true,
+        checkClass:'fa fa-qrcode',
+        captchaBloor: false,
+        time: 60,
         error: '',
         captchaUrl: '',
         ruleForm: {
@@ -45,13 +54,11 @@
           verifyCode: ''
         },
         rules: {
-          username: [
-            {required: true, message: '请输入用户名', trigger: 'blur'}
+          cellphone: [
+            {required: true, message: '请输入手机号', trigger: 'blur'},
+            {pattern:/^1[34578]\d{9}$/, message: '请输入正确的手机号', trigger: 'blur'}
           ],
-          password: [
-            {required: true, message: '请输入密码', trigger: 'blur'}
-          ],
-          captcha: [
+          verifyCode: [
             {required: true, message: '请输入验证码', trigger: 'blur'}
           ]
         }
@@ -60,6 +67,17 @@
     created: function () {
     },
     methods: {
+      checkLogin() {
+        if(this.checkClass === 'fa fa-qrcode') {
+          this.checkClass = 'fa fa-television';
+          this.checkForm = false;
+          this.tipContent = '手机号登陆'
+        } else {
+          this.checkClass = 'fa fa-qrcode';
+          this.checkForm = true;
+          this.tipContent = '扫码登陆更安全哦~'
+        }
+      },
       submitForm(formName) {
         const self = this;
         self.$refs[formName].validate((valid) => {
@@ -68,7 +86,6 @@
               self.$router.push('/home');
             }).catch((error) => {
               this.$message.error(error.response.data.message);
-              this.getCaptcha();
               this.error = error.response.data.message;
             });
           } else {
@@ -80,13 +97,39 @@
       doLogin(ruleForm) {
         return this.axios.post("/v2/anons/login", ruleForm);
       },
-      getCaptcha() {
-        this.axios.get("/api/v2/sms/send/" + this.ruleForm.cellphone).then((response) => {
-          this.captchaUrl = response.data.captchaURL;
-          this.ruleForm.captchaId = response.data.captchaId;
-        }).catch((error) => {
-          this.$message.error(error.response.data.message);
+      getCaptcha(formName) {
+        let that = this;
+        that.$refs[formName].validateField('cellphone',function (valid) {
+          if (!valid) {
+            that.captchaBloor = true;
+            let val = document.getElementById('captcha').children[0];
+            that.setTime(val);
+            that.axios.get("/api/v2/sms/send/"+that.ruleForm.cellphone).then((res) => {
+            }).catch((error) => {
+              that.captchaBloor = false;
+              that.$message.error(error.response.data.message);
+            })
+          } else {
+            console.log(valid);
+            return false;
+          }
         })
+      },
+      setTime(val) {
+        let a;
+        let that = this;
+        if (this.time === 0) {
+          val.innerHTML="获取验证码";
+          this.time = 60;
+          this.captchaBloor = false;
+          clearTimeout(a);
+        } else {
+          val.innerHTML="重新发送(" + this.time + ")";
+          this.time--;
+          a = setTimeout(function() {
+            that.setTime(val)
+          },1000);
+        }
       }
     }
   }
