@@ -22,10 +22,10 @@ axios.interceptors.response.use(function (response) {
   localStorage.setItem('token',response.headers.auth)
   return response;
 }, function (error) {
-  // if  (401 === error.response.status) {
-  //   localStorage.removeItem('token');
-  //   window.location = '/';
-  // }
+  if  (401 === error.response.status) {
+    localStorage.removeItem('token');
+    window.location = '/';
+  }
   return Promise.reject(error);
 });
 Vue.use(VueAxios, axios);
