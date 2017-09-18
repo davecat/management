@@ -2,24 +2,14 @@
   <div class="login-wrap">
     <div class="ms-title">后台管理系统</div>
     <div class="ms-login">
-
-      <el-tooltip class="item" effect="dark" :content="tipContent" placement="top-start">
-        <div style="position: absolute;top: 0;right: 3px;cursor: pointer" @click="checkLogin">
-          <i :class="checkClass" aria-hidden="true" style="font-size: xx-large"></i>
-        </div>
-      </el-tooltip>
-      <!--密码登陆-->
       <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="0px" class="demo-ruleForm" v-if="checkForm">
         <el-form-item prop="cellphone">
-          <el-input v-model="ruleForm.cellphone" placeholder="请输入手机号"></el-input>
+          <el-input v-model="ruleForm.cellphone" placeholder="用户名"></el-input>
         </el-form-item>
-        <el-button @click="getCaptcha('ruleForm')" id="captcha" :disabled="captchaBloor">获取验证码</el-button>
-        <!--<el-form-item prop="password">-->
-        <!--<el-input type="password" placeholder="密码" v-model="ruleForm.password" @keyup.enter.native="submitForm('ruleForm')"></el-input>-->
-        <!--</el-form-item>-->
         <el-form-item prop="verifyCode">
-          <el-input type="captcha" placeholder="请输入验证码" v-model="ruleForm.verifyCode"
+          <el-input type="captcha" placeholder="请输入验证码" v-model="ruleForm.verifyCode" style="width: 64%;"
                     @keyup.enter.native="submitForm('ruleForm')"></el-input>
+          <el-button @click="getCaptcha('ruleForm')" id="captcha" :disabled="captchaBloor" style="width: 102px;">获取验证码</el-button>
         </el-form-item>
         <div class="login-btn">
           <el-button type="primary" @click="submitForm('ruleForm')">登录</el-button>
@@ -50,7 +40,7 @@
         error: '',
         captchaUrl: '',
         ruleForm: {
-          cellphone: '',
+          cellphone: '15037360032',
           verifyCode: ''
         },
         rules: {
@@ -124,7 +114,7 @@
           this.captchaBloor = false;
           clearTimeout(a);
         } else {
-          val.innerHTML="重新发送(" + this.time + ")";
+          val.innerHTML=this.time;
           this.time--;
           a = setTimeout(function() {
             that.setTime(val)
@@ -157,7 +147,7 @@
     left: 50%;
     top: 50%;
     width: 300px;
-    height: 350px;
+    height: 200px;
     margin: -150px 0 0 -190px;
     padding: 40px;
     border-radius: 5px;

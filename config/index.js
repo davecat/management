@@ -28,7 +28,7 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
-      //地图详细数据
+      //中介报表
       '/api/agency': {
         target: 'http://localhost:8000',
         secure: false,
@@ -70,7 +70,7 @@ module.exports = {
       //中介接口
       '/api/v2': {
         target: 'http://182.92.186.16:8085',
-        // target: 'http://192.168.0.110:8080',
+        // target: 'http://192.168.0.112:8080',
         secure: false,
         pathRewrite: {
           '^/api/v2': '/api/v2'

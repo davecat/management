@@ -1,19 +1,12 @@
 <template>
   <div>
-    <div class="crumbs">
-      <el-breadcrumb separator="/">
-        <el-breadcrumb-item><i class="fa fa-dashboard"></i> 控制台</el-breadcrumb-item>
-        <el-breadcrumb-item>首页</el-breadcrumb-item>
-      </el-breadcrumb>
-    </div>
-
-    <el-row :gutter="30">
-      <el-col :span="6">
+    <el-row :gutter="30" style="min-width: 1174px">
+      <el-col :span="6" style="min-width: 291px">
         <el-card class="box-card">
           <div slot="header" class="clearfix" style="position: relative">
             <span style="line-height: 36px;text-align: center;width: 100%;display: inline-block;">申请总数</span>
           </div>
-          <el-row style="text-align: center">
+          <el-row style="text-align: center;margin-bottom: 5px">
             <span class="bigText">{{total.totalAmount}}</span>
           </el-row>
           <el-row class="text item">
@@ -26,12 +19,12 @@
           </el-row>
         </el-card>
       </el-col>
-      <el-col :span="6">
+      <el-col :span="6" style="min-width: 291px">
         <el-card class="box-card">
           <div slot="header" class="clearfix" style="position: relative">
             <span style="line-height: 36px;text-align: center;width: 100%;display: inline-block;">今日申请</span>
           </div>
-          <el-row style="text-align: center">
+          <el-row style="text-align: center;margin-bottom: 5px">
             <span class="bigText">{{today.billAmount}}</span>
           </el-row>
           <el-row style="text-align: center;height: 30px">
@@ -39,12 +32,12 @@
           </el-row>
         </el-card>
       </el-col>
-      <el-col :span="6">
+      <el-col :span="6" style="min-width: 291px">
         <el-card class="box-card">
           <div slot="header" class="clearfix" style="position: relative">
             <span style="line-height: 36px;text-align: center;width: 100%;display: inline-block;">本周申请</span>
           </div>
-          <el-row style="text-align: center">
+          <el-row style="text-align: center;margin-bottom: 5px">
             <span class="bigText">{{week.billAmount}}</span>
           </el-row>
           <el-row style="text-align: center;height: 30px">
@@ -52,12 +45,12 @@
           </el-row>
         </el-card>
       </el-col>
-      <el-col :span="6">
+      <el-col :span="6" style="min-width: 291px">
         <el-card class="box-card">
           <div slot="header" class="clearfix" style="position: relative">
             <span style="line-height: 36px;text-align: center;width: 100%;display: inline-block;">本月申请</span>
           </div>
-          <el-row style="text-align: center">
+          <el-row style="text-align: center;margin-bottom: 5px">
             <span class="bigText">{{month.billAmount}}</span>
           </el-row>
           <el-row style="text-align: center;height: 30px">
@@ -67,8 +60,8 @@
       </el-col>
     </el-row>
     <!--图表-->
-    <el-row v-if="staff.staffType === 'Interior'">
-      <!--折现统计-->
+    <el-row>
+      <!--折线统计-->
       <el-radio-group v-model="radio3" @change="aaa()">
         <el-radio-button label="最近7天"></el-radio-button>
         <el-radio-button label="最近30天"></el-radio-button>
@@ -267,16 +260,8 @@
     },
     created() {
       this.init();
-      this.axios.get("/api/v2/users/current").then((response) => {
-        this.staff = response.data;
-        console.log(this.staff);
-        if (this.staff.staffType === 'Interior') {
-//                    this.getWeekData();
-//                    this.getMapByWeek();
-        }
-      }).catch((error) => {
-        console.log(error);
-      });
+      this.getWeekData();
+      this.getMapByWeek();
     },
     methods: {
       //点击tabs事件
@@ -358,7 +343,7 @@
         //拉取数据
         let weekStart = dataFns.format(dataFns.subDays(Date.now(), 7), 'YYYY-MM-DD');
         let weekEnd = dataFns.format(Date.now(), 'YYYY-MM-DD');
-        this.axios.post('/api/getAmountByDate', {
+        this.axios.post('/api/agency/getLine', {
           'startDay': weekStart,
           'endDay': weekEnd,
           'id': this.staff.id
@@ -392,7 +377,7 @@
       getMonthData() {
         let monthStart = dataFns.format(dataFns.subDays(Date.now(), 30), 'YYYY-MM-DD');
         let monthEnd = dataFns.format(Date.now(), 'YYYY-MM-DD');
-        this.axios.post('/api/getAmountByDate', {
+        this.axios.post('/api/agency/getLine', {
           'startDay': monthStart,
           'endDay': monthEnd,
           'id': this.staff.id

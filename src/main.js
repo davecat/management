@@ -19,7 +19,10 @@ axios.interceptors.request.use(function (config) {
 });
 //返回拦截器
 axios.interceptors.response.use(function (response) {
-  localStorage.setItem('token',response.headers.auth)
+  // 只有当auth存在时候才更新token,防止请求首页报表时候清空token
+  if(response.headers.auth){
+    localStorage.setItem('token',response.headers.auth)
+  }
   return response;
 }, function (error) {
   if  (401 === error.response.status) {
