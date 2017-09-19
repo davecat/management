@@ -27,7 +27,11 @@ body{
   font-family:"Helvetica Neue",Helvetica, "microsoft yahei", arial, STHeiTi, sans-serif;
 }
 a{text-decoration: none}
+.main-container{
+  height:100%;
+}
 .content{
+  height: 100%;
   background: none repeat scroll 0 0 #fff;
   width: auto;
   padding:30px;

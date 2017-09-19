@@ -68,10 +68,10 @@
       </el-radio-group>
       <el-col id="line1">
         <!-- 为 ECharts 准备一个具备大小（宽高）的 DOM -->
-        <div id="line" style="width: 100%;height:400px;"></div>
+        <div id="line" style="width: auto;height:400px;"></div>
       </el-col>
     </el-row>
-    <el-row v-if="staff.staffType === 'Interior'">
+    <el-row style="margin-bottom: 50px">
       <!--地图区域分布-->
       <el-radio-group v-model="radio2" @change="bbb()">
         <el-radio-button label="最近7天"></el-radio-button>
@@ -79,7 +79,7 @@
       </el-radio-group>
       <el-col :span="12" id="map1">
         <!-- 为 ECharts 准备一个具备大小（宽高）的 DOM -->
-        <div id="map" style="width: 100%;height:400px;"></div>
+        <div id="map" style="width: auto;height:400px;"></div>
       </el-col>
       <el-col :span="12">
         <el-tabs v-model="tableStatus" type="card" @tab-click="handleChange(tableStatus)">
@@ -91,9 +91,9 @@
           tooltip-effect="dark"
           :default-sort="{prop: 'total', order: 'descending'}"
           highlight-current-row
-          maxHeight="400"
+          maxHeight="300"
           row-class-name="myTable"
-          style="width: 100%">
+          style="width: 100%;">
           <el-table-column
             type="index"
             width="50">
@@ -261,7 +261,7 @@
     created() {
       this.init();
       this.getWeekData();
-//      this.getMapByWeek();
+      this.getMapByWeek();
     },
     methods: {
       //点击tabs事件
@@ -448,7 +448,7 @@
         let weekEnd = dataFns.format(Date.now(), 'YYYY-MM-DD');
         let totalAdd = 0;
         let totalAdd2 = 0;
-        this.axios.post('/api/getMap', {startDay: weekStart, endDay: weekEnd}).then((res) => {
+        this.axios.post('/api/agency/getMap', {startDay: weekStart, endDay: weekEnd}).then((res) => {
           //处理数据
           res.data[0].forEach(function (item) {
             totalAdd += item.total;
@@ -565,12 +565,12 @@
         if (this.radio2 === '最近7天') {
           this.tableStatus = 'area';
           document.getElementById('map').parentNode.removeChild(document.getElementById('map'));
-          document.getElementById('map1').innerHTML += '<div id="map" style="width: 600px;height:400px;"></div>';
+          document.getElementById('map1').innerHTML += '<div id="map" style="width: 100%;height:400px;"></div>';
           this.getMapByWeek();
         } else {
           this.tableStatus = 'area';
           document.getElementById('map').parentNode.removeChild(document.getElementById('map'));
-          document.getElementById('map1').innerHTML += '<div id="map" style="width: 600px;height:400px;"></div>';
+          document.getElementById('map1').innerHTML += '<div id="map" style="width: 100%;height:400px;"></div>';
           this.getMapByMonth();
         }
       },
