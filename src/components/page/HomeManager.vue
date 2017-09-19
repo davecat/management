@@ -333,7 +333,7 @@
           this.axios.post('/api/v1/branch/getBranchListByLocation', param).then((res) => {
             this.branchList = res.data;
           }).catch((error) => {
-            this.$message.error(error.response.data.error.message);
+            this.$message.error(error.response.data.message);
           })
         } else {
           this.searchForm.branchId = '';
@@ -407,7 +407,7 @@
           this.agencyList = res.data;
           console.log(this.agencyList);
         }).catch((error) => {
-          this.$message.error(error.response.data.error.message);
+          this.$message.error(error.response.data.message);
         })
       },
       //新增确认
@@ -425,7 +425,7 @@
               this.selectedOptions = [];
               this.formVisible = false;
             }).catch((error) => {
-              this.$message.error(error.response.data.error.message);
+              this.$message.error(error.response.data.message);
             })
           } else {
             console.log('error submit!!');
@@ -450,7 +450,7 @@
               this.$refs[formName].resetFields();
               this.formVisible2 = false;
             }).catch((error) => {
-              this.$message.error(error.response.data.error.message);
+              this.$message.error(error.response.data.message);
             })
           } else {
             console.log('error submit!!');
@@ -488,7 +488,7 @@
           this.getData();
 
         }).catch((error) => {
-          this.$message.error(error.response.data.error.message);
+          this.$message.error(error.response.data.message);
         });
         this.dialogVisible = false;
       },
@@ -534,7 +534,7 @@
 
 
         }).catch((error) => {
-          this.$message.error(error.response.data.error.message);
+          this.$message.error(error.response.data.message);
         });
       }
     }

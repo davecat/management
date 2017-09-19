@@ -32,6 +32,7 @@
   export default {
     data: function () {
       return {
+        timeOut: '',
         tipContent: '扫码登陆更安全哦~',
         checkForm: true,
         checkClass:'fa fa-qrcode',
@@ -97,10 +98,9 @@
             that.axios.get("/api/v2/sms/send/"+that.ruleForm.cellphone).then((res) => {
 
             }).catch((error) => {
-                if(error.response.status === 403) {
-                    that.$message.error('当前手机号未激活'+error.response.data)
-                }
               that.captchaBloor = false;
+              clearTimeout(that.timeOut);
+              val.innerHTML="获取验证码";
               that.$message.error(error.response.data.message);
             })
           } else {
@@ -110,17 +110,16 @@
         })
       },
       setTime(val) {
-        let a;
         let that = this;
         if (this.time === 0) {
           val.innerHTML="获取验证码";
           this.time = 60;
           this.captchaBloor = false;
-          clearTimeout(a);
+          clearTimeout(that.timeOut);
         } else {
           val.innerHTML=this.time;
           this.time--;
-          a = setTimeout(function() {
+          this.timeOut = setTimeout(function() {
             that.setTime(val)
           },1000);
         }

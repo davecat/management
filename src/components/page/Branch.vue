@@ -235,7 +235,7 @@
           this.axios.post('/api/v1/branch/getBranchListByLocation', param).then((res) => {
             this.branchList = res.data;
           }).catch((error) => {
-            this.$message.error(error.response.data.error.message);
+            this.$message.error(error.response.data.message);
           })
         } else {
           this.searchForm.branchId = '';
@@ -303,7 +303,7 @@
         this.axios.get('/api/v2/agencys/adminAndLib/getIdNameAgencyList').then((res) => {
           this.agencyList = res.data;
         }).catch((error) => {
-          this.$message.error(error.response.data.error.message);
+          this.$message.error(error.response.data.message);
         })
       },
       //新增确认
@@ -321,7 +321,7 @@
               this.selectedOptions = [];
               this.formVisible = false;
             }).catch((error) => {
-              this.$message.error(error.response.data.error.message);
+              this.$message.error(error.response.data.message);
             })
           } else {
             console.log('error submit!!');
@@ -347,7 +347,7 @@
               this.$refs[formName].resetFields();
               this.formVisible2 = false;
             }).catch((error) => {
-              this.$message.error(error.response.data.error.message);
+              this.$message.error(error.response.data.message);
             })
           } else {
             console.log('error submit!!');
@@ -394,7 +394,7 @@
           this.axios.put('/api/v2/branchs/updateEnabled', form).then((res) => {
             this.getData();
           }).catch((error) => {
-            this.$message.error(error.response.data.error.message);
+            this.$message.error(error.response.data.message);
           })
         }
         this.dialogVisible = false;
@@ -409,7 +409,7 @@
           this.qrCodeUrl = 'https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=' + res.data.ticket;
           this.dialogQRCode = true;
         }).catch((error) => {
-          this.$message.error(error.response.data.error.message);
+          this.$message.error(error.response.data.message);
         });
       },
       districtFormat(value) {
@@ -477,7 +477,7 @@
             document.body.removeChild(a);
           }
         ).catch((error) => {
-          this.$message.error(error.response.data.error.message);
+          this.$message.error(error.response.data.message);
         });
       }
     }

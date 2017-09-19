@@ -344,7 +344,7 @@
         this.axios.put('/api/v2/agents/enabled', form).then((res) => {
           this.getData();
         }).catch((error) => {
-          this.$message.error(error.response.data.error.message);
+          this.$message.error(error.response.data.message);
         });
         this.dialogVisible = false;
       },
@@ -357,7 +357,7 @@
         this.axios.put('/api/v2/agents/enabled', form).then((res) => {
           this.getData();
         }).catch((error) => {
-          this.$message.error(error.response.data.error.message);
+          this.$message.error(error.response.data.message);
         });
         this.dialogVisible1 = false;
       },
@@ -384,7 +384,7 @@
         this.axios.put('/api/v2/agents/passAndNopass', form).then((res) => {
           this.getData();
         }).catch((error) => {
-          this.$message.error(error.response.data.error.message);
+          this.$message.error(error.response.data.message);
         });
         this.dialogVisible3 = false;
       },
@@ -447,7 +447,7 @@
             document.body.removeChild(a);
           }
         ).catch((error) => {
-          this.$message.error(error.response.data.error.message);
+          this.$message.error(error.response.data.message);
         });
       }
     }
