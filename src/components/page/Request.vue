@@ -558,8 +558,9 @@
 <script>
   import VueAwesomeSwiper from 'vue-awesome-swiper'
   import {swiper, swiperSlide} from 'vue-awesome-swiper'
-  import json from "static/city.json";
+  import json from "static/city.json"
   import format from 'date-fns/format'
+  import dateFns from 'date-fns'
   import {qiniu} from '../mixins/qiniu.js'
   export default {
     components: {
@@ -569,7 +570,8 @@
     name: 'carrousel',
     mixins: [qiniu],
     data() {
-        let minDate = Date.now() - 8.64e7;
+      let minDate;
+      let maxDate;
       return {
         transferId: '',
         dateRange: [],
@@ -663,12 +665,11 @@
         formLabelWidth: '82px',
         pickerOptions: {
           disabledDate(time) {
-//
-            return time.getTime() < minDate;
+            return minDate<time.getTime()||time.getTime() <maxDate;
           },
           onPick(val) {
-            minDate = val.minDate;
-            console.log(minDate);
+            minDate = Number(format(dateFns.subDays(dateFns.addMonths(val.minDate,13),1),'x'));
+            maxDate = Number(format(dateFns.subDays(dateFns.addMonths(val.minDate,2),1),'x'));
           }
         },
         bigPhotoUrl: '',
@@ -799,7 +800,8 @@
     },
     methods: {
       ceshi(val){
-        console.log(val);
+        console.log(Date.now()- 8.64e7);
+        console.log(Number());
       },
       //转单确认
       transfer() {
