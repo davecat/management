@@ -15,7 +15,7 @@
         <el-form-item>
           <el-button @click="Search">查询</el-button>
         </el-form-item>
-        <el-form-item style="float: right;margin-right: 0">
+        <el-form-item style="float: right;margin-right: 0" v-if="addButton">
           <el-button type="success" @click="formVisible = true">新增用户</el-button>
         </el-form-item>
       </el-form>
@@ -166,10 +166,12 @@
 
 <script>
   import {pagination} from '../mixins/pagination.js'
+  import store from '@/store'
   export default {
     mixins: [pagination],
     data() {
       return {
+        addButton: false,
         staffTypeList: [],//人员类型
         data: [],
         roleId: '',//角色id
@@ -222,6 +224,14 @@
       this.getStaffTypeList();
       this.getRoleList();
       this.getAgencyList();
+      if(this.button.button.indexOf('新增') >= 0) {
+        this.addButton = true;
+      }
+    },
+    computed: {
+      button() {
+        return store.state.button;
+      }
     },
     filters: {
       staffTypeFormat: function (value) {

@@ -8,7 +8,7 @@
         <el-form-item>
           <el-button  @click="Search">查询</el-button>
         </el-form-item>
-        <el-form-item style="float: right;margin-right: 0">
+        <el-form-item style="float: right;margin-right: 0" v-if="addButton">
           <el-button type="success" @click="formVisible = true">新增中介</el-button>
         </el-form-item>
       </el-form>
@@ -175,10 +175,13 @@
 
 <script>
   import {pagination} from '../mixins/pagination.js'
+  import store from '@/store'
   export default {
     mixins: [pagination],
     data() {
       return {
+        //按钮权限控制
+        addButton:false,
         searchForm: {
           name: '',
           enabled: ['true', 'false']
@@ -214,6 +217,16 @@
           enabled: [{required: true, message: '请选择状态', trigger: 'blur'}],
         },
         url: '/api/v2/agencys/getAgencyPage'
+      }
+    },
+    created(){
+      if(this.button.button.indexOf('新增') >= 0) {
+        this.addButton = true;
+      }
+    },
+    computed: {
+      button() {
+        return store.state.button;
       }
     },
     methods: {

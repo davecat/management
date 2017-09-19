@@ -15,7 +15,7 @@
           <el-button @click="Search">查询</el-button>
         </el-form-item>
         <el-form-item style="float: right;margin-right: 0">
-          <el-button type="success" @click="add()">新增房源</el-button>
+          <el-button type="success" @click="add()" v-if="addButton">新增房源</el-button>
           <el-tooltip class="item" effect="dark" content="批量导入" placement="top-start">
             <el-button type="info" @click="batchImport()"><i class="fa fa-download" aria-hidden="true"></i></el-button>
           </el-tooltip>
@@ -263,6 +263,8 @@
     mixins: [pagination],
     data() {
       return {
+        //按钮权限控制
+        addButton:false,
         form3:{agencyId: ''},
         fileList: [],
         url: '/api/v2/apartments/getBranchListPage',
@@ -321,9 +323,14 @@
     created(){
       this.init();
       this.getAgencyList();
-      console.log(this.staff);
+      if(this.button.button.indexOf('新增') >= 0) {
+        this.addButton = true;
+      }
     },
     computed: {
+      button() {
+        return store.state.button;
+      },
       staff() {
           return this.$store.state.staff.staff
       },

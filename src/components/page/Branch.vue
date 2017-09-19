@@ -288,10 +288,7 @@
     },
     methods: {
       init: function () {
-        let that = this;
         this.options = json;
-        console.log(this.button.button);
-        console.log(this.button.button.indexOf('导出'));
         if(this.button.button.indexOf('新增') >= 0) {
             this.addButton = true;
         }

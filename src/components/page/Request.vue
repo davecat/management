@@ -37,7 +37,7 @@
         <el-form-item>
           <el-button @click="Search">查询</el-button>
         </el-form-item>
-        <el-form-item style="float: right;margin-right: 0">
+        <el-form-item style="float: right;margin-right: 0" v-if="importButton">
           <el-tooltip class="item" effect="dark" content="导出" placement="top-start">
             <el-button type="info" @click="exportCSV()"><i class="fa fa-download" aria-hidden="true"></i></el-button>
           </el-tooltip>
@@ -562,6 +562,7 @@
   import format from 'date-fns/format'
   import dateFns from 'date-fns'
   import {qiniu} from '../mixins/qiniu.js'
+  import store from '@/store'
   export default {
     components: {
       swiper,
@@ -573,6 +574,8 @@
       let minDate;
       let maxDate;
       return {
+        //按钮权限控制
+        importButton: false,
         transferId: '',
         dateRange: [],
         currentIndex: 0,//选中当前行的索引
@@ -716,8 +719,14 @@
     created(){
       this.getData();
       this.init();
+      if(this.button.button.indexOf('导出') >= 0) {
+        this.importButton = true;
+      }
     },
     computed: {
+      button() {
+        return store.state.button;
+      },
       staff (){
         return this.$store.state.staff.staff
       },

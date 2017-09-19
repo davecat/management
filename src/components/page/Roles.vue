@@ -8,7 +8,7 @@
             <el-form-item>
               <el-button @click="Search">查询</el-button>
             </el-form-item>
-            <el-form-item style="float: right;margin-right: 0">
+            <el-form-item style="float: right;margin-right: 0" v-if="addButton">
               <el-button type="success" @click="formVisible = true;">新增角色</el-button>
             </el-form-item>
           </el-form>
@@ -104,6 +104,7 @@
     export default {
         data() {
             return {
+                addButton: false,
                 loading: false,//加载动画
                 tableData: [],
                 cur_page: 1,
@@ -146,12 +147,18 @@
             }
         },
         computed: {
+            button() {
+              return store.state.button;
+            },
             menus() {
                 return store.state.menus.menus;
             }
         },
         created(){
           this.getData();
+          if(this.button.button.indexOf('新增') >= 0) {
+            this.addButton = true;
+          }
         },
         methods: {
             handleCurrentChange(val){

@@ -23,7 +23,7 @@
         <el-form-item>
           <el-button @click="Search">查询</el-button>
         </el-form-item>
-        <el-form-item style="float: right;margin-right: 0">
+        <el-form-item style="float: right;margin-right: 0" v-if="importButton">
           <el-tooltip class="item" effect="dark" content="导出" placement="top-start">
             <el-button type="info" @click="exportCSV()"><i class="fa fa-download" aria-hidden="true"></i></el-button>
           </el-tooltip>
@@ -170,9 +170,12 @@
 <script>
   import format from 'date-fns/format'
   import json from "../../../static/city.json";
+  import store from '@/store'
   export default {
     data() {
       return {
+        //按钮权限控制
+        importButton: false,
         activeName: 'Rejected',
         loading: false,//加载动画
         tableData: [],
@@ -217,16 +220,15 @@
       },
     },
     computed: {
-//            totalAmount() {
-//                let totalAmount = 0;
-//                this.tableData.forEach(item => {
-//                    totalAmount += item.payeeAmount;
-//                });
-//                return totalAmount;
-//            }
+      button() {
+        return store.state.button;
+      }
     },
     created() {
       this.getData();
+      if(this.button.button.indexOf('导出') >= 0) {
+        this.importButton = true;
+      }
     },
     methods: {
       //导出全部
