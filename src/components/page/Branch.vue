@@ -403,9 +403,9 @@
         this.axios.get('/admin/api/branch/getBranchQRCode', {
           params: {
             branchId: row.id,
-            branchName: row.name
           }
         }).then((res) => {
+          console.log(res.data.ticket);
           this.qrCodeUrl = 'https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=' + res.data.ticket;
           this.dialogQRCode = true;
         }).catch((error) => {

@@ -69,20 +69,11 @@ module.exports = {
       },
       //中介接口
       '/api/v2': {
-        // target: 'http://182.92.186.16:8085',
-        target: 'http://192.168.0.106:8080',
+        target: 'http://182.92.186.16:8085',
+        // target: 'http://192.168.0.106:8080',
         secure: false,
         pathRewrite: {
           '^/api/v2': '/api/v2'
-        }
-      },
-      //登陆接口
-      '/v2': {
-        target: 'http://182.92.186.16:8085',
-        // target: 'http://192.168.0.110:8080',
-        secure: false,
-        pathRewrite: {
-          '^/v2': '/v2'
         }
       },
       '/riskcontrol': {
@@ -109,8 +100,9 @@ module.exports = {
           '^/anon': '/anon'
         }
       },
+      //获取门店二维码
       '/admin/api/branch': {
-        target: 'http://192.168.0.107:8001',
+        target: 'http://testbk.wezebra.com',
         secure: false,
         pathRewrite: {
           '^/admin/api/branch': '/admin/api/branch'

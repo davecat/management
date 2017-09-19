@@ -264,7 +264,9 @@
             <el-form-item label="起止日期：" prop="dateRange">
               <el-date-picker
                 v-model="dateRange"
+                @change="ceshi"
                 type="daterange"
+                :picker-options="pickerOptions"
                 placeholder="选择日期范围">
               </el-date-picker>
             </el-form-item>
@@ -567,6 +569,7 @@
     name: 'carrousel',
     mixins: [qiniu],
     data() {
+        let minDate = Date.now() - 8.64e7;
       return {
         transferId: '',
         dateRange: [],
@@ -659,43 +662,14 @@
         },
         formLabelWidth: '82px',
         pickerOptions: {
-          shortcuts: [
-            {
-              text: '今日',
-              onClick(picker) {
-                const end = new Date();
-                const start = new Date();
-                picker.$emit('pick', [start, end]);
-              }
-            },
-            {
-              text: '最近三天',
-              onClick(picker) {
-                const end = new Date();
-                const start = new Date();
-                start.setTime(start.getTime() - 3600 * 1000 * 24 * 3);
-                picker.$emit('pick', [start, end]);
-              }
-            },
-            {
-              text: '最近七天',
-              onClick(picker) {
-                const end = new Date();
-                const start = new Date();
-                start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
-                picker.$emit('pick', [start, end]);
-              }
-            },
-            {
-              text: '最近三十天',
-              onClick(picker) {
-                const end = new Date();
-                const start = new Date();
-                start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
-                picker.$emit('pick', [start, end]);
-              }
-            }
-          ]
+          disabledDate(time) {
+//
+            return time.getTime() < minDate;
+          },
+          onPick(val) {
+            minDate = val.minDate;
+            console.log(minDate);
+          }
         },
         bigPhotoUrl: '',
         dialogTransfer: false,
@@ -824,6 +798,9 @@
       },
     },
     methods: {
+      ceshi(val){
+        console.log(val);
+      },
       //转单确认
       transfer() {
         this.axios.post('/api/v2/applications/transfer/'+this.currentRow.applicationNo+'/'+this.transferId).then((res) => {
@@ -1093,7 +1070,24 @@
 
             this.axios.put('/api/v2/applications/apply', this.currentRow).then((res) => {
                 this.$message.success('提交成功！');
-              this.getData();
+
+              this.loading = true;
+              this.axios.post(this.url, {
+                ...this.searchForm,
+                status: [this.radio],
+                page: this.cur_page - 1,
+                size: this.size
+              }).then((res) => {
+                this.tableData = res.data.data.content;
+                this.handleCurrentRow(this.tableData[this.currentIndex]);
+                this.totalElements = res.data.data.totalElements;
+                this.loading = false;
+              }).catch((error) => {
+                this.$message.error(error.response.data.message);
+              });
+
+
+
             }).catch((error) => {
               this.$message.error(error.response.data.message);
             })
@@ -1126,8 +1120,8 @@
       },
       //切换tab
       handleChangeTab(a) {
+        this.radio = 'Unchecked';
         if (a === 'Unchecked') {
-          this.radio = 'Unchecked';
           this.radioChange();
         } else if (a === 'RetirementFinished') {
           this.checkboxList = ['Inadvancefinished', 'EarlyRetirement'];

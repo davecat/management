@@ -86,7 +86,7 @@
         });
       },
       doLogin(ruleForm) {
-        return this.axios.post("/v2/anons/login", ruleForm);
+        return this.axios.post("/api/v2/anons/login", ruleForm);
       },
       getCaptcha(formName) {
         let that = this;
