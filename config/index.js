@@ -69,8 +69,8 @@ module.exports = {
       },
       //中介接口
       '/api/v2': {
-        target: 'http://182.92.186.16:8085',
-        // target: 'http://192.168.0.112:8080',
+        // target: 'http://182.92.186.16:8085',
+        target: 'http://192.168.0.106:8080',
         secure: false,
         pathRewrite: {
           '^/api/v2': '/api/v2'

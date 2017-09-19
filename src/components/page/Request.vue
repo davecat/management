@@ -195,6 +195,9 @@
     <!--拉扇层-->
     <el-form label-position="left" inline
              v-if="pullBloor"
+             :model="currentRow"
+             ref="currentRow"
+             :rules="rules"
              class="demo-table-expand hiddenForm">
       <div>
         <el-row style="position: absolute;top: 50%;left: -12px;z-index: 999;margin-top: -24px">
@@ -214,7 +217,7 @@
             style="font-size: x-large;vertical-align: sub" class="fa fa-angle-left" aria-hidden="true"></i>上一条
           </el-button>
           <el-button v-if="searchForm.status[0] === 'Unchecked'" type="info" @click="currentSave">临时保存</el-button>
-          <el-button v-if="searchForm.status[0] === 'Unchecked'" type="success" @click="submit">提交审批</el-button>
+          <el-button v-if="searchForm.status[0] === 'Unchecked'" type="success" @click="submit('currentRow')">提交审批</el-button>
           <el-button v-if="searchForm.status[0] === 'Unchecked'" type="warning" @click="dialogVisible = true">取消申请</el-button>
           <el-button v-if="searchForm.status[0] === 'Unconfirmed'" type="warning">撤回</el-button>
           <el-button v-if="searchForm.status[0] === 'Repayment' || searchForm.status[0] === 'Breach' || searchForm.status[0] === 'Loan'" type="warning">
@@ -253,12 +256,12 @@
         </el-row>
         <el-row>
           <el-col :span="6">
-            <el-form-item label="每月租金：">
+            <el-form-item label="每月租金：" prop="monthlyRent">
               <el-input v-model="currentRow.monthlyRent"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="起止日期：">
+            <el-form-item label="起止日期：" prop="dateRange">
               <el-date-picker
                 v-model="dateRange"
                 type="daterange"
@@ -463,7 +466,7 @@
                     :on-success="uploadContractSuccess"
                     :on-error="handleUploadError"
                     :on-remove="handleRemove">
-                    <!--<img v-show="contractPhotos" :src="photo(item)" class="avatar">-->
+                    <!--<img v-show="currentRow.contractPhotos" :src="photo(item)" class="avatar">-->
                     <i class="el-icon-plus"></i>
                   </el-upload>
                 </el-col>
@@ -724,10 +727,8 @@
           contractPhotos: []
         },
         rules: {
-          name: [{required: true, message: '请输入经纪人姓名', trigger: 'blur'}],
-          tel: [{required: true, message: '请输入经纪人电话', trigger: 'blur'}],
-          staffNo: [{required: true, message: '请输入经纪人工号', trigger: 'blur'}],
-          status: [{required: true, message: '请选择状态', trigger: 'change'}]
+//          monthlyRent: [{required: true, message: '请输入月租金', trigger: 'blur'}],
+//          dateRange: [{required: true, message: '请输入起止日期', trigger: 'change'}]
         },
         idCardFrontPhoto: '',
         idCardVersoPhoto: '',
@@ -1082,21 +1083,17 @@
       submit(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
+            this.currentRow.startDate = format(this.dateRange[0],'YYYY-MM-DD')+' 00:00:00';
+            this.currentRow.endDate = format(this.dateRange[1],'YYYY-MM-DD')+' 00:00:00';
             //把省市县的值带到后台
-            this.form.province = this.selectedOptions[0];
-            this.form.city = this.selectedOptions[1];
-            this.form.district = this.selectedOptions[2];
-            let application = this.form;
-            application.idCardFrontPhoto = this.idCardFrontPhoto;
-            application.idCardVersoPhoto = this.idCardVersoPhoto;
-            application.idCardAndPersonPhoto = this.idCardAndPersonPhoto;
-            application.contractPhotos = this.contractPhotos;
-            application.startDate = format(this.form.startDate, 'YYYY-MM-DD');
-            application.endDate = format(this.form.endDate, 'YYYY-MM-DD');
-            this.axios.put('/api/v1/application', application).then((res) => {
+            this.currentRow.province = this.selectedOptions[0];
+            this.currentRow.city = this.selectedOptions[1];
+            this.currentRow.district = this.selectedOptions[2];
+            console.log(this.currentRow);
+
+            this.axios.put('/api/v2/applications/apply', this.currentRow).then((res) => {
+                this.$message.success('提交成功！');
               this.getData();
-              this.$refs[formName].resetFields();
-              this.formVisible = false;
             }).catch((error) => {
               this.$message.error(error.response.data.message);
             })
@@ -1218,22 +1215,23 @@
         }
       },
       uploadFrontSuccess(response, file) {
-        this.idCardFrontPhoto = response.key;
+        this.$set(this.currentRow,'idCardFrontPhoto',response.key);
       },
       uploadVersoSuccess(response, file) {
-        this.idCardVersoPhoto = response.key;
+        this.$set(this.currentRow,'idCardVersoPhoto',response.key);
       },
       uploadPersonSuccess(response, file) {
-        this.idCardAndPersonPhoto = response.key;
+        this.$set(this.currentRow,'idCardAndPersonPhoto',response.key);
       },
       handleUploadError(err, file) {
         console.log(err)
       },
       uploadContractSuccess(response, file) {
-        this.contractPhotos.push(response.key);
+        //给currentRow合同照片赋值，带到后端
+        this.currentRow.contractPhotos.push(response.key);
       },
       handleRemove(file, fileList) {
-        this.contractPhotos = this.contractPhotos.filter(item => file.url.indexOf(item) === -1);
+        this.currentRow.contractPhotos = this.currentRow.contractPhotos.filter(item => file.url.indexOf(item) === -1);
       },
       handlePreview(file) {
         console.log(file);
