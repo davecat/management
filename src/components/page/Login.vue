@@ -95,7 +95,11 @@
             let val = document.getElementById('captcha').children[0];
             that.setTime(val);
             that.axios.get("/api/v2/sms/send/"+that.ruleForm.cellphone).then((res) => {
+
             }).catch((error) => {
+                if(error.response.status === 403) {
+                    that.$message.error('当前手机号未激活'+error.response.data)
+                }
               that.captchaBloor = false;
               that.$message.error(error.response.data.message);
             })

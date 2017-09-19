@@ -60,7 +60,7 @@
       </el-col>
     </el-row>
     <!--图表-->
-    <el-row>
+    <el-row style="margin-top: 5px">
       <!--折线统计-->
       <el-radio-group v-model="radio3" @change="aaa()">
         <el-radio-button label="最近7天"></el-radio-button>
@@ -261,7 +261,7 @@
     created() {
       this.init();
       this.getWeekData();
-      this.getMapByWeek();
+//      this.getMapByWeek();
     },
     methods: {
       //点击tabs事件

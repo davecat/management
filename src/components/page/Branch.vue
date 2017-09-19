@@ -291,11 +291,11 @@
         let that = this;
         this.options = json;
         console.log(this.button.button);
-        console.log(this.button.button.indexOf('新增'));
-        if(this.button.button.indexOf('新增') > 0) {
+        console.log(this.button.button.indexOf('导出'));
+        if(this.button.button.indexOf('新增') >= 0) {
             this.addButton = true;
         }
-        if(this.button.button.indexOf('新增') > 0) {
+        if(this.button.button.indexOf('导出') >= 0) {
           this.importButton = true;
         }
       },
