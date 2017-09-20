@@ -505,7 +505,7 @@
         let monthEnd = dataFns.format(Date.now(), 'YYYY-MM-DD');
         let totalAdd = 0;
         let totalAdd2 = 0;
-        this.axios.post('/api/getMap', {startDay: monthStart, endDay: monthEnd}).then((res) => {
+        this.axios.post('/api/agency/getMap', {startDay: monthStart, endDay: monthEnd}).then((res) => {
           res.data[0].forEach(function (item) {
             totalAdd += item.total;
           });
