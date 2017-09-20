@@ -17,7 +17,8 @@
         components: { SidebarItem },
         computed: {
             onRoutes(){
-                return this.$route.path.replace('/', '');
+//                return this.$route.path.replace('/', '');
+              return this.$route.path;
             },
             menus() {
                 return store.state.menus.menus;
