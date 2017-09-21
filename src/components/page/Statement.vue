@@ -167,7 +167,7 @@
                   v-model="searchForm2.refundDate"
                   align="right"
                   type="date"
-                  placeholder="应收款日期"
+                  placeholder="报违约日期"
                   @change="selectedData">
                 </el-date-picker>
               </el-form-item>
@@ -186,7 +186,7 @@
           </el-row>
           <el-row style="margin-bottom: 10px">
             <el-col :span="4" style="float: left;margin-top: 7px;color: red;min-width: 150px">
-              应收合计:{{ sumPayeeAmount2 | currency}}
+              应收合计:{{ sumRefundAmount | currency}}
             </el-col>
             <div class="pagination" style="position: absolute;right: 0;top: -1px;margin: 0">
               <el-pagination
@@ -203,13 +203,13 @@
               :default-sort="{prop: 'payeeDate', order: 'descending'}"
               style="width: 100%">
               <el-table-column
-                prop="payeeDate"
+                prop="refundDate"
                 sortable
                 min-width="130"
-                label="应收款日期">
+                label="报违约日期">
                 <template scope="scope">
                   <div slot="reference" class="name-wrapper-normal">
-                    <el-tag>{{ scope.row.payeeDate | dateFormat }}</el-tag>
+                    <el-tag>{{ scope.row.refundDate | dateFormat }}</el-tag>
                   </div>
                 </template>
               </el-table-column>
@@ -226,20 +226,10 @@
               <el-table-column
                 min-width="120"
                 prop="payeeAmount"
-                label="应收金额">
+                label="应退金额">
                 <template scope="scope">
                   <div slot="reference" class="name-wrapper">
-                    <el-tag>{{ scope.row.payeeAmount | currency }}</el-tag>
-                  </div>
-                </template>
-              </el-table-column>
-              <el-table-column
-                min-width="120"
-                prop="totalAmount"
-                label="分期总金额">
-                <template scope="scope">
-                  <div slot="reference" class="name-wrapper-normal">
-                    <el-tag>{{ scope.row.totalAmount | currency }}</el-tag>
+                    <el-tag>{{ scope.row.payerAmount | currency }}</el-tag>
                   </div>
                 </template>
               </el-table-column>
@@ -254,12 +244,12 @@
                 </template>
               </el-table-column>
               <el-table-column
-                min-width="150"
-                prop="mobile"
-                label="联系方式">
+                min-width="180"
+                prop="startDate"
+                label="起止时间">
                 <template scope="scope">
                   <div slot="reference" class="name-wrapper-normal">
-                    <el-tag>{{ scope.row.mobile}}</el-tag>
+                    <el-tag>{{ scope.row.startDate | dateFormat}}-{{ scope.row.endDate | dateFormat}}</el-tag>
                   </div>
                 </template>
               </el-table-column>
@@ -270,16 +260,6 @@
                 <template scope="scope">
                   <div slot="reference" class="name-wrapper-normal">
                     <el-tag>{{ scope.row.rentPeriod}}</el-tag>
-                  </div>
-                </template>
-              </el-table-column>
-              <el-table-column
-                min-width="180"
-                prop="startDate"
-                label="起止时间">
-                <template scope="scope">
-                  <div slot="reference" class="name-wrapper-normal">
-                    <el-tag>{{ scope.row.startDate | dateFormat}}-{{ scope.row.endDate | dateFormat}}</el-tag>
                   </div>
                 </template>
               </el-table-column>
@@ -340,7 +320,7 @@
         totalElements: 0,
         totalElements2: 0,
         sumPayeeAmount: 0,
-        sumPayeeAmount2: 0,
+        sumRefundAmount: 0,
         url: '/api/v2/payeeLibs/getPayeeLibPage',
         url2: '/api/v2/agencyRefunds/getAgencyRefundPage',
         searchForm: {
@@ -396,8 +376,12 @@
     methods: {
       tabChange() {
         if(this.activeName === 'Rejected') {
+          this.searchForm.applicationNoOrCustomnerName = '';
+          this.searchForm.applyDate = format(Date.now(), 'YYYY-MM-DD');
           this.getData();
         } else {
+          this.searchForm2.refundDate = '';
+          this.searchForm2.applicationNoOrCustomnerName = '';
           this.getData2();
         }
       },
@@ -519,10 +503,11 @@
           this.tableData2 = res.data.content;
           this.totalElements2 = res.data.totalElements;
           this.loading = false;
-          if (res.data.sumPayeeAmount2 !== undefined) {
-            this.sumPayeeAmount2 = res.data.sumPayeeAmount2;
+          console.log(res.data.sumRefundAmount);
+          if (res.data.sumRefundAmount !== undefined) {
+            this.sumRefundAmount = res.data.sumRefundAmount;
           } else {
-            this.sumPayeeAmount2 = 0;
+            this.sumRefundAmount = 0;
           }
         }).catch((error) => {
           this.$message.error(error.response.data.message);
@@ -533,6 +518,7 @@
         this.getData();
       },
       Search2() {
+        this.searchForm2.refundDate = format(this.searchForm2.refundDate, 'YYYY-MM-DD');
         this.getData2();
       },
       selectedData() {
