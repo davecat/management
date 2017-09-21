@@ -23,12 +23,8 @@
         },
         methods: {
             doLogout() {
-                this.axios.get("/anon/logout").then((response) => {
-                    localStorage.removeItem('token');
-                    this.$router.push('/login');
-                }).catch((error) => {
-                    console.log(error);
-                })
+              localStorage.removeItem('token');
+              this.$router.push('/login');
             }
         }
     }
