@@ -74,7 +74,7 @@
         self.$refs[formName].validate((valid) => {
           if (valid) {
             this.doLogin(self.ruleForm).then((response) => {
-              self.$router.push('/home');
+              self.$router.push('/index');
             }).catch((error) => {
               this.$message.error(error.response.data.message);
               this.error = error.response.data.message;
