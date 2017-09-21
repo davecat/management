@@ -89,10 +89,16 @@
                          @click="rowDisabled(scope.row.id)"><i class="fa fa-trash"></i>
               </el-button>
             </el-tooltip>
-            <el-tooltip class="item" effect="dark" content="查看二维码" placement="top-end">
+            <el-tooltip class="item" effect="dark" content="查看微信二维码" placement="top-end">
               <el-button size="small" type="success"
                          :disabled="scope.row.enabled === 'false'"
                          @click="showQRCode(scope.row)"><i class="fa fa-qrcode"></i>
+              </el-button>
+            </el-tooltip>
+            <el-tooltip class="item" effect="dark" content="查看APP二维码" placement="top-end">
+              <el-button size="small" type="success"
+                         :disabled="scope.row.enabled === 'false'"
+                         @click="showAPPCode(scope.row)"><i class="fa fa-qrcode"></i>
               </el-button>
             </el-tooltip>
           </template>
@@ -161,13 +167,24 @@
     </el-dialog>
 
     <el-dialog
-      title="门店二维码"
+      title="微信二维码"
       :visible.sync="dialogQRCode"
       size="tiny">
       <span><img :src="qrCodeUrl" width="100%"></span>
       <span style="text-align:center;display:block;">经纪人注册专用</span>
       <span slot="footer" class="dialog-footer">
                 <el-button type="primary" @click="dialogQRCode = false">确 定</el-button>
+            </span>
+    </el-dialog>
+
+    <el-dialog
+      title="APP二维码"
+      :visible.sync="dialogAPPCode"
+      size="tiny">
+      <div id="codesss" style="text-align: center"></div>
+      <span style="text-align:center;display:block;">经纪人注册专用</span>
+      <span slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="dialogAPPCode = false">确 定</el-button>
             </span>
     </el-dialog>
 
@@ -210,6 +227,7 @@
         formVisible2: false,
         dialogVisible: false,
         dialogQRCode: false,
+        dialogAPPCode: false,
         disabledId: '',
         qrCodeUrl: 'http://images.tmtpost.com/uploads/images/2014/14/report/30519/mac600.jpg',
         formLabelWidth: '120px',
@@ -407,6 +425,15 @@
           this.dialogQRCode = true;
         }).catch((error) => {
           this.$message.error(error.response.data.message);
+        });
+      },
+      //查看APP二维码
+      showAPPCode(row) {
+        $('#codesss').empty();
+        let a = JSON.stringify(row);
+        this.dialogAPPCode = true;
+        Vue.nextTick(function () {
+          $('#codesss').qrcode(a); //任意字符串
         });
       },
       districtFormat(value) {
