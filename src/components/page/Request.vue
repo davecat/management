@@ -218,66 +218,71 @@
           </el-button>
           <el-button v-if="searchForm.status[0] === 'Unchecked'" type="info" @click="currentSave">临时保存</el-button>
           <el-button v-if="searchForm.status[0] === 'Unchecked'" type="success" @click="submit('currentRow')">提交审批</el-button>
-          <el-button v-if="searchForm.status[0] === 'Unchecked'" type="warning" @click="dialogVisible = true">取消申请</el-button>
-          <el-button v-if="searchForm.status[0] === 'Unconfirmed'" type="warning">撤回</el-button>
+          <el-button v-if="searchForm.status[0] === 'Unchecked'" type="danger" @click="dialogVisible = true">取消申请</el-button>
+          <el-button v-if="searchForm.status[0] === 'Unconfirmed'" type="info" style="width: 88px;">撤回</el-button>
           <el-button v-if="searchForm.status[0] === 'Repayment' || searchForm.status[0] === 'Breach' || searchForm.status[0] === 'Loan'" type="warning">
             提前退租
           </el-button>
-          <el-button v-if="searchForm.status[0] !== 'Finished' && searchForm.status[0] !== 'Inadvancefinished'" @click="dialogTransfer = true;transferId=''">转单
+          <el-button style="width: 88px;" v-if="searchForm.status[0] !== 'Finished' && searchForm.status[0] !== 'Inadvancefinished'" @click="dialogTransfer = true;transferId=''" type="warning">转单
           </el-button>
           <el-button style="float: right;padding: 5px 15px" @click="next()" :disabled="!tableData[currentIndex+1]">下一条<i
             style="font-size: x-large;vertical-align: sub" class="fa fa-angle-right" aria-hidden="true"></i></el-button>
         </div>
         <div
           style="width: 100%;text-align: center;margin-bottom: 5px;border-bottom: 1px solid #D9D9D9;border-top: 1px solid #D9D9D9;padding: 10px 0">
-          <span style="color: red;">{{currentRow.status | appStatusFormat}}</span>
+          <span style="color: #f7ba2a;">{{currentRow.status | appStatusFormat}}</span>
         </div>
         <el-row>
-          <el-col :span="6">
+          <el-col :span="12" style="height: 43px;">
             <el-form-item label="申请编号：">
               <span>{{ currentRow.applictionNo }}</span>
             </el-form-item>
           </el-col>
-          <el-col :span="6">
+          <el-col :span="12" style="height: 43px;">
+            <el-form-item label="每月租金：" prop="monthlyRent" id="monthRen">
+              <el-input v-model="currentRow.monthlyRent"></el-input>
+            </el-form-item>
+
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12" style="height: 43px;">
             <el-form-item label="租客姓名：">
               <span>{{ currentRow.customerName }}</span>
             </el-form-item>
           </el-col>
-          <el-col :span="6">
-            <el-form-item label="手机号码：">
-              <span>{{ currentRow.mobile }}</span>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="身份证号：">
-              <span>{{ currentRow.idCardNo }}</span>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="6">
-            <el-form-item label="每月租金：" prop="monthlyRent">
-              <el-input v-model="currentRow.monthlyRent"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
+          <el-col :span="12" style="height: 43px;">
             <el-form-item label="起止日期：" prop="dateRange">
               <el-date-picker
                 v-model="dateRange"
-                @change="ceshi"
                 type="daterange"
                 :picker-options="pickerOptions"
                 placeholder="选择日期范围">
               </el-date-picker>
             </el-form-item>
           </el-col>
-          <el-col :span="6">
+        </el-row>
+        <el-row>
+          <el-col :span="12" style="height: 43px;">
+            <el-form-item label="手机号码：">
+              <span>{{ currentRow.mobile }}</span>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12" style="height: 43px;">
             <el-form-item label="租期合计：">
               <span>{{ currentRow.rentPeriod }}</span>
             </el-form-item>
+
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12" style="height: 43px;">
+            <el-form-item label="身份证号：">
+              <span>{{ currentRow.idCardNo }}</span>
+            </el-form-item>
           </el-col>
 
-          <el-col :span="6">
+          <el-col :span="12" style="height: 43px;">
             <el-form-item label="尾款合计：">
               <span>{{ currentRow.retainage | currency }}</span>
             </el-form-item>
@@ -330,7 +335,7 @@
                 </el-table-column>
               </el-table>
             </el-tab-pane>
-            <el-tab-pane label="房屋信息" name="houseInfo">
+            <el-tab-pane label="房屋信息" name="houseInfo" id="houseInfo">
               <el-row>
                 <el-col>
                   <el-form-item label="房屋信息：" :label-width="formLabelWidth" prop="selectedOptions">
@@ -351,14 +356,14 @@
               <el-row>
                 <el-col>
                   <el-form-item label="台账号码：" :label-width="formLabelWidth" prop="apartmentNo">
-                    <el-input v-model="currentRow.apartmentNo"></el-input>
+                    <el-input v-model="currentRow.apartmentNo" placeholder="请输入台账号"></el-input>
                   </el-form-item>
                 </el-col>
               </el-row>
             </el-tab-pane>
-            <el-tab-pane label="租客其他信息" name="customerInfo">
+            <el-tab-pane label="租客其他信息" name="customerInfo" id="customerInfo">
               <el-row>
-                <el-col :span="10">
+                <el-col :span="12">
                   <el-form-item label="学历信息：" :label-width="formLabelWidth" prop="education">
                     <el-select v-model="currentRow.education">
                       <el-option label="专科及以下" value="CollegeDown"></el-option>
@@ -367,31 +372,31 @@
                     </el-select>
                   </el-form-item>
                 </el-col>
-                <el-col :span="10">
+                <el-col :span="12">
                   <el-form-item label="应急联系：" :label-width="formLabelWidth" prop="emergencyContact">
                     <el-input v-model="currentRow.emergencyContact"></el-input>
                   </el-form-item>
                 </el-col>
               </el-row>
               <el-row>
-                <el-col :span="10">
+                <el-col :span="12">
                   <el-form-item label="工作单位：" :label-width="formLabelWidth" prop="companyName">
                     <el-input v-model="currentRow.companyName"></el-input>
                   </el-form-item>
                 </el-col>
-                <el-col :span="10">
+                <el-col :span="12">
                   <el-form-item label="联系方式：" :label-width="formLabelWidth" prop="emergencyContactMobile">
                     <el-input v-model="currentRow.emergencyContactMobile"></el-input>
                   </el-form-item>
                 </el-col>
               </el-row>
               <el-row>
-                <el-col :span="10">
+                <el-col :span="12">
                   <el-form-item label="单位地址：" :label-width="formLabelWidth" prop="companyAddress">
                     <el-input v-model="currentRow.companyAddress"></el-input>
                   </el-form-item>
                 </el-col>
-                <el-col :span="10">
+                <el-col :span="12">
                   <el-form-item label="双方关系：" :label-width="formLabelWidth" prop="relation">
                     <el-select v-model="currentRow.relation">
                       <el-option label="父母" value="Parent"></el-option>
@@ -403,7 +408,7 @@
                 </el-col>
               </el-row>
             </el-tab-pane>
-            <el-tab-pane v-if="searchForm.status[0] === 'Unchecked'" label="照片资料" name="picInfo">
+            <el-tab-pane v-if="searchForm.status[0] === 'Unchecked'" label="照片资料" name="picInfo" id="picInfo">
               <el-row :gutter="20">
                 <el-col :span="3">
                   <el-form-item label="身份证照片：">
@@ -528,23 +533,24 @@
             </el-tab-pane>
             <el-tab-pane v-if="radio === 'Returned'" label="审批备注" name="remarks">
               <!--{{currentRow.confirmRemarks}}-->
+              <span slot="label">审批备注<el-badge is-dot class="item"></el-badge></span>
               <span style="color: red;">{{currentRow.confirmRemarks}}</span>
             </el-tab-pane>
           </el-tabs>
         </el-row>
-        <hr style="border-bottom-color: #d9d9d9; border-top: none;">
-        <el-row style="margin-top: 20px;opacity: .5">
-          <el-col :span="6">
+        <el-row  style="opacity: .5;position: fixed;bottom: 0;width: 98%;">
+          <hr style="border-bottom-color: #d9d9d9; border-top: none;opacity: 1">
+          <el-col :span="6" style="height: 40px;">
             <el-form-item label="经纪人：">
               <span>{{ currentRow.responsibleAgent }}</span>
             </el-form-item>
           </el-col>
-          <el-col :span="6">
+          <el-col :span="6" style="height: 40px;">
             <el-form-item label="联系方式：">
               <span>{{currentRow.responsibleAgentPhone}}</span>
             </el-form-item>
           </el-col>
-          <el-col :span="6">
+          <el-col :span="6" style="height: 40px;">
             <el-form-item label="申请日期：">
               <span>{{ currentRow.applyDate | dateFormat }}</span>
             </el-form-item>
@@ -758,6 +764,8 @@
           return "已取消";
         } else if (value === "Rejected") {
           return "审核不通过";
+        } else if(value === "Repayment") {
+          return "还款中"
         }
       },
       educationFormat: function (value) {
@@ -808,10 +816,6 @@
       },
     },
     methods: {
-      ceshi(val){
-        console.log(Date.now()- 8.64e7);
-        console.log(Number());
-      },
       //转单确认
       transfer() {
         this.axios.post('/api/v2/applications/transfer/'+this.currentRow.applicationNo+'/'+this.transferId).then((res) => {
@@ -1148,7 +1152,8 @@
         this.reason = [];
         let that = this;
         this.pullBloor = true;
-        this.cover = true;
+        //TODO 先去掉遮罩层，分析原因可能是因为拉扇层还没有显示，就点击
+//        this.cover = true;
         Vue.nextTick(function () {
           document.querySelector('.hiddenForm').className = 'daveShow hiddenForm el-form demo-table-expand el-form--label-left el-form--inline';
         });
@@ -1346,25 +1351,17 @@
     vertical-align: sub;
   }
 
-  #reasonInputTextarea {
-    width: 100%;
-  }
-
-  #reasonInputTextarea .el-form-item__content {
-    width: 60%;
-  }
-
-  #reasonInputTextarea .el-form-item__content textarea {
-    color: red;
+  #monthRen .el-form-item__content {
+    width: 220px
   }
 
   .hiddenForm {
-    min-width: 1100px;
+    min-width: 700px;
     margin-top: -40px;
     box-shadow: -10px 0px 5px #888888;
     padding: 15px;
     overflow-y: scroll;
-    width: 80%;
+    width: 65%;
     height: 100%;
     z-index: 999;
     transition: all 0.5s;
@@ -1374,18 +1371,18 @@
   }
 
   .daveShow {
-    min-width: 1100px;
+    min-width: 700px;
     margin-top: -40px;
     box-shadow: -10px 0px 5px #888888;
     padding: 15px;
     overflow-y: scroll;
-    width: 80%;
+    width: 65%;
     height: 100%;
     z-index: 999;
     background-color: #fff;
     position: absolute;
     top: 40px;
-    left: 18%;
+    left: 33.5%;
   }
 
   .content {
@@ -1428,5 +1425,20 @@
   .imgContainer {
     width: 100%;
     text-align: center;
+  }
+  #houseInfo .el-cascader {
+    width: 300px;
+  }
+  #houseInfo .el-form-item__content {
+    width: 300px;
+  }
+  #customerInfo .el-select {
+    width: 220px;
+  }
+  #customerInfo .el-form-item__content {
+    width: 220px;
+  }
+  #picInfo .el-form-item__label {
+    min-width: 110px;
   }
 </style>
