@@ -573,7 +573,6 @@
     mixins: [qiniu],
     data() {
       let minDate;
-      let maxDate;
       return {
         //按钮权限控制
         importButton: false,
@@ -669,11 +668,10 @@
         formLabelWidth: '82px',
         pickerOptions: {
           disabledDate(time) {
-            return minDate<time.getTime()||time.getTime() <maxDate;
+            return minDate<time.getTime()
           },
           onPick(val) {
             minDate = Number(format(dateFns.subDays(dateFns.addMonths(val.minDate,13),1),'x'));
-            maxDate = Number(format(dateFns.subDays(dateFns.addMonths(val.minDate,2),1),'x'));
           }
         },
         bigPhotoUrl: '',
