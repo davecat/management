@@ -282,7 +282,6 @@
           size: this.size
         }).then((res) => {
           this.tableData = res.data.content;
-          console.log(this.tableData);
           this.totalElements = res.data.totalElements;
           this.loading = false;
           if (res.data.sumPayeeAmount !== undefined) {

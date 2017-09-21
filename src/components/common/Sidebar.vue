@@ -26,9 +26,11 @@
         },
         methods: {
           treeSelect(index) {
-            this.axios.get('api/v2/roles/getRolePermission/buttons/'+index).then((res) => {
+            this.axios.get('api/v2/roles/getRolePermission/buttons'+index).then((res) => {
               store.dispatch('get_button', res.data);
-              this.$router.push(index);
+              this.$router.push({
+                path:index
+              });
             }).catch((error) => {
               this.$message.error(error.response.data.message);
             })
