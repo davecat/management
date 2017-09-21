@@ -212,7 +212,7 @@
         </el-row>
       </div>
       <content>
-        <div style="width: 100%;text-align: center;margin-bottom: 5px">
+        <div style="width: 100%;text-align: center;margin-bottom: 5px;height: 36px;">
           <el-button style="float: left;padding: 5px 15px" @click="prev()" :disabled="!tableData[currentIndex-1]"><i
             style="font-size: x-large;vertical-align: sub" class="fa fa-angle-left" aria-hidden="true"></i>上一条
           </el-button>
@@ -220,10 +220,10 @@
           <el-button v-if="searchForm.status[0] === 'Unchecked'" type="success" @click="submit('currentRow')">提交审批</el-button>
           <el-button v-if="searchForm.status[0] === 'Unchecked'" type="danger" @click="dialogVisible = true">取消申请</el-button>
           <el-button v-if="searchForm.status[0] === 'Unconfirmed'" type="info" style="width: 88px;">撤回</el-button>
-          <el-button v-if="searchForm.status[0] === 'Repayment' || searchForm.status[0] === 'Breach' || searchForm.status[0] === 'Loan'" type="warning">
-            提前退租
+          <el-button style="width: 88px;" v-if="searchForm.status[0] !== 'Finished' && searchForm.status[0] !== 'Inadvancefinished' && searchForm.status[0] !== 'RetirementFinished'" @click="dialogTransfer = true;transferId=''" type="warning">转单
           </el-button>
-          <el-button style="width: 88px;" v-if="searchForm.status[0] !== 'Finished' && searchForm.status[0] !== 'Inadvancefinished'" @click="dialogTransfer = true;transferId=''" type="warning">转单
+          <el-button v-if="searchForm.status[0] === 'Repayment' || searchForm.status[0] === 'Breach' || searchForm.status[0] === 'Loan'" type="danger">
+            提前退租
           </el-button>
           <el-button style="float: right;padding: 5px 15px" @click="next()" :disabled="!tableData[currentIndex+1]">下一条<i
             style="font-size: x-large;vertical-align: sub" class="fa fa-angle-right" aria-hidden="true"></i></el-button>
@@ -317,11 +317,6 @@
                   min-width="130"
                   prop="mobile"
                   label="逾期费">
-                </el-table-column>
-                <el-table-column
-                  min-width="130"
-                  prop="mobile"
-                  label="手续费">
                 </el-table-column>
                 <el-table-column
                   min-width="180"
@@ -766,6 +761,14 @@
           return "审核不通过";
         } else if(value === "Repayment") {
           return "还款中"
+        } else if(value === "Loan") {
+          return "待放款"
+        } else if(value === "Finished"){
+          return "已结束"
+        } else if(value === "EarlyRetirement" || value === "Inadvancefinished"){
+          return "提前退租"
+        } else if(value === "Breach"){
+          return "已逾期"
         }
       },
       educationFormat: function (value) {

@@ -74,7 +74,7 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column min-width="123" label="操作">
+        <el-table-column min-width="171" label="操作">
           <template scope="scope">
             <el-tooltip class="item" effect="dark" content="修改" placement="top-end">
               <el-button size="small" type="primary"
