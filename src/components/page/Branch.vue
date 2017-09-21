@@ -236,7 +236,8 @@
           name: [{required: true, message: '请输入门店名称', trigger: 'blur'}],
           address: [{required: true, message: '请输入门店地址', trigger: 'blur'}],
           enabled: [{required: true, message: '请选择状态', trigger: 'change'}]
-        }
+        },
+        out:''
       }
     },
     created(){
@@ -427,13 +428,34 @@
           this.$message.error(error.response.data.message);
         });
       },
+      //二维码汉字转码
+      toUtf8(str) {
+        var i, len, c;
+        len = str.length;
+        for(i = 0; i < len; i++) {
+          c = str.charCodeAt(i);
+          if ((c >= 0x0001) && (c <= 0x007F)) {
+            this.out += str.charAt(i);
+          } else if (c > 0x07FF) {
+            this.out += String.fromCharCode(0xE0 | ((c >> 12) & 0x0F));
+            this.out += String.fromCharCode(0x80 | ((c >>  6) & 0x3F));
+            this.out += String.fromCharCode(0x80 | ((c >>  0) & 0x3F));
+          } else {
+            this.out += String.fromCharCode(0xC0 | ((c >>  6) & 0x1F));
+            this.out += String.fromCharCode(0x80 | ((c >>  0) & 0x3F));
+          }
+        }
+        return this.out;
+      },
       //查看APP二维码
       showAPPCode(row) {
+        let that = this;
         $('#codesss').empty();
         let a = JSON.stringify(row);
+        this.toUtf8(a);
         this.dialogAPPCode = true;
         Vue.nextTick(function () {
-          $('#codesss').qrcode(a); //任意字符串
+          $('#codesss').qrcode(that.out); //任意字符串
         });
       },
       districtFormat(value) {

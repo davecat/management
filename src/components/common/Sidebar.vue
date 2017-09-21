@@ -26,7 +26,6 @@
         },
         methods: {
           treeSelect(index) {
-            console.log(index);
             this.axios.get('api/v2/roles/getRolePermission/buttons/'+index).then((res) => {
               store.dispatch('get_button', res.data);
               this.$router.push(index);

@@ -93,6 +93,7 @@
       },
     },
     created() {
+      console.log('log');
       this.getData();
     },
     methods: {

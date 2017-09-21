@@ -18,7 +18,7 @@
           </el-date-picker>
         </el-form-item>
         <el-form-item>
-          <el-input v-model="searchForm.customerName" placeholder="申请编号或租客姓名"></el-input>
+          <el-input v-model="searchForm.applicationNoOrCustomnerName" placeholder="申请编号或租客姓名"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button @click="Search">查询</el-button>
@@ -152,13 +152,11 @@
           </template>
         </el-table-column>
         <el-table-column
-          min-width="127"
+          min-width="130"
           prop="responsibleAgent"
           label="经纪人">
           <template scope="scope">
-            <div slot="reference" class="name-wrapper-normal">
-              <el-tag>{{ scope.row.responsibleBranch }}-{{ scope.row.responsibleAgent }}</el-tag>
-            </div>
+            {{ scope.row.responsibleBranch }}-{{ scope.row.responsibleAgent }}
           </template>
         </el-table-column>
       </el-table>
@@ -183,10 +181,10 @@
         size: 10,
         totalElements: 0,
         sumPayeeAmount: 0,
-        url: '/counter/api/v1/payee/lib/getPayeeLibPage',
+        url: '/api/v2/payeeLibs/getPayeeLibPage ',
         searchForm: {
-          applyDate: '',
-          customerName: ''
+          applyDate: format(Date.now(), 'YYYY-MM-DD'),
+          applicationNoOrCustomnerName: ''
         },
         formLabelWidth: '120px',
       }
@@ -284,6 +282,7 @@
           size: this.size
         }).then((res) => {
           this.tableData = res.data.content;
+          console.log(this.tableData);
           this.totalElements = res.data.totalElements;
           this.loading = false;
           if (res.data.sumPayeeAmount !== undefined) {

@@ -23,11 +23,8 @@ export const constantRouterMap = [
     meta: { requiresAuth: true },
     component: resolve => require(['components/common/Home'], resolve),
     children:[]
-  },
-  {
-    path: '*',
-    component: resolve => require(['components/common/404.vue'], resolve)
   }
+
 ];
 
 export default new Router({
