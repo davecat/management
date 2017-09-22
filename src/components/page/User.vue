@@ -35,7 +35,7 @@
       </div>
     </el-row>
     <el-row>
-      <el-table :data="tableData" border width="100%">
+      <el-table :data="tableData"  width="100%">
         <el-table-column prop="nickname" label="用户昵称">
         </el-table-column>
         <el-table-column prop="staffType" label="类型">
@@ -48,11 +48,11 @@
             {{scope.row.status == 'Normal' ? '启用' : '停用'}}
           </template>
         </el-table-column>
-        <el-table-column prop="username" label="登录名">
+        <el-table-column prop="username" label="登录名" min-width="92">
         </el-table-column>
         <el-table-column prop="role" label="角色">
         </el-table-column>
-        <el-table-column label="操作" width="320">
+        <el-table-column label="操作" min-width="80">
           <template scope="scope">
             <el-tooltip class="item" effect="dark" content="修改" placement="top-end">
               <el-button size="small" type="primary"
@@ -114,7 +114,7 @@
         <el-row style="margin: 10px 0">
           <span>管辖人员：</span>
         </el-row>
-        <el-transfer v-model="form.agents" :data="data"></el-transfer>
+        <el-transfer v-model="form.agents" :data="data" :titles="['所选门店经纪人', '管辖经纪人']"></el-transfer>
       </div>
       <div slot="footer" class="dialog-footer">
         <el-button @click="resetForm('form')">取 消</el-button>
@@ -162,7 +162,7 @@
         <el-row style="margin: 10px 0">
           <span>管辖人员：</span>
         </el-row>
-        <el-transfer v-model="form2.agents" :data="data"></el-transfer>
+        <el-transfer v-model="form2.agents" :data="data" :titles="['所选门店经纪人', '管辖经纪人']"></el-transfer>
       </div>
       <div slot="footer" class="dialog-footer">
         <el-button @click="resetForm2('form2')">取 消</el-button>
@@ -418,7 +418,7 @@
     box-sizing: border-box;
     display: inline-block;
     width: 40%;
-    height: 464px;
+    height: 334px;
     vertical-align: bottom;
   }
 
@@ -429,10 +429,13 @@
   .right {
     display: inline-block;
     background: none repeat scroll 0 0 #fff;
-    width: 53%;
-    height: 498px;
+    width: 485px;
+    height: 366px;
     box-sizing: border-box;
     overflow-y: scroll;
+  }
+  .right .el-transfer {
+    width: 468px;
   }
 
   .formVisible .el-dialog {

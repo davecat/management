@@ -89,6 +89,44 @@
           label="联系方式">
         </el-table-column>
         <el-table-column
+          v-if="radio === 'Returned' || searchForm.status[0] !== 'Unchecked'"
+          min-width="180"
+          prop="apartmentNo"
+          label="台账号">
+        </el-table-column>
+        <el-table-column
+          v-if="radio === 'Returned' || searchForm.status[0] !== 'Unchecked'"
+          min-width="180"
+          prop="city"
+          label="租房城市">
+          <template scope="scope">
+            {{ scope.row.province | districtFormat }}-{{ scope.row.city | districtFormat }}-{{
+            scope.row.district | districtFormat }}
+          </template>
+        </el-table-column>
+        <el-table-column
+          v-if="searchForm.status[0] === 'Breach'"
+          min-width="130"
+          prop="overdueDays"
+          label="逾期天数">
+          <template scope="scope">
+            <div slot="reference" class="name-wrapper">
+              <el-tag>{{ scope.row.overdueDays}}</el-tag>
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column
+          v-if="searchForm.status[0] === 'Breach'"
+          min-width="130"
+          prop="overdueFee"
+          label="逾期费用">
+          <template scope="scope">
+            <div slot="reference" class="name-wrapper">
+              <el-tag>{{ scope.row.overdueFee | currency }}</el-tag>
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column
           min-width="180"
           prop="startDate"
           label="起止日期">
@@ -115,22 +153,6 @@
           label="房租总额">
           <template scope="scope">
             {{ scope.row.totalAmount | currency }}
-          </template>
-        </el-table-column>
-        <el-table-column
-          v-if="radio === 'Returned' || searchForm.status[0] !== 'Unchecked'"
-          min-width="180"
-          prop="apartmentNo"
-          label="台账号">
-        </el-table-column>
-        <el-table-column
-          v-if="radio === 'Returned' || searchForm.status[0] !== 'Unchecked'"
-          min-width="180"
-          prop="city"
-          label="租房城市">
-          <template scope="scope">
-            {{ scope.row.province | districtFormat }}-{{ scope.row.city | districtFormat }}-{{
-            scope.row.district | districtFormat }}
           </template>
         </el-table-column>
         <el-table-column
@@ -306,6 +328,7 @@
                          label="还款账单" name="order">
               <!--@current-change="handleCurrentRow1"-->
               <el-table
+                :data="billList"
                 ref="multipleTable"
                 highlight-current-row
                 tooltip-effect="dark">
@@ -523,23 +546,17 @@
 </template>
 
 <script>
-  import VueAwesomeSwiper from 'vue-awesome-swiper'
-  import {swiper, swiperSlide} from 'vue-awesome-swiper'
   import json from "static/city.json"
   import format from 'date-fns/format'
   import dateFns from 'date-fns'
   import {qiniu} from '../mixins/qiniu.js'
   import store from '@/store'
   export default {
-    components: {
-      swiper,
-      swiperSlide
-    },
-    name: 'carrousel',
     mixins: [qiniu],
     data() {
       let minDate;
       return {
+        billList:[],
         statusDisabled: false,//不同状态下控制是否只读
         //按钮权限控制
         importButton: false,
@@ -548,26 +565,6 @@
         currentIndex: 0,//选中当前行的索引
         checkboxList: ['Inadvancefinished', 'EarlyRetirement'],
         pullBloor: false,//控制拉扇是否显示
-        current1: 0,//照片初始化旋转角度默认0
-        current2: 0,
-        current3: 0,
-        current4: 0,
-        index: 0,//默认审阅模式从第一条开始
-        //控制右边内容tab样式
-        a: 'is-active',
-        b: '',
-        c: '',
-        d: '',
-        //初始化seiper
-        swiperOption: {
-          pagination: '.swiper-pagination',
-          paginationClickable: true,
-          nextButton: '.swiper-button-next',
-          prevButton: '.swiper-button-prev',
-          spaceBetween: 100,
-          hashnav: true,
-          hashnavWatchState: true
-        },
         infoTab: 'houseInfo',//拉扇层tab
         cover: false,//拉扇层
         radio: 'Unchecked',//单选按钮
@@ -945,102 +942,6 @@
           this.loading = false;
         }
       },
-      prevClick() {
-        console.log(window.location.hash);
-        if (window.location.hash === '#slide4') {
-          this.a = '';
-          this.b = '';
-          this.c = 'is-active';
-          this.d = ''
-        }
-        if (window.location.hash === '#slide3') {
-          this.a = '';
-          this.b = 'is-active';
-          this.c = '';
-          this.d = ''
-        }
-        if (window.location.hash === '#slide2') {
-          this.a = 'is-active';
-          this.b = '';
-          this.c = '';
-          this.d = ''
-        }
-      },
-      nextClick() {
-        console.log(window.location.hash);
-        if (window.location.hash === '#slide1') {
-          this.a = '';
-          this.b = 'is-active';
-          this.c = '';
-          this.d = ''
-        }
-        if (window.location.hash === '#slide2') {
-          this.a = '';
-          this.b = '';
-          this.c = 'is-active';
-          this.d = ''
-        }
-        if (window.location.hash === '#slide3') {
-          this.a = '';
-          this.b = '';
-          this.c = '';
-          this.d = 'is-active'
-        }
-        if (window.location.hash === '#slide4') {
-          this.a = '';
-          this.b = '';
-          this.c = '';
-          this.d = 'is-active'
-        }
-      },
-      //根据hash来跳转
-      hashClick(a) {
-        if (a === 'slide1') {
-          window.location.hash = '#slide1';
-          this.a = 'is-active';
-          this.b = '';
-          this.c = '';
-          this.d = ''
-        }
-        if (a === 'slide2') {
-          window.location.hash = '#slide2';
-          this.a = '';
-          this.b = 'is-active';
-          this.c = '';
-          this.d = ''
-        }
-        if (a === 'slide3') {
-          window.location.hash = '#slide3';
-          this.a = '';
-          this.b = '';
-          this.c = 'is-active';
-          this.d = ''
-        }
-        if (a === 'slide4') {
-          window.location.hash = '#slide4';
-          this.a = '';
-          this.b = '';
-          this.c = '';
-          this.d = 'is-active'
-        }
-      },
-      //照片旋转
-      imgClick1() {
-        this.current1 = (this.current1 + 90) % 360;
-        document.getElementById('idCardFrontPhoto').style.transform = 'rotate(' + this.current1 + 'deg)';
-      },
-      imgClick2() {
-        this.current2 = (this.current2 + 90) % 360;
-        document.getElementById('idCardVersoPhoto').style.transform = 'rotate(' + this.current2 + 'deg)';
-      },
-      imgClick3() {
-        this.current3 = (this.current3 + 90) % 360;
-        document.getElementById('idCardAndPersonPhoto').style.transform = 'rotate(' + this.current3 + 'deg)';
-      },
-      imgClick4(index) {
-        this.current4 = (this.current4 + 90) % 360;
-        document.getElementsByClassName('contractPhotos')[index].style.transform = 'rotate(' + this.current4 + 'deg)';
-      },
       //隐藏右侧内容
       hiddenClass() {
         let that = this;
@@ -1088,12 +989,6 @@
       showBigPhoto(token) {
         this.bigPhotoUrl = this.qiniu + token + '?imageMogr2/auto-orient';
         this.dialogBigPhoto = true;
-      },
-      //显示全图
-      showquanPhoto(token) {
-        if (token !== undefined && token !== '' && token !== null) {
-          return this.qiniu + token + '?imageMogr2/auto-orient|imageView2/1';
-        }
       },
       submit(formName) {
         this.$refs[formName].validate((valid) => {
@@ -1240,6 +1135,13 @@
             that.fileList2.push(obj);
           });
         }
+        //请求账单列表
+        this.axios.get('/api/v2/applications/'+this.currentRow.applicationNo).then((res) => {
+          this.billList = res.data;
+          console.log(this.billList);
+        }).catch((error) => {
+          this.$message.error(error.response.data.message);
+        })
       },
       selectedData() {
         if (this.searchForm.applyDate[0] !== null) {
@@ -1479,6 +1381,11 @@
     color: green;
   }
   .Breach {
+    color: red;
+  }
+  .name-wrapper .el-tag{
+    font-size: 14px;
+    background-color: transparent;
     color: red;
   }
 </style>
