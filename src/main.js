@@ -52,7 +52,7 @@ router.beforeEach((to, from, next) => {
           "icon":"fa fa-dashboard",
           "id":"402880ef5e703923015e70394c2b0000",
           "name":"控制台首页",
-          "permission":"instalment:home",
+          "permission":"instalment:index",
           "sortNum":1,
           "type":"Menu",
           "path":"/index",
@@ -84,7 +84,7 @@ router.beforeEach((to, from, next) => {
             {
               "id":"0015a70c2c28442791127fabc68eb8412",
               "name":"基础权限",
-              "permission":"basePermission",
+              "permission":"instalment:branch:basePermission",
               "sortNum":3,
               "type":"Button",
               "path":"/3",
@@ -117,7 +117,7 @@ router.beforeEach((to, from, next) => {
             {
               "id":"0015a70c2c28442791127fabc68eb8413",
               "name":"基础权限",
-              "permission":"basePermission",
+              "permission":"instalment:agent:basePermission",
               "sortNum":3,
               "type":"Button",
               "path":"/5",
@@ -140,7 +140,7 @@ router.beforeEach((to, from, next) => {
             {
               "id":"6234524c9c204f6092e938fffd9126cd",
               "name":"导出",
-              "permission":"instalment:librequest:import_button",
+              "permission":"instalment:request:import_button",
               "sortNum":1,
               "type":"Button",
               "path":"/6",
@@ -150,7 +150,7 @@ router.beforeEach((to, from, next) => {
             {
               "id":"0015a70c2c28442791127fabc68eb8414",
               "name":"基础权限",
-              "permission":"basePermission",
+              "permission":"instalment:request:basePermission",
               "sortNum":3,
               "type":"Button",
               "path":"/7",
@@ -183,7 +183,7 @@ router.beforeEach((to, from, next) => {
             {
               "id":"0015a70c2c28442791127fabc68eb8415",
               "name":"基础权限",
-              "permission":"basePermission",
+              "permission":"instalment:statement:basePermission",
               "sortNum":3,
               "type":"Button",
               "path":"/10",
@@ -206,7 +206,7 @@ router.beforeEach((to, from, next) => {
             {
               "id":"c84db7657cd6459885eea212c97b7c97",
               "name":"新增",
-              "permission":"instalment:system:homeManager:add_button",
+              "permission":"instalment:homeManager:add_button",
               "sortNum":1,
               "type":"Button",
               "path":"/11",
@@ -216,7 +216,7 @@ router.beforeEach((to, from, next) => {
             {
               "id":"0015a70c2c28442791127fabc68eb8416",
               "name":"基础权限",
-              "permission":"basePermission",
+              "permission":"instalment:homeManager:basePermission",
               "sortNum":3,
               "type":"Button",
               "path":"/12",
@@ -241,7 +241,7 @@ router.beforeEach((to, from, next) => {
               "icon":"fa fa-table",
               "id":"402880ef5e703923015e70394c4c0006",
               "name":"日志",
-              "permission":"instalment:log",
+              "permission":"instalment:system:log",
               "sortNum":7,
               "type":"Menu",
               "path":"/log",
@@ -263,7 +263,7 @@ router.beforeEach((to, from, next) => {
                 {
                   "id":"0015a70c2c28442791127fabc68eb8417",
                   "name":"基础权限",
-                  "permission":"basePermission",
+                  "permission":"instalment:system:agency:basePermission",
                   "sortNum":3,
                   "type":"Button",
                   "path":"/16",
@@ -296,7 +296,7 @@ router.beforeEach((to, from, next) => {
                 {
                   "id":"0015a70c2c28442791127fabc68eb8418",
                   "name":"基础权限",
-                  "permission":"basePermission",
+                  "permission":"instalment:system:user:basePermission",
                   "sortNum":3,
                   "type":"Button",
                   "path":"/22",
@@ -329,7 +329,7 @@ router.beforeEach((to, from, next) => {
                 {
                   "id":"0015a70c2c28442791127fabc68eb8429",
                   "name":"基础权限",
-                  "permission":"basePermission",
+                  "permission":"instalment:system:role:basePermission",
                   "sortNum":3,
                   "type":"Button",
                   "path":"/32",
