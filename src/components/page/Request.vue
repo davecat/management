@@ -230,7 +230,7 @@
         </div>
         <div
           style="width: 100%;text-align: center;margin-bottom: 5px;border-bottom: 1px solid #D9D9D9;border-top: 1px solid #D9D9D9;padding: 10px 0">
-          <span style="color: #f7ba2a;">{{currentRow.status | appStatusFormat}}</span>
+          <span :class="getColor">{{currentRow.status | appStatusFormat}}</span>
         </div>
         <el-row>
           <el-col :span="12" style="height: 43px;">
@@ -240,7 +240,7 @@
           </el-col>
           <el-col :span="12" style="height: 43px;">
             <el-form-item label="每月租金：" prop="monthlyRent" id="monthRen">
-              <el-input v-model="currentRow.monthlyRent"></el-input>
+              <el-input :disabled="statusDisabled" v-model="currentRow.monthlyRent"></el-input>
             </el-form-item>
 
           </el-col>
@@ -254,6 +254,7 @@
           <el-col :span="12" style="height: 43px;">
             <el-form-item label="起止日期：" prop="dateRange">
               <el-date-picker
+                :disabled="statusDisabled"
                 v-model="dateRange"
                 type="daterange"
                 :picker-options="pickerOptions"
@@ -335,6 +336,7 @@
                 <el-col>
                   <el-form-item label="房屋信息：" :label-width="formLabelWidth" prop="selectedOptions">
                     <el-cascader
+                      :disabled="statusDisabled"
                       :options="options"
                       v-model="selectedOptions">
                     </el-cascader>
@@ -344,14 +346,14 @@
               <el-row>
                 <el-col>
                   <el-form-item label=" " :label-width="formLabelWidth" prop="address">
-                    <el-input v-model="currentRow.address" placeholder="详细地址"></el-input>
+                    <el-input :disabled="statusDisabled" v-model="currentRow.address" placeholder="详细地址"></el-input>
                   </el-form-item>
                 </el-col>
               </el-row>
               <el-row>
                 <el-col>
                   <el-form-item label="台账号码：" :label-width="formLabelWidth" prop="apartmentNo">
-                    <el-input v-model="currentRow.apartmentNo" placeholder="请输入台账号"></el-input>
+                    <el-input :disabled="statusDisabled" v-model="currentRow.apartmentNo" placeholder="请输入台账号"></el-input>
                   </el-form-item>
                 </el-col>
               </el-row>
@@ -360,7 +362,7 @@
               <el-row>
                 <el-col :span="12">
                   <el-form-item label="学历信息：" :label-width="formLabelWidth" prop="education">
-                    <el-select v-model="currentRow.education">
+                    <el-select v-model="currentRow.education" :disabled="statusDisabled">
                       <el-option label="专科及以下" value="CollegeDown"></el-option>
                       <el-option label="本科" value="Undergraduate"></el-option>
                       <el-option label="硕士及以上" value="PostgraduateUp"></el-option>
@@ -369,31 +371,31 @@
                 </el-col>
                 <el-col :span="12">
                   <el-form-item label="应急联系：" :label-width="formLabelWidth" prop="emergencyContact">
-                    <el-input v-model="currentRow.emergencyContact"></el-input>
+                    <el-input :disabled="statusDisabled" v-model="currentRow.emergencyContact"></el-input>
                   </el-form-item>
                 </el-col>
               </el-row>
               <el-row>
                 <el-col :span="12">
                   <el-form-item label="工作单位：" :label-width="formLabelWidth" prop="companyName">
-                    <el-input v-model="currentRow.companyName"></el-input>
+                    <el-input :disabled="statusDisabled" v-model="currentRow.companyName"></el-input>
                   </el-form-item>
                 </el-col>
                 <el-col :span="12">
                   <el-form-item label="联系方式：" :label-width="formLabelWidth" prop="emergencyContactMobile">
-                    <el-input v-model="currentRow.emergencyContactMobile"></el-input>
+                    <el-input :disabled="statusDisabled" v-model="currentRow.emergencyContactMobile"></el-input>
                   </el-form-item>
                 </el-col>
               </el-row>
               <el-row>
                 <el-col :span="12">
                   <el-form-item label="单位地址：" :label-width="formLabelWidth" prop="companyAddress">
-                    <el-input v-model="currentRow.companyAddress"></el-input>
+                    <el-input :disabled="statusDisabled" v-model="currentRow.companyAddress"></el-input>
                   </el-form-item>
                 </el-col>
                 <el-col :span="12">
                   <el-form-item label="双方关系：" :label-width="formLabelWidth" prop="relation">
-                    <el-select v-model="currentRow.relation">
+                    <el-select v-model="currentRow.relation" :disabled="statusDisabled">
                       <el-option label="父母" value="Parent"></el-option>
                       <el-option label="同事" value="Fellow"></el-option>
                       <el-option label="朋友" value="Friend"></el-option>
@@ -574,6 +576,7 @@
     data() {
       let minDate;
       return {
+        statusDisabled: false,//不同状态下控制是否只读
         //按钮权限控制
         importButton: false,
         transferId: '',
@@ -723,6 +726,17 @@
       }
     },
     computed: {
+      getColor() {
+        switch (this.searchForm.status[0]) {
+          case 'Unchecked' : return 'Unchecked';
+          case 'Unconfirmed' : return 'Unconfirmed';
+          case 'Loan' : return 'Loan';
+          case 'Repayment' : return 'Repayment';
+          case 'Breach' : return 'Breach';
+          case 'Finished' : return 'Finished';
+          case 'RetirementFinished' : return 'RetirementFinished';
+        }
+      },
       button() {
         return store.state.button;
       },
@@ -1138,11 +1152,14 @@
       handleChangeTab(a) {
         this.radio = 'Unchecked';
         if (a === 'Unchecked') {
+          this.statusDisabled = false;//只有待处理的单据，可以填写内容，其余都是只读
           this.radioChange();
         } else if (a === 'RetirementFinished') {
+          this.statusDisabled = true;
           this.checkboxList = ['Inadvancefinished', 'EarlyRetirement'];
           this.getData();
         } else {
+          this.statusDisabled = true;
           this.getData();
         }
       },
@@ -1441,5 +1458,18 @@
   }
   #picInfo .el-form-item__label {
     min-width: 110px;
+  }
+  /*各状态下的颜色*/
+  .Unchecked, .Loan,.RetirementFinished {
+    color: #f7ba2a;
+  }
+  .Unconfirmed {
+    color: blue;
+  }
+  .Repayment {
+    color: green;
+  }
+  .Breach {
+    color: red;
   }
 </style>
