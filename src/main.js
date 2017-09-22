@@ -397,7 +397,10 @@ router.beforeEach((to, from, next) => {
         component: resolve => require(['components/common/404.vue'], resolve)
       });
       router.addRoutes(constantRouterMap);// 动态添加可访问路由表
-      next(to.path); // hack方法 确保addRoutes已完成
+      // next(to.path); // hack方法 确保addRoutes已完成
+      if(to.path === '/login') {
+        next({path: '/home'})
+      }
     }).catch((error) => {
       console.log(error);
     });
@@ -411,9 +414,6 @@ router.beforeEach((to, from, next) => {
     //   console.log(error);
     // });
 
-    if(to.path === '/login') {
-      next({path: '/home'})
-    }
 
     //staff  赋值
     Vue.axios.get("/api/v2/users/current").then((response) => {

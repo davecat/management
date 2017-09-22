@@ -174,6 +174,16 @@
             </span>
     </el-dialog>
     <el-dialog
+      title="提前退租"
+      :visible.sync="dialogTermination"
+      size="tiny">
+      <p>确认进行提前退租操作？，该操作不可撤回</p>
+      <span slot="footer" class="dialog-footer">
+                <el-button @click="dialogTermination=false">取 消</el-button>
+                <el-button type="primary" @click="termination()">确 定</el-button>
+            </span>
+    </el-dialog>
+    <el-dialog
       title="转单"
       :visible.sync="dialogTransfer"
       size="tiny">
@@ -219,10 +229,10 @@
           <el-button v-if="searchForm.status[0] === 'Unchecked'" type="info" @click="currentSave">临时保存</el-button>
           <el-button v-if="searchForm.status[0] === 'Unchecked'" type="success" @click="submit('currentRow')">提交审批</el-button>
           <el-button v-if="searchForm.status[0] === 'Unchecked'" type="danger" @click="dialogVisible = true">取消申请</el-button>
-          <el-button v-if="searchForm.status[0] === 'Unconfirmed'" type="info" style="width: 88px;">撤回</el-button>
+          <el-button v-if="searchForm.status[0] === 'Unconfirmed'" type="info" style="width: 88px;" @click="revocation()">撤回</el-button>
           <el-button style="width: 88px;" v-if="searchForm.status[0] !== 'Finished' && searchForm.status[0] !== 'Inadvancefinished' && searchForm.status[0] !== 'RetirementFinished'" @click="dialogTransfer = true;transferId=''" type="warning">转单
           </el-button>
-          <el-button v-if="searchForm.status[0] === 'Repayment' || searchForm.status[0] === 'Breach' || searchForm.status[0] === 'Loan'" type="danger">
+          <el-button v-if="searchForm.status[0] === 'Repayment' || searchForm.status[0] === 'Breach' || searchForm.status[0] === 'Loan'" type="danger" @click="dialogTermination = true">
             提前退租
           </el-button>
           <el-button style="float: right;padding: 5px 15px" @click="next()" :disabled="!tableData[currentIndex+1]">下一条<i
@@ -632,6 +642,7 @@
           }
         },
         bigPhotoUrl: '',
+        dialogTermination: false,
         dialogTransfer: false,
         formVisible: false,
         dialogBigPhoto: false,
@@ -785,6 +796,49 @@
       },
     },
     methods: {
+      //撤回
+      revocation() {
+        this.axios.post('/counter/api/v2/request/revocation/'+this.currentRow.applicationNo).then((res) => {
+          this.axios.post(this.url, {
+            ...this.searchForm,
+            page: this.cur_page - 1,
+            size: this.size
+          }).then((res) => {
+            this.$message.success("撤回成功！");
+            this.tableData = res.data.data.content;
+            this.currentRow = this.tableData[this.currentIndex];
+            this.totalElements = res.data.data.totalElements;
+          }).catch((error) => {
+            this.$message.error(error.response.data.message);
+          });
+        }).catch((error) => {
+          console.log(error.response.data);
+          this.$message.error(error.response.data.message);
+        })
+      },
+      //提前中退
+      termination() {
+        this.axios.post('/counter/api/v2/request/termination/'+this.currentRow.applicationNo).then((res) => {
+          this.loading = true;
+          this.axios.post(this.url, {
+            ...this.searchForm,
+            page: this.cur_page - 1,
+            size: this.size
+          }).then((res) => {
+            this.$message.success("退租成功！");
+            this.dialogTermination = false;
+            this.tableData = res.data.data.content;
+            this.currentRow = this.tableData[this.currentIndex];
+            this.totalElements = res.data.data.totalElements;
+            this.loading = false;
+          }).catch((error) => {
+            this.$message.error(error.response.data.message);
+          });
+        }).catch((error) => {
+          console.log(error.response.data);
+          this.$message.error(error.response.data.message);
+        })
+      },
       //转单确认
       transfer() {
         this.axios.post('/api/v2/applications/transfer/'+this.currentRow.applicationNo+'/'+this.transferId).then((res) => {

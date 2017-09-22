@@ -36,13 +36,6 @@ module.exports = {
           '^/api/agency': '/api/agency'
         }
       },
-      '/api/getMapDetails': {
-        target: 'http://localhost:8000',
-        secure: false,
-        pathRewrite: {
-          '^/api/getMapDetails': '/api/getMapDetails'
-        }
-      },
       //地图
       '/api/getMap': {
         target: 'http://localhost:8000',
@@ -70,7 +63,7 @@ module.exports = {
       //中介接口
       '/api/v2': {
         target: 'http://182.92.186.16:8085',
-        // target: 'http://192.168.0.106:8080',
+        // target: 'http://192.168.0.116:8080',
         secure: false,
         pathRewrite: {
           '^/api/v2': '/api/v2'
@@ -84,9 +77,9 @@ module.exports = {
           '^/riskcontrol': '/riskcontrol'
         }
       },
+      // 中退、撤回
       '/counter': {
-        target: 'http://testbk.wezebra.com',
-        // target: 'http://192.168.0.128:8080',
+        target: 'http://192.168.0.66:8080',
         secure: false,
         pathRewrite: {
           '^/counter': '/counter'
