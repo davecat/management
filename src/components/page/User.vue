@@ -16,7 +16,7 @@
           <el-button @click="Search">查询</el-button>
         </el-form-item>
         <el-form-item style="float: right;margin-right: 0" v-if="addButton">
-          <el-button type="success" @click="formVisible = true">新增用户</el-button>
+          <el-button type="success" @click="addUser()">新增用户</el-button>
         </el-form-item>
       </el-form>
     </el-row>
@@ -74,7 +74,7 @@
       </el-table>
     </el-row>
 
-    <el-dialog title="新增用户" :visible.sync="formVisible" id="formVisible">
+    <el-dialog title="新增用户" :visible.sync="formVisible" class="formVisible">
       <div class="left">
         <el-form :model="form" ref="form" :rules="rules">
           <el-form-item label="用户昵称" :label-width="formLabelWidth" prop="nickname">
@@ -85,7 +85,7 @@
           </el-form-item>
           <el-form-item label="员工类型" :label-width="formLabelWidth" prop="staffType">
             <el-col :span="24">
-              <el-select v-model="form.staffType" filterable
+              <el-select v-model="form.staffType" filterable @change="staffTypeChange"
                          placeholder="员工类型">
                 <el-option v-for="staff in staffTypeList" :key="staff.englishName" :label="staff.name"
                            :value="staff.englishName"></el-option>
@@ -93,18 +93,18 @@
             </el-col>
           </el-form-item>
           <el-form-item label="角色" :label-width="formLabelWidth" prop="role">
-            <el-select v-model="form.role">
+            <el-select v-model="form.role" :disabled="form.staffType === 'Admin'">
               <el-option v-for="role in roleList" :key="role.id" :value="role.id" :label="role.name"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="管辖中介：" :label-width="formLabelWidth" prop="agencies">
             <el-select v-model="form.agencies" multiple @change="getBranchListAdd(form.agencies)"
-                       :disabled="agenciesDisable">
+                       :disabled="form.staffType === 'Admin'">
               <el-option v-for="agency in agencyList" :value="agency.id" :label="agency.name" :key="agency.id"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="管辖门店：" :label-width="formLabelWidth" prop="branches">
-            <el-select v-model="form.branches" multiple :disabled="agenciesDisable" @change="getRightData(form.branches)">
+            <el-select v-model="form.branches" multiple :disabled="form.staffType === 'Admin' || form.staffType === 'Interior'" @change="getRightData(form.branches)">
               <el-option v-for="branch in branchList" :key="branch.id" :value="branch.id" :label="branch.name"></el-option>
             </el-select>
           </el-form-item>
@@ -122,39 +122,48 @@
       </div>
     </el-dialog>
 
-    <el-dialog title="修改用户" :visible.sync="formVisible2">
-      <el-form :model="form2" ref="form2" :rules="rules">
-        <el-form-item label="昵称" :label-width="formLabelWidth" prop="nickname">
-          <el-input v-model="form2.nickname"></el-input>
-        </el-form-item>
-        <el-form-item label="登录名" :label-width="formLabelWidth" prop="username">
-          <el-input v-model="form2.username" disabled></el-input>
-        </el-form-item>
-        <el-form-item label="员工类型" :label-width="formLabelWidth" prop="staffType">
-          <el-select v-model="form2.staffType" disabled>
-            <el-option label="管理员" value="Admin"></el-option>
-            <el-option label="内部员工" value="Interior"></el-option>
-            <el-option label="门店经理" value="BranchManager"></el-option>
-            <el-option label="门店主管" value="BrachDirector"></el-option>
-            <el-option label="门店业务员" value="BrachSalesman"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="角色" :label-width="formLabelWidth" prop="role">
-          <el-select v-model="form2.role">
-            <el-option v-for="role in roleList" :key="role.id" :label="role.name" :value="role.id"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="管辖中介：" :label-width="formLabelWidth"  prop="agencies">
-          <el-select v-model="form2.agencies" multiple @change="getBranchListAdd(form2.agencies)">
-            <el-option v-for="item in agencyList" :key="item.id" :label="item.name" :value="item.id"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="管辖门店：" :label-width="formLabelWidth"  prop="branches">
-          <el-select v-model="form2.branches" multiple>
-            <el-option v-for="item in branchList" :key="item.id" :label="item.name" :value="item.id"></el-option>
-          </el-select>
-        </el-form-item>
-      </el-form>
+    <el-dialog title="修改用户" :visible.sync="formVisible2" class="formVisible">
+      <div class="left">
+        <el-form :model="form2" ref="form2" :rules="rules">
+          <el-form-item label="用户昵称" :label-width="formLabelWidth" prop="nickname">
+            <el-input v-model="form2.nickname"></el-input>
+          </el-form-item>
+          <el-form-item label="登录名" :label-width="formLabelWidth" prop="username">
+            <el-input v-model="form2.username"></el-input>
+          </el-form-item>
+          <el-form-item label="员工类型" :label-width="formLabelWidth" prop="staffType">
+            <el-col :span="24">
+              <el-select v-model="form2.staffType" filterable @change="staffTypeChange"
+                         placeholder="员工类型">
+                <el-option v-for="staff in staffTypeList" :key="staff.englishName" :label="staff.name"
+                           :value="staff.englishName"></el-option>
+              </el-select>
+            </el-col>
+          </el-form-item>
+          <el-form-item label="角色" :label-width="formLabelWidth" prop="role">
+            <el-select v-model="form2.role" :disabled="form2.staffType === 'Admin'">
+              <el-option v-for="role in roleList" :key="role.id" :value="role.id" :label="role.name"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="管辖中介：" :label-width="formLabelWidth" prop="agencies">
+            <el-select v-model="form2.agencies" multiple @change="getBranchListAdd(form.agencies)"
+                       :disabled="form2.staffType === 'Admin'">
+              <el-option v-for="agency in agencyList" :value="agency.id" :label="agency.name" :key="agency.id"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="管辖门店：" :label-width="formLabelWidth" prop="branches">
+            <el-select v-model="form2.branches" multiple :disabled="form2.staffType === 'Admin' || form.staffType === 'Interior'" @change="getRightData(form.branches)">
+              <el-option v-for="branch in branchList" :key="branch.id" :value="branch.id" :label="branch.name"></el-option>
+            </el-select>
+          </el-form-item>
+        </el-form>
+      </div>
+      <div class="right">
+        <el-row style="margin: 10px 0">
+          <span>管辖人员：</span>
+        </el-row>
+        <el-transfer v-model="form2.agents" :data="data"></el-transfer>
+      </div>
       <div slot="footer" class="dialog-footer">
         <el-button @click="resetForm2('form2')">取 消</el-button>
         <el-button type="primary" @click="submitUser2('form2')">确 定</el-button>
@@ -177,7 +186,6 @@
         roleId: '',//角色id
         loanerId: '',//资金端id
         loanerDisable: true,//用来控制资金端是否能选择
-        agenciesDisable: false,//用来控制中介和门店是否能选择
         editShow: true,//用来控制修改时候资金端是否显示
         agenciesIds: [],//存放选择的中介id
         branchesIds: [],//存放选择的门店id
@@ -245,6 +253,17 @@
       }
     },
     methods: {
+      //新增员工类型变化时
+      staffTypeChange() {
+          this.form.role = '';
+          this.form.agencies = [];
+          this.form.branches = [];
+          this.data = [];
+      },
+      addUser() {
+        this.data = [];
+        this.formVisible = true
+      },
       //获取角色
       getRoleList() {
         this.axios.get('/api/v2/roles/getRoleAll').then((res) => {
@@ -281,10 +300,12 @@
         })
       },
       getRightData(ids) {
-          let that = this;
+        let that = this;
+        that.data = [];
+        if(this.form.staffType === 'BranchManager'){
+            return;
+        }
         this.axios.post('/api/v2/admin/getAgentListByAgencyIdList ', ids).then((res) => {
-          console.log(res.data);
-
           res.data.forEach(item => {
               let form = {key: '',label: ''};
               form.key = item.id;
@@ -409,12 +430,12 @@
     display: inline-block;
     background: none repeat scroll 0 0 #fff;
     width: 53%;
-    height: 464px;
+    height: 498px;
     box-sizing: border-box;
     overflow-y: scroll;
   }
 
-  #formVisible .el-dialog {
+  .formVisible .el-dialog {
     min-width: 922px;
   }
 </style>
