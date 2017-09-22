@@ -405,7 +405,7 @@
                 </el-col>
               </el-row>
             </el-tab-pane>
-            <el-tab-pane v-if="searchForm.status[0] === 'Unchecked'" label="照片资料" name="picInfo" id="picInfo">
+            <el-tab-pane label="照片资料" name="picInfo" id="picInfo">
               <el-row :gutter="20">
                 <el-col :span="3">
                   <el-form-item label="身份证照片：">
@@ -413,6 +413,7 @@
                 </el-col>
                 <el-col :span="7">
                   <el-upload
+                    :disabled="statusDisabled"
                     class="avatar-uploader"
                     :action="uploadUrl"
                     :data="postData"
@@ -420,13 +421,15 @@
                     :before-upload="beforeUpload"
                     :on-success="uploadFrontSuccess"
                     :on-error="handleUploadError">
-                    <img v-show="currentRow.idCardFrontPhoto" :src="photo(currentRow.idCardFrontPhoto)" class="avatar">
+                    <img v-show="currentRow.idCardFrontPhoto && this.searchForm.status[0] === 'Unchecked'" :src="photo(currentRow.idCardFrontPhoto)" class="avatar">
+                    <img @click="showBigPhoto(currentRow.idCardFrontPhoto)" v-show="currentRow.idCardFrontPhoto && this.searchForm.status[0] !== 'Unchecked'" :src="photo(currentRow.idCardFrontPhoto)" class="avatar">
                     <i v-show="!currentRow.idCardFrontPhoto" class="el-icon-plus avatar-uploader-icon"></i>
                     <div class="el-upload__tip" slot="tip">身份证正面</div>
                   </el-upload>
                 </el-col>
                 <el-col :span="7">
                   <el-upload
+                    :disabled="statusDisabled"
                     class="avatar-uploader"
                     :action="uploadUrl"
                     :data="postData"
@@ -434,13 +437,15 @@
                     :before-upload="beforeUpload"
                     :on-success="uploadVersoSuccess"
                     :on-error="handleUploadError">
-                    <img v-show="currentRow.idCardVersoPhoto" :src="photo(currentRow.idCardVersoPhoto)" class="avatar">
+                    <img v-show="currentRow.idCardVersoPhoto && this.searchForm.status[0] === 'Unchecked'" :src="photo(currentRow.idCardVersoPhoto)" class="avatar">
+                    <img @click="showBigPhoto(currentRow.idCardVersoPhoto)" v-show="currentRow.idCardVersoPhoto && this.searchForm.status[0] !== 'Unchecked'" :src="photo(currentRow.idCardVersoPhoto)" class="avatar">
                     <i v-show="!currentRow.idCardVersoPhoto" class="el-icon-plus avatar-uploader-icon"></i>
                     <div class="el-upload__tip" slot="tip">身份证反面</div>
                   </el-upload>
                 </el-col>
                 <el-col :span="7">
                   <el-upload
+                    :disabled="statusDisabled"
                     class="avatar-uploader"
                     :action="uploadUrl"
                     :data="postData"
@@ -448,7 +453,8 @@
                     :before-upload="beforeUpload"
                     :on-success="uploadPersonSuccess"
                     :on-error="handleUploadError">
-                    <img v-show="currentRow.idCardAndPersonPhoto" :src="photo(currentRow.idCardAndPersonPhoto)" class="avatar">
+                    <img v-show="currentRow.idCardAndPersonPhoto && this.searchForm.status[0] === 'Unchecked'" :src="photo(currentRow.idCardAndPersonPhoto)" class="avatar">
+                    <img @click="showBigPhoto(currentRow.idCardAndPersonPhoto)" v-show="currentRow.idCardAndPersonPhoto && this.searchForm.status[0] !== 'Unchecked'" :src="photo(currentRow.idCardAndPersonPhoto)" class="avatar">
                     <i v-show="!currentRow.idCardAndPersonPhoto" class="el-icon-plus avatar-uploader-icon"></i>
                     <div class="el-upload__tip" slot="tip">手持身份证照片</div>
                   </el-upload>
@@ -461,6 +467,7 @@
                 </el-col>
                 <el-col :span="20">
                   <el-upload
+                    :disabled="statusDisabled"
                     :file-list="fileList2"
                     :action="uploadUrl"
                     :data="postData"
@@ -470,63 +477,10 @@
                     :on-success="uploadContractSuccess"
                     :on-error="handleUploadError"
                     :on-remove="handleRemove">
-                    <!--<img v-show="currentRow.contractPhotos" :src="photo(item)" class="avatar">-->
                     <i class="el-icon-plus"></i>
                   </el-upload>
                 </el-col>
               </el-row>
-            </el-tab-pane>
-            <el-tab-pane v-else="searchForm.status[0] === 'Unchecked'" label="照片资料" name="picInfo">
-              <div style="width: 500px;height: 400px;margin: 0 auto">
-                <div style="width: 100%;text-align: center;margin-bottom: 15px">
-                  <el-button @click="hashClick('slide1')" :class="a">身份证正面</el-button>
-                  <el-button @click="hashClick('slide2')" :class="b">身份证反面</el-button>
-                  <el-button @click="hashClick('slide3')" :class="c">手持身份证</el-button>
-                  <el-button @click="hashClick('slide4')" :class="d">房租合同</el-button>
-                </div>
-                <!-- swiper -->
-                <swiper :options="swiperOption">
-                  <swiper-slide data-hash="slide1" style="overflow-y: scroll">
-                    <div class="swiper-zoom-container">
-                      <i class="fa fa-search-plus" aria-hidden="true"
-                         style="font-size: x-large;position: absolute;top: 0;right: 0"
-                         @click="showBigPhoto(currentRow.idCardFrontPhoto)"></i>
-                      <img :src="showquanPhoto(currentRow.idCardFrontPhoto)" alt="" @click="imgClick1()"
-                           id="idCardFrontPhoto">
-                    </div>
-                  </swiper-slide>
-                  <swiper-slide data-hash="slide2" style="overflow-y: scroll">
-                    <div class="swiper-zoom-container">
-                      <i class="fa fa-search-plus" aria-hidden="true"
-                         style="font-size: x-large;position: absolute;top: 0;right: 0"
-                         @click="showBigPhoto(currentRow.idCardVersoPhoto)"></i>
-                      <img :src="showquanPhoto(currentRow.idCardVersoPhoto)" alt="" @click="imgClick2()"
-                           id="idCardVersoPhoto">
-                    </div>
-                  </swiper-slide>
-                  <swiper-slide data-hash="slide3" style="overflow-y: scroll">
-                    <div class="swiper-zoom-container">
-                      <i class="fa fa-search-plus" aria-hidden="true"
-                         style="font-size: x-large;position: absolute;top: 0;right: 0"
-                         @click="showBigPhoto(currentRow.idCardAndPersonPhoto)"></i>
-                      <img :src="showquanPhoto(currentRow.idCardAndPersonPhoto)" alt="" @click="imgClick3()"
-                           id="idCardAndPersonPhoto">
-                    </div>
-                  </swiper-slide>
-                  <swiper-slide v-for="(item,index) in currentRow.contractPhotos" :key="item" data-hash="slide4"
-                                style="overflow-y: scroll">
-                    <div class="imgContainer">
-                      <i class="fa fa-search-plus" aria-hidden="true"
-                         style="font-size: x-large;position: absolute;top: 0;right: 0" @click="showBigPhoto(item)"></i>
-                      <img :src="showquanPhoto(item)" alt="" @click="imgClick4(index)" class="contractPhotos"
-                           width="80%" height="100%">
-                    </div>
-                  </swiper-slide>
-                  <div class="swiper-pagination" slot="pagination"></div>
-                  <div class="swiper-button-prev" slot="button-prev" @click="prevClick()"></div>
-                  <div class="swiper-button-next" slot="button-next" @click="nextClick()"></div>
-                </swiper>
-              </div>
             </el-tab-pane>
             <el-tab-pane v-if="radio === 'Returned'" label="审批备注" name="remarks">
               <!--{{currentRow.confirmRemarks}}-->
@@ -1262,7 +1216,8 @@
         this.currentRow.contractPhotos = this.currentRow.contractPhotos.filter(item => file.url.indexOf(item) === -1);
       },
       handlePreview(file) {
-        console.log(file);
+        this.bigPhotoUrl = file.url;
+        this.dialogBigPhoto = true;
       },
       getBranchList(cityId) {
         if (cityId !== ' ') {
