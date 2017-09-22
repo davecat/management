@@ -87,7 +87,7 @@
             <el-col :span="24">
               <el-select v-model="form.staffType" filterable @change="staffTypeChange"
                          placeholder="员工类型">
-                <el-option v-for="staff in staffTypeList" :key="staff.englishName" :label="staff.name"
+                <el-option v-for="staff in staffTypeList2" :key="staff.englishName" :label="staff.name"
                            :value="staff.englishName"></el-option>
               </el-select>
             </el-col>
@@ -135,7 +135,7 @@
             <el-col :span="24">
               <el-select v-model="form2.staffType" filterable @change="staffTypeChange"
                          placeholder="员工类型">
-                <el-option v-for="staff in staffTypeList" :key="staff.englishName" :label="staff.name"
+                <el-option v-for="staff in staffTypeList2" :key="staff.englishName" :label="staff.name"
                            :value="staff.englishName"></el-option>
               </el-select>
             </el-col>
@@ -182,6 +182,7 @@
       return {
         addButton: false,
         staffTypeList: [],//人员类型
+        staffTypeList2: [],//人员类型2
         data: [],
         roleId: '',//角色id
         loanerId: '',//资金端id
@@ -230,6 +231,7 @@
     },
     created(){
       this.getStaffTypeList();
+      this.getStaffTypeList2();
       this.getRoleList();
       this.getAgencyList();
       if(this.button.button.indexOf('新增') >= 0) {
@@ -282,9 +284,17 @@
         })
       },
       getStaffTypeList() {
-        this.axios.get('/api/v2/users/getAllStafftype').then((res) => {
+        this.axios.get('/api/v2/users/admin/registGetAllStaffType').then((res) => {
           this.staffTypeList = res.data;
           console.log(this.staffTypeList);
+        }).catch((error) => {
+          this.$message.error(error.response.data.message);
+        })
+      },
+      getStaffTypeList2() {
+        this.axios.get('/api/v2/users/admin/addGetAllStaffType').then((res) => {
+          this.staffTypeList2 = res.data;
+          console.log(this.staffTypeList2);
         }).catch((error) => {
           this.$message.error(error.response.data.message);
         })
