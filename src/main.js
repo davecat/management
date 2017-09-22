@@ -382,12 +382,17 @@ router.beforeEach((to, from, next) => {
       store.dispatch('set_menu', newTree);
       //动态添加路由
       let routers = Object.assign([], newTree);
-      newTree[6].children.forEach(item => {
-        routers.push(item)
+      routers.forEach(item => {
+        //拿到系统管理
+        if(item.permission === "instalment:system") {
+          item.children.forEach(item2 => {
+            routers.push(item2)
+          });
+          routers.splice(routers.indexOf(item),1);
+        }
       });
       constantRouterMap[2].children = routers;
-      constantRouterMap[2].children.splice(6,1);
-      constantRouterMap[2].children.push({
+      constantRouterMap.push({
         path: '*',
         component: resolve => require(['components/common/404.vue'], resolve)
       });
