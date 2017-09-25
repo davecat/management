@@ -401,6 +401,10 @@ router.beforeEach((to, from, next) => {
       if(to.path === '/login') {
         next({path: '/home'})
       }
+      //home默认打开菜单的第一个
+      if(to.path === '/home') {
+        next({path: routers[0].path})
+      }
     }).catch((error) => {
       console.log(error);
     });
