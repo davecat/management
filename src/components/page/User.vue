@@ -146,13 +146,13 @@
             </el-select>
           </el-form-item>
           <el-form-item label="管辖中介：" :label-width="formLabelWidth" prop="agencies">
-            <el-select v-model="form2.agencies" multiple @change="getBranchListAdd(form.agencies)"
+            <el-select v-model="form2.agencies" multiple @change="getBranchListAdd(form2.agencies)"
                        :disabled="form2.staffType === 'Admin'">
               <el-option v-for="agency in agencyList" :value="agency.id" :label="agency.name" :key="agency.id"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="管辖门店：" :label-width="formLabelWidth" prop="branches">
-            <el-select v-model="form2.branches" multiple :disabled="form2.staffType === 'Admin' || form.staffType === 'Interior'" @change="getRightData(form.branches)">
+            <el-select v-model="form2.branches" multiple :disabled="form2.staffType === 'Admin' || form2.staffType === 'Interior'" @change="getRightData(form2.branches)">
               <el-option v-for="branch in branchList" :key="branch.id" :value="branch.id" :label="branch.name"></el-option>
             </el-select>
           </el-form-item>
@@ -312,7 +312,7 @@
       getRightData(ids) {
         let that = this;
         that.data = [];
-        if(this.form.staffType === 'BranchManager'){
+        if(this.form.staffType === 'BranchManager' || this.form2.staffType === 'BranchManager'){
             return;
         }
         this.axios.post('/api/v2/admin/getAgentListByAgencyIdList ', ids).then((res) => {
