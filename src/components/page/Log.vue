@@ -42,19 +42,15 @@
           width="130"
           label="日志时间">
           <template scope="scope">
-            <div slot="reference" class="name-wrapper-normal">
-              <el-tag>{{ scope.row.logDate | dateFormat }}</el-tag>
-            </div>
+            {{ scope.row.logDate | dateFormat }}
           </template>
         </el-table-column>
         <el-table-column
-          min-width="136"
+          min-width="1110"
           prop="logContent"
           label="日志内容">
           <template scope="scope">
-            <div slot="reference" class="name-wrapper-normal">
-              <el-tag>{{ scope.row.logContent }}</el-tag>
-            </div>
+            {{ scope.row.logContent }}
           </template>
         </el-table-column>
       </el-table>
