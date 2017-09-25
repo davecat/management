@@ -334,33 +334,51 @@
                 tooltip-effect="dark">
                 <el-table-column
                   min-width="140"
-                  prop="id"
+                  prop="paymentDueDate"
                   label="应还款日期">
+                  <template scope="scope">
+                    {{ scope.row.paymentDueDate | dateFormat }}
+                  </template>
                 </el-table-column>
                 <el-table-column
                   min-width="100"
-                  prop="customerName"
+                  prop="amount"
                   label="账单金额">
+                  <template scope="scope">
+                    {{ scope.row.amount | currency }}
+                  </template>
                 </el-table-column>
                 <el-table-column
                   min-width="130"
-                  prop="mobile"
+                  prop="serviceFee"
                   label="手续费">
+                  <template scope="scope">
+                    {{ scope.row.serviceFee | currency }}
+                  </template>
                 </el-table-column>
                 <el-table-column
                   min-width="130"
-                  prop="mobile"
+                  prop="overdueFee"
                   label="逾期费">
+                  <template scope="scope">
+                    {{ scope.row.overdueFee | currency }}
+                  </template>
                 </el-table-column>
                 <el-table-column
                   min-width="180"
-                  prop="startDate"
+                  prop="status"
                   label="账单状态">
+                  <template scope="scope">
+                    {{ scope.row.status | appStatusFormat }}
+                  </template>
                 </el-table-column>
                 <el-table-column
                   min-width="130"
                   prop="monthlyRent"
                   label="实际还款日期">
+                  <template scope="scope">
+                    {{ scope.row.paymentDate | dateFormat }}
+                  </template>
                 </el-table-column>
               </el-table>
             </el-tab-pane>
@@ -964,7 +982,6 @@
           size: this.size
         }).then((res) => {
           this.tableData = res.data.data.content;
-          console.log(this.tableData);
           this.totalElements = res.data.data.totalElements;
           this.loading = false;
         }).catch((error) => {
@@ -980,7 +997,9 @@
         //获取待处理、已逾期单据数量
         this.axios.get('/api/v2/applications/status/count').then((res) => {
           this.pendingNumber = Number(res.data.data.Pending.count);
-          this.overdueNumber = Number(res.data.data.Breach.count);
+          if(res.data.data.Breach) {
+            this.overdueNumber = Number(res.data.data.Breach.count);
+          }
         }).catch((error) => {
           this.$message.error(error.response.data.message);
         });
@@ -1137,7 +1156,7 @@
         }
         //请求账单列表
         this.axios.get('/api/v2/applications/'+this.currentRow.applicationNo).then((res) => {
-          this.billList = res.data;
+          this.billList = res.data.data.billDTOs;
           console.log(this.billList);
         }).catch((error) => {
           this.$message.error(error.response.data.message);
