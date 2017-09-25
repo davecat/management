@@ -14,7 +14,7 @@
                 </el-date-picker>
               </el-form-item>
               <el-form-item>
-                <el-input v-model="searchForm.applicationNoOrCustomnerName" placeholder="申请编号或租客姓名"></el-input>
+                <el-input v-model="searchForm.applicationNoOrCustomnerName" placeholder="申请编号或租客姓名" @keyup.enter.native="Search"></el-input>
               </el-form-item>
               <el-form-item>
                 <el-button @click="Search">查询</el-button>
@@ -170,7 +170,7 @@
                 </el-date-picker>
               </el-form-item>
               <el-form-item>
-                <el-input v-model="searchForm2.applicationNoOrCustomnerName" placeholder="申请编号或租客姓名"></el-input>
+                <el-input v-model="searchForm2.applicationNoOrCustomnerName" placeholder="申请编号或租客姓名" @keyup.enter.native="Search2"></el-input>
               </el-form-item>
               <el-form-item>
                 <el-button @click="Search2">查询</el-button>
