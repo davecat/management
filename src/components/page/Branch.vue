@@ -108,8 +108,7 @@
 
     <el-dialog title="新增门店" :visible.sync="formVisible">
       <el-form :model="form" ref="form" :rules="rules">
-        <!--只有当登录人为内部员工时候才显示-->
-        <el-form-item label="所属中介：" :label-width="formLabelWidth" prop="agencyId" v-if="staff.staffType === 'Interior'">
+        <el-form-item label="所属中介：" :label-width="formLabelWidth" prop="agencyId">
           <el-select v-model="form.agencyId">
             <el-option v-for="agency in agencyList" :key="agency.id" :label="agency.name"
                        :value="agency.id"></el-option>
@@ -136,6 +135,12 @@
 
     <el-dialog title="修改门店" :visible.sync="formVisible2">
       <el-form :model="form2" ref="form2" :rules="rules">
+        <el-form-item label="所属中介：" :label-width="formLabelWidth" prop="agencyId">
+          <el-select v-model="form2.agencyId">
+            <el-option v-for="agency in agencyList" :key="agency.id" :label="agency.name"
+                       :value="agency.id"></el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item label="门店名称：" :label-width="formLabelWidth" prop="name">
           <el-input v-model="form2.name"></el-input>
         </el-form-item>
