@@ -881,6 +881,10 @@
       },
       //临时保存
       currentSave() {
+        //把省市县的值带到后台
+        this.currentRow.province = this.selectedOptions[0];
+        this.currentRow.city = this.selectedOptions[1];
+        this.currentRow.district = this.selectedOptions[2];
         this.currentRow.startDate = format(this.dateRange[0],'YYYY-MM-DD')+' 00:00:00';
         this.currentRow.endDate = format(this.dateRange[1],'YYYY-MM-DD')+' 00:00:00';
         this.axios.put('/api/v2/applications/apply/temp', this.currentRow).then((res) => {
