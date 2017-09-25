@@ -936,6 +936,7 @@
             console.log(this.currentRow);
             //跳转到下一条 请求成功时才执行
             if(this.tableData[this.currentIndex] === undefined) {
+              this.hiddenClass();
               this.$message.success('数据处理完毕！');
             }
           }).catch((error) => {
