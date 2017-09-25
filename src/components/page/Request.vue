@@ -580,6 +580,7 @@
     data() {
       let minDate;
       return {
+        cityList: [],
         checkboxList2: ['Finished','CanceledAndRejected'],
         billList:[],
         statusDisabled: false,//不同状态下控制是否只读
@@ -729,19 +730,6 @@
       },
       staff (){
         return this.$store.state.staff.staff
-      },
-      cityList () {
-        let citys = [];
-        let all = {id: ' ', name: '全部'};
-        citys.push(all);
-        json.forEach(item => {
-          if (item.children) {
-            item.children.forEach(i => {
-              citys.push({id: i.value, name: i.label});
-            })
-          }
-        });
-        return citys;
       }
     },
     filters: {
@@ -1039,6 +1027,15 @@
         }).catch((error) => {
           this.$message.error(error.response.data.message);
         });
+
+
+        //获取城市列表
+        this.axios.get('/api/v2/branchs/getCitys').then((res) => {
+          this.cityList = res.data;
+          console.log(res.data);
+        }).catch((error) => {
+          this.$message.error(error.response.data.message);
+        });
       },
       //显示大图
       showBigPhoto(token) {
@@ -1293,7 +1290,7 @@
           this.searchForm.branchId = '';
           this.branchList = [];
           let param = {city: [cityId]};
-          this.axios.post('/api/v1/branch/getBranchListByLocation', param).then((res) => {
+          this.axios.post('/api/v2/agents/getByCityIdBranch/', param).then((res) => {
             this.branchList = res.data;
           }).catch((error) => {
             this.$message.error(error.response.data.message);
