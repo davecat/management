@@ -10,11 +10,11 @@
             <span class="bigText">{{total.totalAmount}}</span>
           </el-row>
           <el-row class="text item">
-            <el-col :span="12">
-              <span style="line-height: 30px;float: left">待审核：{{total.pendingAmount}}</span>
+            <el-col :span="11">
+              <span style="line-height: 30px;float: left;">待审核：{{total.pendingAmount}}</span>
             </el-col>
-            <el-col :span="12">
-              <span style="line-height: 30px;float: right">审批不通过：{{total.notPendingAmount}}</span>
+            <el-col :span="13">
+              <span style="line-height: 30px;float: right;">审批不通过：{{total.notPendingAmount}}</span>
             </el-col>
           </el-row>
         </el-card>
@@ -68,7 +68,7 @@
       </el-radio-group>
       <el-col id="line1">
         <!-- 为 ECharts 准备一个具备大小（宽高）的 DOM -->
-        <div id="line" style="width: auto;height:400px;"></div>
+        <div id="line" style="width: 100%;height:400px;"></div>
       </el-col>
     </el-row>
     <el-row style="margin-bottom: 50px">

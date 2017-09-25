@@ -129,12 +129,12 @@
             <el-input v-model="form2.nickname"></el-input>
           </el-form-item>
           <el-form-item label="登录名" :label-width="formLabelWidth" prop="username">
-            <el-input v-model="form2.username"></el-input>
+            <el-input v-model="form2.username" disabled></el-input>
           </el-form-item>
           <el-form-item label="员工类型" :label-width="formLabelWidth" prop="staffType">
             <el-col :span="24">
               <el-select v-model="form2.staffType" filterable @change="staffTypeChange"
-                         placeholder="员工类型">
+                         placeholder="员工类型" disabled>
                 <el-option v-for="staff in staffTypeList2" :key="staff.englishName" :label="staff.name"
                            :value="staff.englishName"></el-option>
               </el-select>
