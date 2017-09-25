@@ -51,11 +51,11 @@
         <el-checkbox label="Inadvancefinished">未退款</el-checkbox>
         <el-checkbox label="EarlyRetirement">已退款</el-checkbox>
       </el-checkbox-group>
-      <el-checkbox-group v-model="checkboxList2"
+      <el-checkbox-group v-model="checkboxList2" @change="checkboxChange2"
                          style="float: left;margin-top: 7px;min-width: 150px"
                          v-if="searchForm.status[0] === 'AllFinished'">
         <el-checkbox label="Finished">合同结束</el-checkbox>
-        <el-checkbox label="EarlyRetirement">已取消/拒批</el-checkbox>
+        <el-checkbox label="CanceledAndRejected">已取消/拒批</el-checkbox>
       </el-checkbox-group>
       <el-radio-group v-model="radio" @change="radioChange()" v-if="searchForm.status[0] === 'Unchecked'"
                       style="float: left;margin-top: 7px;">
@@ -580,7 +580,7 @@
     data() {
       let minDate;
       return {
-        checkboxList2: [],
+        checkboxList2: ['Finished','CanceledAndRejected'],
         billList:[],
         statusDisabled: false,//不同状态下控制是否只读
         //按钮权限控制
@@ -960,6 +960,27 @@
           page: this.cur_page - 1,
           size: this.size,
           status: this.checkboxList
+        };
+        this.loading = true;
+        if(form.status.length >0) {
+          this.axios.post(this.url, form).then((res) => {
+            this.tableData = res.data.data.content;
+            this.totalElements = res.data.data.totalElements;
+            this.loading = false;
+          }).catch((error) => {
+            this.$message.error(error.response.data.message);
+          })
+        } else {
+          this.tableData = [];
+          this.loading = false;
+        }
+      },
+      checkboxChange2() {
+        let form = {
+          ...this.searchForm,
+          page: this.cur_page - 1,
+          size: this.size,
+          status: this.checkboxList2
         };
         this.loading = true;
         if(form.status.length >0) {
