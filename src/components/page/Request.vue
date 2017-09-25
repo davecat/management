@@ -12,7 +12,7 @@
         <el-tab-pane label="已逾期" name="Breach">
           <span slot="label">已逾期<el-badge :value="overdueNumber" class="item"></el-badge></span>
         </el-tab-pane>
-        <el-tab-pane label="已结束" name="Finished"></el-tab-pane>
+        <el-tab-pane label="已结束" name="AllFinished"></el-tab-pane>
         <el-tab-pane label="提前退租" name="RetirementFinished"></el-tab-pane>
       </el-tabs>
     </el-row>
@@ -50,6 +50,12 @@
                          v-if="searchForm.status[0] === 'RetirementFinished'">
         <el-checkbox label="Inadvancefinished">未退款</el-checkbox>
         <el-checkbox label="EarlyRetirement">已退款</el-checkbox>
+      </el-checkbox-group>
+      <el-checkbox-group v-model="checkboxList2"
+                         style="float: left;margin-top: 7px;min-width: 150px"
+                         v-if="searchForm.status[0] === 'AllFinished'">
+        <el-checkbox label="Finished">合同结束</el-checkbox>
+        <el-checkbox label="EarlyRetirement">已取消/拒批</el-checkbox>
       </el-checkbox-group>
       <el-radio-group v-model="radio" @change="radioChange()" v-if="searchForm.status[0] === 'Unchecked'"
                       style="float: left;margin-top: 7px;">
@@ -230,7 +236,6 @@
              v-if="pullBloor"
              :model="currentRow"
              ref="currentRow"
-             :rules="rules"
              class="demo-table-expand hiddenForm">
       <div>
         <el-row style="position: absolute;top: 50%;left: -12px;z-index: 999;margin-top: -24px">
@@ -253,7 +258,7 @@
           <el-button v-if="searchForm.status[0] === 'Unchecked'" type="success" @click="submit('currentRow')">提交审批</el-button>
           <el-button v-if="searchForm.status[0] === 'Unchecked'" type="danger" @click="dialogVisible = true">取消申请</el-button>
           <el-button v-if="searchForm.status[0] === 'Unconfirmed'" type="info" style="width: 88px;" @click="revocation()">撤回</el-button>
-          <el-button style="width: 88px;" v-if="searchForm.status[0] !== 'Finished' && searchForm.status[0] !== 'Inadvancefinished' && searchForm.status[0] !== 'RetirementFinished'" @click="dialogTransfer = true;transferId=''" type="warning">转单
+          <el-button style="width: 88px;" v-if="searchForm.status[0] !== 'AllFinished' && searchForm.status[0] !== 'Inadvancefinished' && searchForm.status[0] !== 'RetirementFinished'" @click="dialogTransfer = true;transferId=''" type="warning">转单
           </el-button>
           <el-button v-if="searchForm.status[0] === 'Repayment' || searchForm.status[0] === 'Breach' || searchForm.status[0] === 'Loan'" type="danger" @click="dialogTermination = true">
             提前退租
@@ -575,6 +580,7 @@
     data() {
       let minDate;
       return {
+        checkboxList2: [],
         billList:[],
         statusDisabled: false,//不同状态下控制是否只读
         //按钮权限控制
@@ -714,7 +720,7 @@
           case 'Loan' : return 'Loan';
           case 'Repayment' : return 'Repayment';
           case 'Breach' : return 'Breach';
-          case 'Finished' : return 'Finished';
+          case 'AllFinished' : return 'Finished';
           case 'RetirementFinished' : return 'RetirementFinished';
         }
       },
@@ -1021,13 +1027,70 @@
       submit(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            this.currentRow.startDate = format(this.dateRange[0],'YYYY-MM-DD')+' 00:00:00';
-            this.currentRow.endDate = format(this.dateRange[1],'YYYY-MM-DD')+' 00:00:00';
             //把省市县的值带到后台
             this.currentRow.province = this.selectedOptions[0];
             this.currentRow.city = this.selectedOptions[1];
             this.currentRow.district = this.selectedOptions[2];
-            console.log(this.currentRow);
+            //加入验证
+            if(!this.currentRow.monthlyRent) {
+              this.$message.error("请输入月租金");
+              return;
+            }
+            if(this.dateRange && this.dateRange[0] !== null) {
+              this.currentRow.startDate = format(this.dateRange[0],'YYYY-MM-DD')+' 00:00:00';
+              this.currentRow.endDate = format(this.dateRange[1],'YYYY-MM-DD')+' 00:00:00';
+            } else {
+              this.$message.error("请选择起止日期");
+              return;
+            }
+            if(dateFns.differenceInCalendarMonths(this.currentRow.endDate,this.currentRow.startDate) < 2) {
+              this.$message.error("起止日期不能小于2个月");
+              return;
+            }
+            if(!this.currentRow.province || !this.currentRow.city|| !this.currentRow.district) {
+              this.$message.error("请选择房屋城市");
+              return;
+            }
+            if(!this.currentRow.address) {
+              this.$message.error("请填写房屋详细地址");
+              return;
+            }
+            if(!this.currentRow.apartmentNo) {
+              this.$message.error("请输入台账号码");
+              return;
+            }
+            if(!this.currentRow.emergencyContact) {
+              this.$message.error("请输入应急联系人");
+              return;
+            }
+            if(!this.currentRow.companyName) {
+              this.$message.error("请输入工作单位");
+              return;
+            }
+            if(!this.currentRow.emergencyContactMobile) {
+              this.$message.error("请输入应急联系人联系方式");
+              return;
+            }
+            if(!this.currentRow.companyAddress) {
+              this.$message.error("请输入单位地址");
+              return;
+            }
+            if(!this.currentRow.idCardFrontPhoto) {
+              this.$message.error("请上传身份证正面");
+              return;
+            }
+            if(!this.currentRow.idCardVersoPhoto) {
+              this.$message.error("请上传身份证反面");
+              return;
+            }
+            if(!this.currentRow.idCardAndPersonPhoto) {
+              this.$message.error("请上传手持身份证照片");
+              return;
+            }
+            if(this.currentRow.contractPhotos.length === 0) {
+              this.$message.error("请上传合同照片");
+              return;
+            }
 
             this.axios.put('/api/v2/applications/apply', this.currentRow).then((res) => {
                 this.$message.success('提交成功！');
@@ -1165,8 +1228,9 @@
         }
         //请求账单列表
         this.axios.get('/api/v2/applications/'+this.currentRow.applicationNo).then((res) => {
-          this.billList = res.data.data.billDTOs;
-          console.log(this.billList);
+          if(res.data.data.billDTOs) {
+            this.billList = res.data.data.billDTOs;
+          }
         }).catch((error) => {
           this.$message.error(error.response.data.message);
         })
