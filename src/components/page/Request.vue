@@ -177,6 +177,7 @@
 
 
     <el-dialog
+      id="showBig"
       title="大图"
       :visible.sync="dialogBigPhoto"
       size="small">
@@ -369,7 +370,7 @@
                   prop="status"
                   label="账单状态">
                   <template scope="scope">
-                    {{ scope.row.status | appStatusFormat }}
+                    {{ scope.row.status | billStatusFormat }}
                   </template>
                 </el-table-column>
                 <el-table-column
@@ -738,6 +739,14 @@
       }
     },
     filters: {
+      billStatusFormat: function (value) {
+        switch (value) {
+          case 'NotRepayment': return '未还款';
+          case 'EndRepayment': return '已还款';
+          case 'OverdueRepayment': return '逾期未还款';
+          case 'Exit': return '退租';
+        }
+      },
       appStatusFormat: function (value) {
         if (value === "Unchecked") {
           return "待补充";
@@ -1406,5 +1415,9 @@
     font-size: 14px;
     background-color: transparent;
     color: red;
+  }
+  #showBig .el-dialog__body{
+    height: 500px;
+    overflow: auto;
   }
 </style>
