@@ -17,8 +17,6 @@
     "babel-polyfill": "^6.23.0",
     "date-fns": "^1.28.5",
     "echarts": "^3.7.0",
-    "swiper": "^3.4.2",
-    "vue-awesome-swiper": "2.5.4",
     "vue-axios": "^2.0.2",
     "vuex": "^2.3.1"
   },
