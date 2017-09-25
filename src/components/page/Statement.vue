@@ -10,8 +10,7 @@
                   v-model="searchForm.applyDate"
                   align="right"
                   type="date"
-                  placeholder="应收款日期"
-                  @change="selectedData">
+                  placeholder="应收款日期">
                 </el-date-picker>
               </el-form-item>
               <el-form-item>
@@ -167,8 +166,7 @@
                   v-model="searchForm2.refundDate"
                   align="right"
                   type="date"
-                  placeholder="报违约日期"
-                  @change="selectedData">
+                  placeholder="报违约日期">
                 </el-date-picker>
               </el-form-item>
               <el-form-item>
@@ -503,7 +501,6 @@
           this.tableData2 = res.data.content;
           this.totalElements2 = res.data.totalElements;
           this.loading = false;
-          console.log(res.data.sumRefundAmount);
           if (res.data.sumRefundAmount !== undefined) {
             this.sumRefundAmount = res.data.sumRefundAmount;
           } else {
@@ -514,20 +511,19 @@
         })
       },
       Search() {
-        this.searchForm.applyDate = format(this.searchForm.applyDate, 'YYYY-MM-DD');
+        if(this.searchForm.applyDate) {
+          this.searchForm.applyDate = format(this.searchForm.applyDate, 'YYYY-MM-DD');
+        }else {
+          this.searchForm.applyDate = '';
+        }
         this.getData();
       },
       Search2() {
-        this.searchForm2.refundDate = format(this.searchForm2.refundDate, 'YYYY-MM-DD');
-        this.getData2();
-      },
-      selectedData() {
-        if (this.searchForm.applyDate !== undefined && this.searchForm.applyDate !== 'Invalid Date' && this.searchForm.applyDate !== '') {
-          this.searchForm.applyDate = format(this.searchForm.applyDate, 'YYYY-MM-DD');
-        } else {
-          this.searchForm.applyDate = format(Date.now(), 'YYYY-MM-DD');
+        if(this.searchForm2.refundDate) {
+          this.searchForm2.refundDate = format(this.searchForm2.refundDate, 'YYYY-MM-DD');
         }
-      },
+        this.getData2();
+      }
     }
   }
 </script>
