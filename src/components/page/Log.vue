@@ -39,10 +39,10 @@
         <el-table-column
           prop="logDate"
           sortable
-          width="130"
+          width="150"
           label="日志时间">
           <template scope="scope">
-            {{ scope.row.logDate | dateFormat }}
+            {{ scope.row.logDate }}
           </template>
         </el-table-column>
         <el-table-column
@@ -80,16 +80,7 @@
         formLabelWidth: '120px',
       }
     },
-    filters: {
-      dateFormat: function (value) {
-        if (typeof value === "string") {
-          let date = Date.parse(value.substring(0, value.length - 9));
-          return format(date, 'YYYY-MM-DD');
-        }
-      },
-    },
     created() {
-      console.log('log');
       this.getData();
     },
     methods: {
