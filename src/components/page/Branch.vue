@@ -204,6 +204,7 @@
     mixins: [pagination],
     data() {
       return {
+        cityList: [],
         //按钮权限控制
         importButton: false,
         addButton:false,
@@ -266,24 +267,6 @@
           this.branchList = [];
         }
       },
-      //获取城市列表
-      cityList () {
-        let citys = [];
-        let all = {id: ' ', name: '全部'};
-        citys.push(all);
-        json.forEach(item => {
-          if (item.children) {
-            item.children.forEach(i => {
-              citys.push({id: i.value, name: i.label});
-            })
-          }
-        });
-        return citys;
-      },
-//      Interior, //内部员工
-//      Boss,     // 中介公司负责人
-//      Branch,   // 门店管理员
-//      Loaner,   // 资金端管理员
       staff() {
         return store.state.staff.staff
       }
@@ -319,6 +302,13 @@
         if(this.button.button.indexOf('导出') >= 0) {
           this.importButton = true;
         }
+
+        //获取城市列表
+        this.axios.get('/api/v2/branchs/getCitys').then((res) => {
+          this.cityList = res.data;
+        }).catch((error) => {
+          this.$message.error(error.response.data.message);
+        });
       },
       getAgencyList() {
         this.axios.get('/api/v2/agencys/adminAndLib/getIdNameAgencyList').then((res) => {
