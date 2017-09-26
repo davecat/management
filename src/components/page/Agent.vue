@@ -287,8 +287,7 @@
         if (cityId !== ' ') {
           this.searchForm.branchId = '';
           this.branchList = [];
-          let param = {city: [cityId]};
-          this.axios.post('/api/v2/agents/getByCityIdBranch/', param).then((res) => {
+          this.axios.get('/api/v2/agents/getByCityIdBranch/'+cityId).then((res) => {
             this.branchList = res.data;
           }).catch((error) => {
             this.$message.error(error.response.data.error.data.message);
