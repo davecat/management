@@ -1020,7 +1020,6 @@
         //获取城市列表
         this.axios.get('/api/v2/branchs/getCitys').then((res) => {
           this.cityList = res.data;
-          console.log(res.data);
         }).catch((error) => {
           this.$message.error(error.response.data.message);
         });
