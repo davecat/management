@@ -888,7 +888,6 @@
         this.currentRow.startDate = format(this.dateRange[0],'YYYY-MM-DD')+' 00:00:00';
         this.currentRow.endDate = format(this.dateRange[1],'YYYY-MM-DD')+' 00:00:00';
         this.axios.put('/api/v2/applications/apply/temp', this.currentRow).then((res) => {
-          this.loading = true;
           this.axios.post(this.url, {
             ...this.searchForm,
             page: this.cur_page - 1,
@@ -898,7 +897,6 @@
             this.tableData = res.data.data.content;
             this.currentRow = this.tableData[this.currentIndex];
             this.totalElements = res.data.data.totalElements;
-            this.loading = false;
           }).catch((error) => {
             this.$message.error(error.response.data.message);
           });
@@ -1116,9 +1114,6 @@
             }
 
             this.axios.put('/api/v2/applications/apply', this.currentRow).then((res) => {
-                this.$message.success('提交成功！');
-
-              this.loading = true;
               this.axios.post(this.url, {
                 ...this.searchForm,
                 status: [this.radio],
@@ -1127,13 +1122,11 @@
               }).then((res) => {
                 this.tableData = res.data.data.content;
                 this.handleCurrentRow(this.tableData[this.currentIndex]);
+                this.$message.success('提交成功！');
                 this.totalElements = res.data.data.totalElements;
-                this.loading = false;
               }).catch((error) => {
                 this.$message.error(error.response.data.message);
               });
-
-
 
             }).catch((error) => {
               this.$message.error(error.response.data.message);
