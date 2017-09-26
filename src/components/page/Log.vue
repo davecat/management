@@ -46,6 +46,8 @@
           </template>
         </el-table-column>
         <el-table-column
+          class-name="logContent"
+          align="left"
           min-width="1110"
           prop="logContent"
           label="日志内容">
@@ -118,4 +120,7 @@
 </script>
 
 <style>
+  .logContent {
+    padding-left: 20px;
+  }
 </style>
