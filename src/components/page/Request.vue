@@ -860,7 +860,6 @@
       //转单确认
       transfer() {
         this.axios.post('/api/v2/applications/transfer/'+this.currentRow.applicationNo+'/'+this.transferId).then((res) => {
-          this.loading = true;
           this.axios.post(this.url, {
             ...this.searchForm,
             page: this.cur_page - 1,
@@ -871,7 +870,6 @@
             this.tableData = res.data.data.content;
             this.currentRow = this.tableData[this.currentIndex];
             this.totalElements = res.data.data.totalElements;
-            this.loading = false;
           }).catch((error) => {
             this.$message.error(error.response.data.message);
           });
@@ -920,7 +918,6 @@
       cancel() {
         this.axios.put('/api/v2/applications/cancle/'+this.currentRow.id).then((res) => {
           this.dialogVisible = false;
-          this.loading = true;
           this.axios.post(this.url, {
             ...this.searchForm,
             page: this.cur_page - 1,
@@ -929,9 +926,6 @@
             this.tableData = res.data.data.content;
             this.currentRow = this.tableData[this.currentIndex];
             this.totalElements = res.data.data.totalElements;
-            this.loading = false;
-            console.log(this.currentIndex);
-            console.log(this.currentRow);
             //跳转到下一条 请求成功时才执行
             if(this.tableData[this.currentIndex] === undefined) {
               this.hiddenClass();
@@ -1121,9 +1115,14 @@
                 size: this.size
               }).then((res) => {
                 this.tableData = res.data.data.content;
-                this.handleCurrentRow(this.tableData[this.currentIndex]);
-                this.$message.success('提交成功！');
                 this.totalElements = res.data.data.totalElements;
+                if(this.tableData[this.currentIndex] === undefined) {
+                  this.hiddenClass();
+                  this.$message.success('提交成功,数据处理完毕！');
+                } else {
+                  this.handleCurrentRow(this.tableData[this.currentIndex]);
+                  this.$message.success('提交成功！');
+                }
               }).catch((error) => {
                 this.$message.error(error.response.data.message);
               });
