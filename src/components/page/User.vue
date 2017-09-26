@@ -302,7 +302,9 @@
       //只有当选择了中介，才能选择门店
       //新增
       getBranchListAdd(ids) {
-        console.log(ids);
+        this.form2.branches = [];
+        this.form.branches = [];
+        this.data = [];
         this.axios.post('/api/v2/admin/branch/getBranchListByAgencyIdList', ids).then((res) => {
           this.branchList = res.data;
         }).catch((error) => {
