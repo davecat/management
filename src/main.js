@@ -48,7 +48,18 @@ router.beforeEach((to, from, next) => {
       let ids = response.data;
       let tree = [
         {
-          "children":[],
+          "children":[
+            {
+              "id":"0015a70c2c28442791127fabc68eb8412",
+              "name":"基础权限",
+              "permission":"instalment:index:basePermission",
+              "sortNum":3,
+              "type":"Button",
+              "path":"/3",
+              "meta": { requiresAuth: false },
+              "component": resolve => require(['components/page/Index'], resolve)
+            }
+          ],
           "icon":"fa fa-dashboard",
           "id":"402880ef5e703923015e70394c2b0000",
           "name":"控制台首页",
