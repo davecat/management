@@ -305,10 +305,26 @@
 
         //获取城市列表
         this.axios.get('/api/v2/branchs/getCitys').then((res) => {
-          this.cityList = res.data;
+          let citysIds = res.data.filter(item => item !== null);
+          let citys = [];
+          let all = {id: ' ', name: '全部'};
+          citys.push(all);
+          json.forEach(item => {
+            if (item.children) {
+              item.children.forEach(i => {
+                citysIds.forEach(j => {
+                    if(j === i.value) {
+                      citys.push({id: i.value, name: i.label});
+                    }
+                })
+              })
+            }
+          });
+          this.cityList = citys;
         }).catch((error) => {
           this.$message.error(error.response.data.message);
         });
+
       },
       getAgencyList() {
         this.axios.get('/api/v2/agencys/adminAndLib/getIdNameAgencyList').then((res) => {

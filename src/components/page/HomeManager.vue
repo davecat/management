@@ -263,6 +263,7 @@
     mixins: [pagination],
     data() {
       return {
+        cityList: [],
         //按钮权限控制
         addButton:false,
         form3:{agencyId: ''},
@@ -347,24 +348,6 @@
           this.branchList = [];
         }
       },
-      //获取城市列表
-      cityList () {
-        let citys = [];
-        let all = {id: ' ', name: '全部'};
-        citys.push(all);
-        json.forEach(item => {
-          if (item.children) {
-            item.children.forEach(i => {
-              citys.push({id: i.value, name: i.label});
-            })
-          }
-        });
-        return citys;
-      },
-//      Interior, //内部员工
-//      Boss,     // 中介公司负责人
-//      Branch,   // 门店管理员
-//      Loaner,   // 资金端管理员
       staff() {
         return store.state.staff.staff
       }
@@ -408,6 +391,27 @@
       },
       init() {
         this.options = json;
+        //获取城市列表
+        this.axios.get('/api/v2/branchs/getCitys').then((res) => {
+          let citysIds = res.data.filter(item => item !== null);
+          let citys = [];
+          let all = {id: ' ', name: '全部'};
+          citys.push(all);
+          json.forEach(item => {
+            if (item.children) {
+              item.children.forEach(i => {
+                citysIds.forEach(j => {
+                  if(j === i.value) {
+                    citys.push({id: i.value, name: i.label});
+                  }
+                })
+              })
+            }
+          });
+          this.cityList = citys;
+        }).catch((error) => {
+          this.$message.error(error.response.data.message);
+        });
       },
       getAgencyList() {
         this.axios.get('/api/v2/agencys/adminAndLib/getIdNameAgencyList').then((res) => {
