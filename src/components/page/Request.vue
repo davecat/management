@@ -1016,20 +1016,21 @@
         //获取省市区json
         this.options = json;
         //获取待处理、已逾期单据数量
+        this.getCount();
+        //获取城市列表
+        this.axios.get('/api/v2/branchs/getCitys').then((res) => {
+          this.cityList = res.data;
+          console.log(res.data);
+        }).catch((error) => {
+          this.$message.error(error.response.data.message);
+        });
+      },
+      getCount() {
         this.axios.get('/api/v2/applications/status/count').then((res) => {
           this.pendingNumber = Number(res.data.data.Pending.count);
           if(res.data.data.Breach) {
             this.overdueNumber = Number(res.data.data.Breach.count);
           }
-        }).catch((error) => {
-          this.$message.error(error.response.data.message);
-        });
-
-
-        //获取城市列表
-        this.axios.get('/api/v2/branchs/getCitys').then((res) => {
-          this.cityList = res.data;
-          console.log(res.data);
         }).catch((error) => {
           this.$message.error(error.response.data.message);
         });
@@ -1159,6 +1160,8 @@
       },
       //切换tab
       handleChangeTab(a) {
+        //更新单据数量
+        this.getCount();
         this.radio = 'Unchecked';
         if (a === 'Unchecked') {
           this.statusDisabled = false;//只有待处理的单据，可以填写内容，其余都是只读
