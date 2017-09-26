@@ -106,6 +106,11 @@
                 </template>
               </el-table-column>
               <el-table-column
+                min-width="150"
+                prop="accountCode"
+                label="台账号">
+              </el-table-column>
+              <el-table-column
                 min-width="115"
                 prop="rentPeriod"
                 label="租期">
@@ -240,6 +245,11 @@
                     <el-tag>{{ scope.row.customerName}}</el-tag>
                   </div>
                 </template>
+              </el-table-column>
+              <el-table-column
+                min-width="150"
+                prop="accountCode"
+                label="台账号">
               </el-table-column>
               <el-table-column
                 min-width="180"
