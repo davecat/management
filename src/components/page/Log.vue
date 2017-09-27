@@ -4,6 +4,7 @@
       <el-form :inline="true" :model="searchForm">
         <el-form-item>
           <el-date-picker
+            @change="dateChange"
             v-model="searchForm.logDate"
             align="right"
             type="date"
@@ -16,8 +17,8 @@
         <!--<el-form-item>-->
           <!--<el-button type="primary" @click="Search">查询</el-button>-->
         <!--</el-form-item>-->
-        <el-form-item style="float: right;margin-right: 0">
-          <el-button type="success" @click="Search">查询日志</el-button>
+        <el-form-item>
+          <el-button  @click="Search">查询日志</el-button>
         </el-form-item>
       </el-form>
     </el-row>
@@ -109,10 +110,12 @@
           this.$message.error(error.response.data.message);
         })
       },
-      Search() {
+      dateChange() {
         if(this.searchForm.logDate) {
           this.searchForm.logDate = format(this.searchForm.logDate, 'YYYY-MM-DD');
         }
+      },
+      Search() {
         this.getData();
       }
     }
