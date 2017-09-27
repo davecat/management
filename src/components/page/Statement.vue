@@ -189,7 +189,7 @@
           </el-row>
           <el-row style="margin-bottom: 10px">
             <el-col :span="4" style="float: left;margin-top: 7px;color: red;min-width: 150px">
-              应收合计:{{ sumRefundAmount | currency}}
+              应退合计:{{ sumRefundAmount | currency}}
             </el-col>
             <div class="pagination" style="position: absolute;right: 0;top: -1px;margin: 0">
               <el-pagination
