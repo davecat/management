@@ -56,22 +56,22 @@
                 </template>
               </el-table-column>
               <el-table-column
-                min-width="136"
-                prop="applicationNo"
-                label="申请编号">
-                <template scope="scope">
-                  <div slot="reference" class="name-wrapper-normal">
-                    <el-tag>{{ scope.row.applicationNo }}</el-tag>
-                  </div>
-                </template>
-              </el-table-column>
-              <el-table-column
                 min-width="120"
                 prop="payeeAmount"
                 label="应收金额">
                 <template scope="scope">
                   <div slot="reference" class="name-wrapper">
                     <el-tag>{{ scope.row.payeeAmount | currency }}</el-tag>
+                  </div>
+                </template>
+              </el-table-column>
+              <el-table-column
+                min-width="136"
+                prop="applicationNo"
+                label="申请编号">
+                <template scope="scope">
+                  <div slot="reference" class="name-wrapper-normal">
+                    <el-tag>{{ scope.row.applicationNo }}</el-tag>
                   </div>
                 </template>
               </el-table-column>
@@ -107,8 +107,11 @@
               </el-table-column>
               <el-table-column
                 min-width="150"
-                prop="accountCode"
+                prop="apartmentNo"
                 label="台账号">
+                <template scope="scope">
+                  {{ scope.row.apartmentNo?scope.row.apartmentNo:'无'}}
+                </template>
               </el-table-column>
               <el-table-column
                 min-width="115"
@@ -211,18 +214,8 @@
                 min-width="130"
                 label="报违约日期">
                 <template scope="scope">
-                  <div slot="reference" class="name-wrapper-normal">
+                  <div slot="reference" class="name-wrapper-refundDate">
                     <el-tag>{{ scope.row.refundDate | dateFormat }}</el-tag>
-                  </div>
-                </template>
-              </el-table-column>
-              <el-table-column
-                min-width="136"
-                prop="applicationNo"
-                label="申请编号">
-                <template scope="scope">
-                  <div slot="reference" class="name-wrapper-normal">
-                    <el-tag>{{ scope.row.applicationNo }}</el-tag>
                   </div>
                 </template>
               </el-table-column>
@@ -233,6 +226,16 @@
                 <template scope="scope">
                   <div slot="reference" class="name-wrapper">
                     <el-tag>{{ scope.row.payerAmount | currency }}</el-tag>
+                  </div>
+                </template>
+              </el-table-column>
+              <el-table-column
+                min-width="136"
+                prop="applicationNo"
+                label="申请编号">
+                <template scope="scope">
+                  <div slot="reference" class="name-wrapper-normal">
+                    <el-tag>{{ scope.row.applicationNo }}</el-tag>
                   </div>
                 </template>
               </el-table-column>
@@ -248,8 +251,11 @@
               </el-table-column>
               <el-table-column
                 min-width="150"
-                prop="accountCode"
+                prop="apartmentNo"
                 label="台账号">
+                <template scope="scope">
+                  {{ scope.row.apartmentNo?scope.row.apartmentNo:'无'}}
+                </template>
               </el-table-column>
               <el-table-column
                 min-width="180"
@@ -561,5 +567,10 @@
     font-size: 14px;
     background-color: transparent;
     color: black;
+  }
+  .name-wrapper-refundDate .el-tag {
+    font-size: 14px;
+    background-color: transparent;
+    color: red;
   }
 </style>
