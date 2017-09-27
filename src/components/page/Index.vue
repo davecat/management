@@ -604,14 +604,6 @@
         }).catch((error) => {
           console.log(error);
         });
-//                this.axios.get('/api/v1/application/getAgentApplicationStatistics').then((res) => {
-//                    this.total = res.data.total;
-//                    this.today = res.data.today;
-//                    this.week = res.data.week;
-//                    this.month = res.data.month;
-//                }).catch((error) => {
-//                    console.log(error);
-//                });
       },
       drawLine(id) {
         let that = this;

@@ -254,19 +254,6 @@
       button() {
         return store.state.button;
       },
-      getBranchList(cityId) {
-        if (cityId !== '') {
-          let param = {city: [cityId]};
-          this.axios.post('/api/v1/branch/getBranchListByLocation', param).then((res) => {
-            this.branchList = res.data;
-          }).catch((error) => {
-            this.$message.error(error.response.data.message);
-          })
-        } else {
-          this.searchForm.branchId = '';
-          this.branchList = [];
-        }
-      },
       staff() {
         return store.state.staff.staff
       }
