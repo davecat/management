@@ -403,10 +403,10 @@ router.beforeEach((to, from, next) => {
         }
       });
       constantRouterMap[2].children = routers;
-      constantRouterMap.push({
+      constantRouterMap[3] = {
         path: '*',
         component: resolve => require(['components/common/404.vue'], resolve)
-      });
+      };
       router.addRoutes(constantRouterMap);// 动态添加可访问路由表
       // next(to.path); // hack方法 确保addRoutes已完成
       if(to.path === '/login') {
@@ -414,7 +414,7 @@ router.beforeEach((to, from, next) => {
       }
       //home默认打开菜单的第一个
       if(to.path === '/home') {
-        next({path: routers[0].path})
+        next({path: constantRouterMap[2].children[0].path})
       }
     }).catch((error) => {
       console.log(error);
