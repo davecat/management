@@ -146,7 +146,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label="管辖中介：" :label-width="formLabelWidth" prop="agencies">
-            <el-select v-model="form2.agencies" multiple @change="getBranchListAdd(form2.agencies)"
+            <el-select v-model="form2.agencies" multiple @change="getBranchListAdd2(form2.agencies)" @remove-tag="dss"
                        :disabled="form2.staffType === 'Admin'">
               <el-option v-for="agency in agencyList" :value="agency.id" :label="agency.name" :key="agency.id"></el-option>
             </el-select>
@@ -302,7 +302,6 @@
       //只有当选择了中介，才能选择门店
       //新增
       getBranchListAdd(ids) {
-        this.form2.branches = [];
         this.form.branches = [];
         this.data = [];
         this.axios.post('/api/v2/admin/branch/getBranchListByAgencyIdList', ids).then((res) => {
@@ -311,13 +310,24 @@
           this.$message.error(error.response.data.message);
         })
       },
+      getBranchListAdd2(ids) {
+        this.axios.post('/api/v2/admin/branch/getBranchListByAgencyIdList', ids).then((res) => {
+          this.branchList = res.data;
+        }).catch((error) => {
+          this.$message.error(error.response.data.message);
+        })
+      },
+      dss() {
+        this.form2.branches = [];
+        this.data = [];
+      },
       getRightData(ids) {
         let that = this;
         that.data = [];
         if(this.form.staffType === 'BranchManager' || this.form2.staffType === 'BranchManager'){
             return;
         }
-        this.axios.post('/api/v2/admin/getAgentListByAgencyIdList ', ids).then((res) => {
+        this.axios.post('/api/v2/admin/getAgentListByAgencyIdList', ids).then((res) => {
           res.data.forEach(item => {
               let form = {key: '',label: ''};
               form.key = item.id;
