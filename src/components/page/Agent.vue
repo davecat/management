@@ -16,6 +16,9 @@
           </el-select>
         </el-form-item>
         <el-form-item>
+          <el-input v-model="searchForm.name" placeholder="经纪人姓名"></el-input>
+        </el-form-item>
+        <el-form-item>
           <el-button  @click="Search">查询</el-button>
         </el-form-item>
         <el-form-item style="float: right;margin-right: 0" v-if="importButton">
@@ -199,6 +202,7 @@
         url: '/api/v2/agents/getAgentListPage',
         branchList: [],
         searchForm: {
+          name: '',
           branchId: '',
           cityId: '',
           status: ["Pending", "NoPass", "Enabled", "Disable"],
