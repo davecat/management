@@ -41,7 +41,7 @@
         error: '',
         captchaUrl: '',
         ruleForm: {
-          cellphone: '15037360032',
+          cellphone: '',
           verifyCode: ''
         },
         rules: {
