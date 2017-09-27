@@ -441,6 +441,7 @@
       },
       //二维码汉字转码
       toUtf8(str) {
+        this.out = '';
         var i, len, c;
         len = str.length;
         for(i = 0; i < len; i++) {
@@ -460,9 +461,10 @@
       },
       //查看APP二维码
       showAPPCode(row) {
+        let flagRow = {id:row.id,name:row.name};
         let that = this;
         $('#codesss').empty();
-        let a = JSON.stringify(row);
+        let a = JSON.stringify(flagRow);
         this.toUtf8(a);
         this.dialogAPPCode = true;
         Vue.nextTick(function () {
