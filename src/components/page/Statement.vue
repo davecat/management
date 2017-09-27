@@ -7,6 +7,7 @@
             <el-form :inline="true" :model="searchForm">
               <el-form-item>
                 <el-date-picker
+                  @change="dateChange"
                   v-model="searchForm.applyDate"
                   align="right"
                   type="date"
@@ -171,6 +172,7 @@
             <el-form :inline="true" :model="searchForm2">
               <el-form-item>
                 <el-date-picker
+                  @change="dateChange2"
                   v-model="searchForm2.refundDate"
                   align="right"
                   type="date"
@@ -526,18 +528,22 @@
           this.$message.error(error.response.data.message);
         })
       },
-      Search() {
+      dateChange() {
         if(this.searchForm.applyDate) {
           this.searchForm.applyDate = format(this.searchForm.applyDate, 'YYYY-MM-DD');
         }else {
           this.searchForm.applyDate = '';
         }
+      },
+      Search() {
         this.getData();
       },
-      Search2() {
+      dateChange2() {
         if(this.searchForm2.refundDate) {
           this.searchForm2.refundDate = format(this.searchForm2.refundDate, 'YYYY-MM-DD');
         }
+      },
+      Search2() {
         this.getData2();
       }
     }
