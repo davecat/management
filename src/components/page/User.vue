@@ -328,12 +328,7 @@
             return;
         }
         this.axios.post('/api/v2/admin/getAgentListByAgencyIdList', ids).then((res) => {
-          res.data.forEach(item => {
-              let form = {key: '',label: ''};
-              form.key = item.id;
-              form.label = item.branchName+'-'+item.name;
-              that.data.push(form)
-          });
+          that.data = res.data;
         }).catch((error) => {
           this.$message.error(error.response.data.message);
         })
