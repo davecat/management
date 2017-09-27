@@ -862,6 +862,7 @@
         this.axios.post('/api/v2/applications/transfer/'+this.currentRow.applicationNo+'/'+this.transferId).then((res) => {
           this.axios.post(this.url, {
             ...this.searchForm,
+            status: [this.radio],
             page: this.cur_page - 1,
             size: this.size
           }).then((res) => {
@@ -888,6 +889,7 @@
         this.axios.put('/api/v2/applications/apply/temp', this.currentRow).then((res) => {
           this.axios.post(this.url, {
             ...this.searchForm,
+            status: [this.radio],
             page: this.cur_page - 1,
             size: this.size
           }).then((res) => {
@@ -920,6 +922,7 @@
           this.dialogVisible = false;
           this.axios.post(this.url, {
             ...this.searchForm,
+            status: [this.radio],
             page: this.cur_page - 1,
             size: this.size
           }).then((res) => {
