@@ -211,7 +211,7 @@
         url: '/api/v2/branchs/getBranchListPageByAgencyId',
         //省市县
         selectedOptions: [],
-        agencyList: {},
+        agencyList: [],
         searchForm: {
           name: '',
           cityId: '',
@@ -227,7 +227,8 @@
         form2: {
           id: '',
           name: '',
-          address: ''
+          address: '',
+          agencyId: ''
         },
         formVisible: false,
         formVisible2: false,
@@ -349,7 +350,6 @@
         this.form2.province = this.selectedOptions[0];
         this.form2.city = this.selectedOptions[1];
         this.form2.district = this.selectedOptions[2];
-        console.log(this.form2);
         this.$refs[formName].validate((valid) => {
           if (valid) {
             this.axios.put('/api/v2/branchs/update', this.form2).then((res) => {
@@ -389,6 +389,7 @@
         this.form2.id = row.id;
         this.form2.name = row.name;
         this.form2.address = row.address;
+        this.form2.agencyId = row.agencyId;
         this.formVisible2 = true;
       },
       rowDisabled(id) {
