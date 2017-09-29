@@ -345,8 +345,8 @@
 //        console.log(row);
         //获取指定用户的详细信息
         this.axios.get('/api/v2/users/assign/' + row.id).then((res) => {
-          console.log(res.data);
-          this.form2 = res.data;
+          this.form2 = Object.assign({},res.data);
+          this.getRightData(this.form2.branches);
           //请求门店
           this.axios.post('/api/v2/admin/branch/getBranchListByAgencyIdList', this.form2.agencies).then((res) => {
             this.branchList = res.data;
