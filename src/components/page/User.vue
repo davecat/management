@@ -10,10 +10,10 @@
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-select v-model="searchForm.staffType" filterable
+          <el-select v-model="searchForm.roleId" filterable
                      placeholder="角色">
-            <el-option v-for="staff in staffTypeList" :key="staff.englishName" :label="staff.name"
-                       :value="staff.englishName"></el-option>
+            <el-option v-for="role in roleList" :key="role.id" :label="role.name"
+                       :value="role.id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item>
@@ -229,6 +229,7 @@
           loanerId: [{required: true, message: '请输入员工类型', trigger: 'change'}],
         },
         searchForm:{
+          roleId: '',
           nickname: '',
           staffType: '',
           status:['Normal','Blocked']

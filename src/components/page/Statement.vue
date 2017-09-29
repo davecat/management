@@ -223,11 +223,11 @@
               </el-table-column>
               <el-table-column
                 min-width="120"
-                prop="payeeAmount"
+                prop="refundAmount"
                 label="应退金额">
                 <template scope="scope">
                   <div slot="reference" class="name-wrapper">
-                    <el-tag>{{ scope.row.payerAmount | currency }}</el-tag>
+                    <el-tag>{{ scope.row.refundAmount | currency }}</el-tag>
                   </div>
                 </template>
               </el-table-column>

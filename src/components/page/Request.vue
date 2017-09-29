@@ -646,6 +646,7 @@
         selectedOptions: [],
         options: [],
         searchForm: {
+          applyDate: '',
           customerOrAppNoValue: '',
           branchId: '',
           cityId: '',
