@@ -487,7 +487,7 @@
         this.getData();
       },
       handleCurrentChange2(val){
-        this.cur_page = val;
+        this.cur_page2 = val;
         this.getData2();
       },
       getData(){
