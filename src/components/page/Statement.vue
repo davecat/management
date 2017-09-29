@@ -61,7 +61,7 @@
                 prop="payeeAmount"
                 label="应收金额">
                 <template scope="scope">
-                  <div slot="reference" class="name-wrapper">
+                  <div slot="reference" class="name-wrapper-blue">
                     <el-tag>{{ scope.row.payeeAmount | currency }}</el-tag>
                   </div>
                 </template>
@@ -226,7 +226,7 @@
                 prop="refundAmount"
                 label="应退金额">
                 <template scope="scope">
-                  <div slot="reference" class="name-wrapper">
+                  <div slot="reference" class="name-wrapper-blue">
                     <el-tag>{{ scope.row.refundAmount | currency }}</el-tag>
                   </div>
                 </template>
@@ -550,7 +550,7 @@
   }
 </script>
 
-<style>
+<style scoped>
   .payerAmountFont {
     color: #1D8CE0
   }
@@ -563,12 +563,6 @@
     color: #13CE66
   }
 
-  .el-tag {
-    font-size: 14px;
-    background-color: transparent;
-    color: #1D8CE0
-  }
-
   .name-wrapper-normal .el-tag {
     font-size: 14px;
     background-color: transparent;
@@ -578,5 +572,10 @@
     font-size: 14px;
     background-color: transparent;
     color: red;
+  }
+  .name-wrapper-blue .el-tag {
+    font-size: 14px;
+    background-color: transparent;
+    color: #1D8CE0;
   }
 </style>
