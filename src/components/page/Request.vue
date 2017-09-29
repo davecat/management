@@ -21,6 +21,12 @@
         <el-form-item>
           <el-input v-model="searchForm.customerOrAppNoValue" placeholder="申请编号或租客姓名"></el-input>
         </el-form-item>
+        <el-form-item  prop="applyDate">
+          <el-date-picker
+            v-model="searchForm.applyDate"
+            placeholder="选择申请日期">
+          </el-date-picker>
+        </el-form-item>
         <el-form-item>
           <el-select v-model="searchForm.cityId" filterable @change="getBranchList(searchForm.cityId)"
                      placeholder="选择城市">
