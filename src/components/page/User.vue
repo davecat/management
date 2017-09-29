@@ -10,7 +10,14 @@
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-input v-model="searchForm.nickname" placeholder="用户昵称"></el-input>
+          <el-select v-model="searchForm.staffType" filterable
+                     placeholder="角色">
+            <el-option v-for="staff in staffTypeList" :key="staff.englishName" :label="staff.name"
+                       :value="staff.englishName"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-input v-model="searchForm.nickname" placeholder="用户昵称或登录名"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button @click="Search">查询</el-button>
@@ -135,7 +142,7 @@
             <el-col :span="24">
               <el-select v-model="form2.staffType" filterable @change="staffTypeChange"
                          placeholder="员工类型" disabled>
-                <el-option v-for="staff in staffTypeList2" :key="staff.englishName" :label="staff.name"
+                <el-option v-for="staff in staffTypeList" :key="staff.englishName" :label="staff.name"
                            :value="staff.englishName"></el-option>
               </el-select>
             </el-col>
@@ -166,7 +173,7 @@
       </div>
       <div slot="footer" class="dialog-footer">
         <el-button @click="resetForm2('form2')">取 消</el-button>
-        <el-button type="primary" @click="submitUser2('form2')">确 定</el-button>
+        <el-button type="primary" @click="submitUser2('form2')" :disabled="form2.staffType === 'BrachSalesman'">确 定</el-button>
       </div>
     </el-dialog>
 
