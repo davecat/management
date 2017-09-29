@@ -9,6 +9,9 @@
           </el-select>
         </el-form-item>
         <el-form-item>
+          <el-input v-model="searchForm.name" placeholder="请输入门店名称" @keyup.enter.native="Search"></el-input>
+        </el-form-item>
+        <el-form-item>
           <el-button  @click="Search">查询</el-button>
         </el-form-item>
         <el-form-item style="float: right;margin-right: 0">
