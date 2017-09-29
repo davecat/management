@@ -181,7 +181,7 @@
           prop="startDate"
           label="申请日期">
           <template scope="scope">
-            {{ scope.row.startDate | dateFormat}}
+            {{ scope.row.applyDate | dateFormat}}
           </template>
         </el-table-column>
       </el-table>
