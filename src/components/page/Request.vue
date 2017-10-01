@@ -24,6 +24,7 @@
         <el-form-item  prop="applyDate">
           <el-date-picker
             v-model="searchForm.applyDate"
+            @change="selectedData"
             placeholder="选择申请日期">
           </el-date-picker>
         </el-form-item>
@@ -1302,13 +1303,7 @@
         })
       },
       selectedData() {
-        if (this.searchForm.applyDate[0] !== null) {
-          this.searchForm.startDate = format(this.searchForm.applyDate[0], 'YYYY-MM-DD');
-          this.searchForm.endDate = format(this.searchForm.applyDate[1], 'YYYY-MM-DD');
-        } else {
-          this.searchForm.startDate = '';
-          this.searchForm.endDate = '';
-        }
+        this.searchForm.applyDate = format(this.searchForm.applyDate,'YYYY-MM-DD');
       },
       uploadFrontSuccess(response, file) {
         this.$set(this.currentRow,'idCardFrontPhoto',response.key);
