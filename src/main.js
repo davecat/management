@@ -41,7 +41,11 @@ import { constantRouterMap } from '@/router';
 router.beforeEach((to, from, next) => {
   const token = localStorage.getItem('token');
   if (!token || token === null) {
-    next();
+    if(to.path !== '/login') {
+      next('/login');
+    } else {
+      next()
+    }
   } else {
     // 动态生成路由
     Vue.axios.get("/api/v2/v1/menus").then((response) => {
