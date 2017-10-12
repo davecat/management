@@ -7,10 +7,10 @@
             <el-form :inline="true" :model="searchForm">
               <el-form-item>
                 <el-date-picker
+                  type="daterange"
                   @change="dateChange"
-                  v-model="searchForm.applyDate"
+                  v-model="applyDate"
                   align="right"
-                  type="date"
                   placeholder="应收款日期">
                 </el-date-picker>
               </el-form-item>
@@ -324,6 +324,7 @@
   export default {
     data() {
       return {
+        applyDate: [format(Date.now(), 'YYYY-MM-DD'),format(Date.now(), 'YYYY-MM-DD')],
         //按钮权限控制
         importButton: false,
         activeName: 'Rejected',
@@ -341,6 +342,7 @@
         url2: '/api/v2/agencyRefunds/getAgencyRefundPage',
         searchForm: {
           applyDate: format(Date.now(), 'YYYY-MM-DD'),
+          applyEndDate: format(Date.now(), 'YYYY-MM-DD'),
           applicationNoOrCustomnerName: ''
         },
         searchForm2: {
@@ -393,7 +395,9 @@
       tabChange() {
         if(this.activeName === 'Rejected') {
           this.searchForm.applicationNoOrCustomnerName = '';
+          this.applyDate = [format(Date.now(), 'YYYY-MM-DD'),format(Date.now(), 'YYYY-MM-DD')];
           this.searchForm.applyDate = format(Date.now(), 'YYYY-MM-DD');
+          this.searchForm.applyEndDate = format(Date.now(), 'YYYY-MM-DD');
           this.getData();
         } else {
           this.searchForm2.refundDate = '';
@@ -529,10 +533,12 @@
         })
       },
       dateChange() {
-        if(this.searchForm.applyDate) {
-          this.searchForm.applyDate = format(this.searchForm.applyDate, 'YYYY-MM-DD');
-        }else {
+        if(this.applyDate === undefined || this.applyDate[0] === null) {
           this.searchForm.applyDate = '';
+          this.searchForm.applyEndDate = '';
+        } else {
+          this.searchForm.applyDate = format(this.applyDate[0], 'YYYY-MM-DD');
+          this.searchForm.applyEndDate = format(this.applyDate[1], 'YYYY-MM-DD');
         }
       },
       Search() {
