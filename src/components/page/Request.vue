@@ -1,5 +1,5 @@
 <template>
-  <div style="height: 100%;">
+  <div style="height: 100%;" id="smialClick">
     <el-row>
       <el-tabs v-model="searchForm.status[0]" @tab-click="handleChangeTab(searchForm.status[0])">
         <el-tab-pane label="待处理" name="Unchecked">
@@ -51,7 +51,7 @@
         </el-form-item>
       </el-form>
     </el-row>
-    <el-row style="margin-bottom: 10px;height: 28px;">
+    <el-row style="margin-bottom: 10px;height: 28px;" id="smialClick1">
       <el-checkbox-group v-model="checkboxList" @change="checkboxChange"
                          style="float: left;margin-top: 7px;min-width: 150px"
                          v-if="searchForm.status[0] === 'RetirementFinished'">
@@ -246,7 +246,7 @@
     <div v-if="cover"
          style="width: 100%;height: 100%;opacity: .1;background-color: #666;position: absolute;left: 0;top: 0;z-index: 888"></div>
     <!--拉扇层-->
-    <el-form label-position="left" inline
+    <el-form label-position="left" inline id="lashan"
              v-if="pullBloor"
              :model="currentRow"
              ref="currentRow"
@@ -1048,6 +1048,15 @@
         this.getData();
       },
       init: function () {
+        let that = this;
+        //点击关闭拉扇层
+        Vue.nextTick(function () {
+          $('#smialClick').click(function (e) {
+            if(e.target === this || e.target === $('#smialClick1')[0]) {
+                that.hiddenClass()
+            }
+          });
+        });
         //获取省市区json
         this.options = json;
         //获取待处理、已逾期单据数量
