@@ -19,7 +19,7 @@
     <el-row style="margin-bottom: -15px">
       <el-form :inline="true" :model="searchForm">
         <el-form-item>
-          <el-input v-model="searchForm.customerOrAppNoValue" placeholder="申请编号或租客姓名"></el-input>
+          <el-input id="customerOrAppNoValue" v-model="searchForm.customerOrAppNoValue" placeholder="申请编号、租客姓名、台账号"></el-input>
         </el-form-item>
         <el-form-item  prop="applyDate">
           <el-date-picker
@@ -1557,5 +1557,8 @@
   #showBig .el-dialog__body{
     height: 500px;
     overflow: auto;
+  }
+  #customerOrAppNoValue input{
+    width: 204px;
   }
 </style>
