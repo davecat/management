@@ -1312,7 +1312,12 @@
         })
       },
       selectedData() {
-        this.searchForm.applyDate = format(this.searchForm.applyDate,'YYYY-MM-DD');
+        if(this.searchForm.applyDate) {
+          this.searchForm.applyDate = format(this.searchForm.applyDate,'YYYY-MM-DD');
+        } else {
+          this.searchForm.applyDate = ""
+        }
+        console.log(this.searchForm.applyDate);
       },
       uploadFrontSuccess(response, file) {
         this.$set(this.currentRow,'idCardFrontPhoto',response.key);
