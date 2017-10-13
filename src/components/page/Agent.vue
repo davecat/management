@@ -21,8 +21,9 @@
         <el-form-item>
           <el-button  @click="Search">查询</el-button>
         </el-form-item>
-        <el-form-item style="float: right;margin-right: 0" v-if="importButton">
-          <el-tooltip class="item" effect="dark" content="导出" placement="top-start">
+        <el-form-item style="float: right;margin-right: 0">
+          <el-button type="success" @click="multiplePass('a')" style="vertical-align: bottom" :disabled="!allPass">批量通过</el-button>
+          <el-tooltip class="item" effect="dark" content="导出" placement="top-start" v-if="importButton">
             <el-button type="info" @click="exportCSV()"><i class="fa fa-download" aria-hidden="true"></i></el-button>
           </el-tooltip>
         </el-form-item>
@@ -51,6 +52,9 @@
         :data="tableData"
         tooltip-effect="dark"
         style="width: 100%"
+        @select = 'selectChange'
+        @select-all = 'selectAll'
+        @selection-change = 'selectChange1'
       >
         <el-table-column type="selection" width="50">
         </el-table-column>
@@ -170,7 +174,7 @@
       <span>此操作将审批通过选中人员，是否继续？</span>
       <span slot="footer" class="dialog-footer">
                 <el-button @click="dialogVisible2 = false">取 消</el-button>
-                <el-button type="primary" @click="multiplePass">确 定</el-button>
+                <el-button type="primary" @click="multiplePass()">确 定</el-button>
             </span>
     </el-dialog>
 
@@ -196,6 +200,8 @@
     mixins: [pagination],
     data() {
       return {
+        allPass: true,
+        passIds: [],
         cityList: [],
         //按钮权限控制
         importButton: false,
@@ -385,12 +391,46 @@
         });
         this.dialogVisible1 = false;
       },
+      selectChange1(selection) {
+        let that = this;
+        that.allPass = true;
+        selection.forEach(item => {
+          if(item.status !== 'Pending') {
+            that.allPass = false
+          }
+        })
+      },
+      selectChange(selection, row) {
+        let that = this;
+        that.passIds = [];
+        selection.forEach(item => {
+          that.passIds.push(item.id)
+        });
+      },
+      selectAll(selection) {
+        let that = this;
+        that.passIds = [];
+        selection.forEach(item => {
+            that.passIds.push(item.id)
+        });
+      },
       //审批通过确认
-      multiplePass() {
+      multiplePass(a) {
+        console.log(a);
+        //批量
         let form = {
-          ids: [this.passId],
-          pass: 'true'
+            ids: [],
+            pass: 'true'
         };
+        if(a === 'a') {
+          form.ids = this.passIds;
+          if(this.passIds.length === 0) {
+            this.$message.error("请选择数据");
+            return false;
+          }
+        } else {
+            form.ids = [this.passId]
+        }
         this.axios.put('/api/v2/agents/passAndNopass', form).then((res) => {
           this.getData();
           this.$message.success("已通过！");
