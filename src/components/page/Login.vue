@@ -102,18 +102,31 @@
       },
       getCaptcha(formName) {
         let that = this;
+        let form = {
+          phoneNum: that.ruleForm.cellphone,
+          clientId: '',
+          captchaId: that.ruleForm.captchaId,
+          captcha: that.ruleForm.captcha
+        };
         that.$refs[formName].validateField('cellphone',function (valid) {
           if (!valid) {
             that.captchaBloor = true;
             let val = document.getElementById('captcha').children[0];
             that.setTime(val);
-            that.axios.get("/api/v2/sms/send/"+that.ruleForm.cellphone).then((res) => {
+            that.axios.post("/api/v2/sms/send",form).then((res) => {
+              if(res.data.flag === true) {
+                document.getElementById('ms-login').style.height = "250px";
+                that.error = true;
+                that.getCode();
+              }
+              if(res.data.message) {
+                that.captchaBloor = false;
+                clearTimeout(that.timeOut);
+                val.innerHTML="获取验证码";
+                that.$message.error(res.data.message);
+              }
 
             }).catch((error) => {
-              that.captchaBloor = false;
-              clearTimeout(that.timeOut);
-              val.innerHTML="获取验证码";
-              that.$message.error(error.response.data.message);
             })
           } else {
             return false;
