@@ -48,8 +48,8 @@
           prop="city"
           label="城市">
           <template scope="scope">
-            {{ scope.row.province | districtFormat }}-{{ scope.row.city | districtFormat }}-{{
-            scope.row.district | districtFormat }}
+            {{ scope.row.province}}-{{ scope.row.city}}-{{
+            scope.row.district }}
           </template>
         </el-table-column>
         <el-table-column
@@ -59,8 +59,10 @@
         </el-table-column>
         <el-table-column
           min-width="300"
-          prop="rentalType"
           label="出租类型">
+          <template scope="scope">
+            {{ scope.row.rentalType | rentalType}}
+          </template>
         </el-table-column>
         <el-table-column
           min-width="300"
@@ -126,7 +128,7 @@
             <el-input v-model="form.city"></el-input>
           </el-col>
         </el-form-item>
-        <el-form-item label="区()：" :label-width="formLabelWidth" prop="district">
+        <el-form-item label="区(县)：" :label-width="formLabelWidth" prop="district">
           <el-col :span="24">
             <el-input v-model="form.district"></el-input>
           </el-col>
@@ -256,7 +258,6 @@
 </template>
 
 <script>
-  import json from "static/city.json";
   import {pagination} from '../mixins/pagination.js'
   import store from '@/store'
   export default {
@@ -340,25 +341,11 @@
       }
     },
     filters: {
-      districtFormat: function (value) {
-        if (!value) {
-          return ''
+      rentalType: function (value) {
+        switch (value) {
+          case 'Entire': return '整租';
+          case 'Joint': return '合租';
         }
-        let district = {};
-        let findLabel = (item, value) => {
-          if (item) {
-            return item.some(i => {
-              if (value === i.value) {
-                district = i;
-                return true;
-              } else {
-                return findLabel(i.children, value)
-              }
-            });
-          }
-        };
-        findLabel(json, value);
-        return district.label;
       }
     },
     methods: {
@@ -377,24 +364,11 @@
 
       },
       init() {
-        this.options = json;
         //获取城市列表
         this.axios.get('/api/v2/branchs/getCitys').then((res) => {
-          let citysIds = res.data.filter(item => item !== null);
           let citys = [];
           let all = {id: ' ', name: '全部'};
           citys.push(all);
-          json.forEach(item => {
-            if (item.children) {
-              item.children.forEach(i => {
-                citysIds.forEach(j => {
-                  if(j === i.value) {
-                    citys.push({id: i.value, name: i.label});
-                  }
-                })
-              })
-            }
-          });
           this.cityList = citys;
         }).catch((error) => {
           this.$message.error(error.response.data.message);
@@ -411,11 +385,9 @@
       //新增确认
       submitBranch(formName) {
         //把省市县的值带到后台
-        this.form.province = this.selectedOptions[0];
-        this.form.city = this.selectedOptions[1];
-        this.form.district = this.selectedOptions[2];
         this.$refs[formName].validate((valid) => {
           if (valid) {
+            console.log(this.form);
             this.axios.post('/api/v2/apartments/add', this.form).then((res) => {
               this.getData();
               this.$refs[formName].resetFields();
@@ -489,26 +461,6 @@
           this.$message.error(error.response.data.message);
         });
         this.dialogVisible = false;
-      },
-      districtFormat(value) {
-        if (!value) {
-          return ''
-        }
-        let district = {};
-        let findLabel = (item, value) => {
-          if (item) {
-            return item.some(i => {
-              if (value === i.value) {
-                district = i;
-                return true;
-              } else {
-                return findLabel(i.children, value)
-              }
-            });
-          }
-        };
-        findLabel(json, value);
-        return district.label;
       },
       exportCSV() {
         var head = [["小区名称", "门牌号", "省","市","区","详细地址","房间数量","台账号","整租或合租（“0”表示整租“1”表示合租）"]];
