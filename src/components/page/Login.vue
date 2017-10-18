@@ -16,7 +16,7 @@
           <img :src="captchaUrl" @click="getCode"/>
         </el-form-item>
         <div class="login-btn">
-          <el-button type="primary" @click="submitForm('ruleForm')">登录</el-button>
+          <el-button type="primary" @click="submitForm('ruleForm')" :disabled="loginBoolean">登录</el-button>
         </div>
       </el-form>
       <!--二维码-->
@@ -29,6 +29,7 @@
   export default {
     data: function () {
       return {
+        loginBoolean: false,
         error: false,
         timeOut: '',
         tipContent: '扫码登陆更安全哦~',
@@ -77,13 +78,16 @@
         const self = this;
         self.$refs[formName].validate((valid) => {
           if (valid) {
+            this.loginBoolean = true;
             this.doLogin(self.ruleForm).then((res) => {
               if(res.data.errorMessage) {
                 this.$message.error(res.data.errorMessage);
+                this.loginBoolean = false;
               }
               if(res.data.ifCaptcha){
                 document.getElementById('ms-login').style.height = "250px";
                 this.error = true;
+                this.loginBoolean = false;
                 this.getCode();
               }
               if(res.data.success) {
@@ -93,6 +97,7 @@
             });
           } else {
             console.log('error submit!!');
+            this.loginBoolean = false;
             return false;
           }
         });
