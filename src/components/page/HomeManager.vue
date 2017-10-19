@@ -3,9 +3,9 @@
     <el-row style="margin-bottom: -15px">
       <el-form :inline="true" :model="searchForm">
         <el-form-item>
-          <el-select v-model="searchForm.cityId" filterable placeholder="选择城市">
-            <el-option v-for="city in cityList" :key="city.id" :label="city.name"
-                       :value="city.id"></el-option>
+          <el-select v-model="searchForm.city" filterable placeholder="选择城市">
+            <el-option v-for="city in cityList" :key="city" :label="city"
+                       :value="city"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item id="dave">
@@ -261,12 +261,15 @@
 </template>
 
 <script>
-  import {pagination} from '../mixins/pagination.js'
   import store from '@/store'
   export default {
-    mixins: [pagination],
     data() {
       return {
+        loading: false,//加载动画
+        tableData: [],
+        cur_page: 1,
+        size: 10,
+        totalElements: 0,
         cityList: [],
         //按钮权限控制
         addButton:false,
@@ -275,7 +278,7 @@
         url: '/api/v2/apartments/getBranchListPage',
         agencyList: [],
         searchForm: {
-          cityId: '',
+          city: '',
           rentalType: ['Entire', 'Joint']
         },
         form: {
@@ -327,6 +330,7 @@
       }
     },
     created(){
+      this.getData();
       this.init();
       this.getAgencyList();
       if(this.button.button.indexOf('新增') >= 0) {
@@ -353,6 +357,30 @@
       }
     },
     methods: {
+      handleCurrentChange(val){
+        this.cur_page = val;
+        this.getData();
+      },
+      getData(){
+        this.loading = true;
+        this.axios.post(this.url, {
+          ...this.searchForm,
+          page: this.cur_page - 1,
+          size: this.size
+        }).then((res) => {
+          this.tableData = res.data.content;
+          this.totalElements = res.data.totalElements;
+          this.loading = false;
+        }).catch((error) => {
+          this.$message.error(error.response.data.message);
+        })
+      },
+      Search() {
+        if(this.searchForm.city === '全部') {
+            this.searchForm.city = ''
+        }
+        this.getData();
+      },
       uploadSuccess() {
           this.importVisible = false;
           this.getData();
@@ -369,11 +397,9 @@
       },
       init() {
         //获取城市列表
-        this.axios.get('/api/v2/branchs/getCitys').then((res) => {
-          let citys = [];
-          let all = {id: ' ', name: '全部'};
-          citys.push(all);
-          this.cityList = citys;
+        this.axios.get('/api/v2/apartments/getApartmentCitys').then((res) => {
+          let city = ['全部'];
+          this.cityList = city.concat(res.data);
         }).catch((error) => {
           this.$message.error(error.response.data.message);
         });
@@ -381,7 +407,6 @@
       getAgencyList() {
         this.axios.get('/api/v2/agencys/adminAndLib/getIdNameAgencyList').then((res) => {
           this.agencyList = res.data;
-          console.log(this.agencyList);
         }).catch((error) => {
           this.$message.error(error.response.data.message);
         })
