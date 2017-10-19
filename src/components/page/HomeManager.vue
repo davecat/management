@@ -101,23 +101,17 @@
 
     <el-dialog title="新增房源" :visible.sync="formVisible" size="tiny">
       <el-form :model="form" ref="form" :rules="rules">
-        <el-radio-group v-model="form.rentalType">
+        <el-radio-group v-model="form.rentalType" style="height: 40px;">
           <el-radio label='Entire'>整租</el-radio>
           <el-radio label='Joint'>合租</el-radio>
         </el-radio-group>
         <!--只有当登录人为内部员工时候才显示-->
-        <el-form-item label="所属中介" :label-width="formLabelWidth" prop="agencyId">
-          <el-select v-model="form.agencyId">
+        <el-form-item label="所属中介：" :label-width="formLabelWidth" prop="agencyId">
+          <el-select v-model="form.agencyId" style="display: block">
             <el-option v-for="agency in agencyList" :key="agency.id" :label="agency.name"
                        :value="agency.id"></el-option>
           </el-select>
         </el-form-item>
-        <!--<el-form-item label="城市：" :label-width="formLabelWidth" prop="selectedOptions">-->
-          <!--<el-cascader-->
-            <!--:options="options"-->
-            <!--v-model="selectedOptions">-->
-          <!--</el-cascader>-->
-        <!--</el-form-item>-->
         <el-form-item label="省：" :label-width="formLabelWidth" prop="province">
           <el-col :span="24">
             <el-input v-model="form.province"></el-input>
@@ -143,7 +137,7 @@
           <el-input v-model="form.houseNumber"></el-input>
         </el-form-item>
         <el-form-item label="房间数：" :label-width="formLabelWidth" prop="roomAmount" v-if="form.rentalType !== 'Entire'">
-          <el-select v-model="form.roomAmount">
+          <el-select v-model="form.roomAmount" style="display: block">
             <el-option value="2">2</el-option>
             <el-option value="3">3</el-option>
             <el-option value="4">4</el-option>
@@ -160,24 +154,33 @@
       </div>
     </el-dialog>
 
-    <el-dialog title="修改房源" :visible.sync="formVisible2">
+    <el-dialog title="修改房源" :visible.sync="formVisible2" size="tiny">
       <el-form :model="form2" ref="form2" :rules="rules">
-        <el-radio-group v-model="form2.rentalType">
+        <el-radio-group v-model="form2.rentalType" style="height: 40px;">
           <el-radio label='Entire'>整租</el-radio>
           <el-radio label='Joint'>合租</el-radio>
         </el-radio-group>
         <!--只有当登录人为内部员工时候才显示-->
-        <el-form-item label="所属中介" :label-width="formLabelWidth" prop="agencyId">
-          <el-select v-model="form2.agencyId">
+        <el-form-item label="所属中介：" :label-width="formLabelWidth" prop="agencyId">
+          <el-select v-model="form2.agencyId" style="display: block">
             <el-option v-for="agency in agencyList" :key="agency.id" :label="agency.name"
                        :value="agency.id"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="城市：" :label-width="formLabelWidth" prop="selectedOptions">
-          <el-cascader
-            :options="options"
-            v-model="selectedOptions">
-          </el-cascader>
+        <el-form-item label="省：" :label-width="formLabelWidth" prop="province">
+          <el-col :span="24">
+            <el-input v-model="form2.province"></el-input>
+          </el-col>
+        </el-form-item>
+        <el-form-item label="市：" :label-width="formLabelWidth" prop="city">
+          <el-col :span="24">
+            <el-input v-model="form2.city"></el-input>
+          </el-col>
+        </el-form-item>
+        <el-form-item label="区(县)：" :label-width="formLabelWidth" prop="district">
+          <el-col :span="24">
+            <el-input v-model="form2.district"></el-input>
+          </el-col>
         </el-form-item>
         <el-form-item label="详细地址：" :label-width="formLabelWidth" prop="address">
           <el-input v-model="form2.address"></el-input>
@@ -189,7 +192,7 @@
           <el-input v-model="form2.houseNumber"></el-input>
         </el-form-item>
         <el-form-item label="房间数：" :label-width="formLabelWidth" prop="roomAmount" v-if="form2.rentalType !== 'Entire'">
-          <el-select v-model="form2.roomAmount">
+          <el-select v-model="form2.roomAmount" style="display: block">
             <el-option value="2">2</el-option>
             <el-option value="3">3</el-option>
             <el-option value="4">4</el-option>
@@ -270,8 +273,6 @@
         form3:{agencyId: ''},
         fileList: [],
         url: '/api/v2/apartments/getBranchListPage',
-        //省市县
-        selectedOptions: [],
         agencyList: [],
         searchForm: {
           cityId: '',
@@ -312,13 +313,16 @@
         dialogQRCode: false,
         deleteId: '',
         qrCodeUrl: 'http://images.tmtpost.com/uploads/images/2014/14/report/30519/mac600.jpg',
-        formLabelWidth: '156px',
+        formLabelWidth: '92px',
         rules: {
           agencyId: [{required: true, message: '请选择中介', trigger: 'change'}],
           accountCode: [{required: true, message: '请输入台账号', trigger: 'blur'}],
           address: [{required: true, message: '请输入门店地址', trigger: 'blur'}],
           communityName: [{required: true, message: '请输入小区名称', trigger: 'blur'}],
-          houseNumber: [{required: true, message: '请输入门牌号', trigger: 'blur'}]
+          houseNumber: [{required: true, message: '请输入门牌号', trigger: 'blur'}],
+          city: [{required: true, message: '请输入市', trigger: 'blur'}],
+          province :[{required: true, message: '请输入省', trigger: 'blur'}],
+          district: [{required: true, message: '请输入区(县)', trigger: 'blur'}]
         }
       }
     },
@@ -392,7 +396,6 @@
               this.getData();
               this.$refs[formName].resetFields();
               //清空省市区
-              this.selectedOptions = [];
               this.formVisible = false;
             }).catch((error) => {
               this.$message.error(error.response.data.message);
@@ -405,10 +408,6 @@
       },
       //修改确认
       submitBranch2(formName) {
-        //把省市县的值带到后台
-        this.form2.province = this.selectedOptions[0];
-        this.form2.city = this.selectedOptions[1];
-        this.form2.district = this.selectedOptions[2];
         this.$refs[formName].validate((valid) => {
           if (valid) {
             this.axios.put('/api/v2/apartments/update', this.form2).then((res) => {
@@ -431,7 +430,6 @@
       resetForm(formName) {
         this.$refs[formName].resetFields();
         //清空省市区
-        this.selectedOptions = [];
         this.formVisible = false;
       },
       resetForm2(formName) {
@@ -444,7 +442,6 @@
       },
       handleEdit(row) {
         //带过来默认的省市区
-        this.selectedOptions = [row.province, row.city, row.district];
         this.form2 = Object.assign({},row);
         this.formVisible2 = true;
       },
