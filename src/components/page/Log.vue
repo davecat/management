@@ -116,6 +116,7 @@
         }
       },
       Search() {
+        this.searchForm.logDate = format(this.searchForm.logDate, 'YYYY-MM-DD');
         this.getData();
       }
     }

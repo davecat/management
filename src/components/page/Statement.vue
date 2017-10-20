@@ -550,6 +550,7 @@
         }
       },
       Search2() {
+        this.searchForm2.refundDate = format(this.searchForm2.refundDate, 'YYYY-MM-DD');
         this.getData2();
       }
     }
