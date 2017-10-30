@@ -1481,7 +1481,7 @@
   }
 
   .content {
-    overflow-y: hidden;
+    overflow-y: auto;
     overflow-x: scroll;
   }
 
