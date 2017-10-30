@@ -11,7 +11,7 @@
                   @change="dateChange"
                   v-model="applyDate"
                   align="right"
-                  placeholder="应收款日期">
+                  placeholder="收款日期">
                 </el-date-picker>
               </el-form-item>
               <el-form-item>
@@ -49,7 +49,7 @@
                 prop="payeeDate"
                 sortable
                 min-width="130"
-                label="应收款日期">
+                label="收款日期">
                 <template scope="scope">
                   <div slot="reference" class="name-wrapper-normal">
                     <el-tag>{{ scope.row.payeeDate | dateFormat }}</el-tag>
@@ -590,7 +590,7 @@
       },
       //导出全部
       exportCSV() {
-        var head = [["应收款日期","申请编号","应收金额","分期总金额", "租客姓名", "联系方式", "租期", "起租时间","结束时间", "月租金","所属店","经纪人"]];
+        var head = [["收款日期","申请编号","应收金额","分期总金额", "租客姓名", "联系方式", "租期", "起租时间","结束时间", "月租金","所属店","经纪人"]];
         let param = {
           ...this.searchForm,
           page: this.cur_page - 1,
