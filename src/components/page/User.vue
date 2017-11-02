@@ -255,10 +255,10 @@
       staffTypeFormat: function (value) {
         switch (value) {
           case 'Admin': return '管理员';
-          case 'Interior': return '内部员工';
-          case 'BranchManager': return '门店经理';
-          case 'BrachDirector': return '门店主管';
-          case 'BrachSalesman': return '门店业务员';
+          case 'Interior': return '中介级';
+          case 'BranchManager': return '门店级';
+          case 'BrachDirector': return '员工级';
+          case 'BrachSalesman': return '个人级';
         }
       }
     },
