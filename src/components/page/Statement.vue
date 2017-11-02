@@ -312,143 +312,143 @@
             </el-table>
           </el-row>
         </el-tab-pane>
-        <el-tab-pane label="租客账单" name="customerBill">
-          <el-row style="margin-bottom: -15px">
-            <el-form :inline="true" :model="searchForm2">
-              <el-form-item>
-                <el-date-picker
-                  @change="dateChange2"
-                  v-model="searchForm2.refundDate"
-                  align="right"
-                  type="date"
-                  placeholder="报违约日期">
-                </el-date-picker>
-              </el-form-item>
-              <el-form-item>
-                <el-input v-model="searchForm2.applicationNoOrCustomnerName" placeholder="申请编号或租客姓名" @keyup.enter.native="Search2"></el-input>
-              </el-form-item>
-              <el-form-item>
-                <el-button @click="Search2">查询</el-button>
-              </el-form-item>
-              <el-form-item style="float: right;margin-right: 0" v-if="importButton">
-                <el-tooltip class="item" effect="dark" content="导出" placement="top-start">
-                  <el-button type="info" @click="exportCSV2()"><i class="fa fa-download" aria-hidden="true"></i></el-button>
-                </el-tooltip>
-              </el-form-item>
-            </el-form>
-          </el-row>
-          <el-row style="margin-bottom: 10px">
-            <el-col :span="4" style="float: left;margin-top: 7px;color: red;min-width: 190px">
-              应退合计:{{ sumRefundAmount | currency}}
-            </el-col>
-            <div class="pagination" style="position: absolute;right: 0;top: -1px;margin: 0">
-              <el-pagination
-                @current-change="handleCurrentChange2"
-                layout="total, prev, pager, next"
-                :total="totalElements2">
-              </el-pagination>
-            </div>
-          </el-row>
-          <el-row>
-            <el-table
-              v-loading.body="loading"
-              :data="tableData2"
-              :default-sort="{prop: 'payeeDate', order: 'descending'}"
-              style="width: 100%">
-              <el-table-column
-                prop="refundDate"
-                sortable
-                min-width="130"
-                label="应还款日期">
-                <template scope="scope">
-                  <div slot="reference" class="name-wrapper-refundDate">
-                    <el-tag>{{ scope.row.refundDate | dateFormat }}</el-tag>
-                  </div>
-                </template>
-              </el-table-column>
-              <el-table-column
-                min-width="136"
-                prop="applicationNo"
-                label="申请编号">
-                <template scope="scope">
-                  <div slot="reference" class="name-wrapper-normal">
-                    <el-tag>{{ scope.row.applicationNo }}</el-tag>
-                  </div>
-                </template>
-              </el-table-column>
-              <el-table-column
-                min-width="100"
-                prop="customerName"
-                label="租客姓名">
-                <template scope="scope">
-                  <div slot="reference" class="name-wrapper-normal">
-                    <el-tag>{{ scope.row.customerName}}</el-tag>
-                  </div>
-                </template>
-              </el-table-column>
-              <el-table-column
-                min-width="150"
-                prop="apartmentNo"
-                label="台账号">
-                <template scope="scope">
-                  {{ scope.row.apartmentNo?scope.row.apartmentNo:'无'}}
-                </template>
-              </el-table-column>
-              <el-table-column
-                min-width="120"
-                prop="monthlyRent"
-                label="账单金额">
-                <template scope="scope">
-                  <div slot="reference" class="name-wrapper-normal">
-                    <el-tag>{{ scope.row.monthlyRent | currency }}</el-tag>
-                  </div>
-                </template>
-              </el-table-column>
-              <el-table-column
-                min-width="120"
-                prop="monthlyRent"
-                label="月租金">
-                <template scope="scope">
-                  <div slot="reference" class="name-wrapper-normal">
-                    <el-tag>{{ scope.row.monthlyRent | currency }}</el-tag>
-                  </div>
-                </template>
-              </el-table-column>
-              <el-table-column
-                min-width="120"
-                prop="monthlyRent"
-                label="逾期费">
-                <template scope="scope">
-                  <div slot="reference" class="name-wrapper-normal">
-                    <el-tag>{{ scope.row.monthlyRent | currency }}</el-tag>
-                  </div>
-                </template>
-              </el-table-column>
-              <el-table-column
-                min-width="120"
-                prop="monthlyRent"
-                label="状态">
-                <template scope="scope">
-                  <div slot="reference" class="name-wrapper-normal">
-                    <el-tag>{{ scope.row.status }}</el-tag>
-                  </div>
-                </template>
-              </el-table-column>
-              <el-table-column min-width="80" label="操作">
-                <template scope="scope">
-                  <el-tooltip class="item" effect="dark" content="上传凭证" placement="top-end">
-                    <el-button size="small" type="primary" @click="upload(scope.row)"><i class="fa fa-pencil-square-o"></i>
-                    </el-button>
-                  </el-tooltip>
-                  <el-tooltip class="item" effect="dark" content="查看" placement="top-end">
-                    <el-button size="small" type="primary" @click="query(scope.row)"><i class="fa fa-pencil-square-o"></i>
-                    </el-button>
-                  </el-tooltip>
-                </template>
-              </el-table-column>
-            </el-table>
-          </el-row>
-        </el-tab-pane>
+        <!--<el-tab-pane label="租客账单" name="customerBill">-->
+          <!--<el-row style="margin-bottom: -15px">-->
+            <!--<el-form :inline="true" :model="searchForm2">-->
+              <!--<el-form-item>-->
+                <!--<el-date-picker-->
+                  <!--@change="dateChange2"-->
+                  <!--v-model="searchForm2.refundDate"-->
+                  <!--align="right"-->
+                  <!--type="date"-->
+                  <!--placeholder="报违约日期">-->
+                <!--</el-date-picker>-->
+              <!--</el-form-item>-->
+              <!--<el-form-item>-->
+                <!--<el-input v-model="searchForm2.applicationNoOrCustomnerName" placeholder="申请编号或租客姓名" @keyup.enter.native="Search2"></el-input>-->
+              <!--</el-form-item>-->
+              <!--<el-form-item>-->
+                <!--<el-button @click="Search2">查询</el-button>-->
+              <!--</el-form-item>-->
+              <!--<el-form-item style="float: right;margin-right: 0" v-if="importButton">-->
+                <!--<el-tooltip class="item" effect="dark" content="导出" placement="top-start">-->
+                  <!--<el-button type="info" @click="exportCSV2()"><i class="fa fa-download" aria-hidden="true"></i></el-button>-->
+                <!--</el-tooltip>-->
+              <!--</el-form-item>-->
+            <!--</el-form>-->
+          <!--</el-row>-->
+          <!--<el-row style="margin-bottom: 10px">-->
+            <!--<el-col :span="4" style="float: left;margin-top: 7px;color: red;min-width: 190px">-->
+              <!--应退合计:{{ sumRefundAmount | currency}}-->
+            <!--</el-col>-->
+            <!--<div class="pagination" style="position: absolute;right: 0;top: -1px;margin: 0">-->
+              <!--<el-pagination-->
+                <!--@current-change="handleCurrentChange2"-->
+                <!--layout="total, prev, pager, next"-->
+                <!--:total="totalElements2">-->
+              <!--</el-pagination>-->
+            <!--</div>-->
+          <!--</el-row>-->
+          <!--<el-row>-->
+            <!--<el-table-->
+              <!--v-loading.body="loading"-->
+              <!--:data="tableData2"-->
+              <!--:default-sort="{prop: 'payeeDate', order: 'descending'}"-->
+              <!--style="width: 100%">-->
+              <!--<el-table-column-->
+                <!--prop="refundDate"-->
+                <!--sortable-->
+                <!--min-width="130"-->
+                <!--label="应还款日期">-->
+                <!--<template scope="scope">-->
+                  <!--<div slot="reference" class="name-wrapper-refundDate">-->
+                    <!--<el-tag>{{ scope.row.refundDate | dateFormat }}</el-tag>-->
+                  <!--</div>-->
+                <!--</template>-->
+              <!--</el-table-column>-->
+              <!--<el-table-column-->
+                <!--min-width="136"-->
+                <!--prop="applicationNo"-->
+                <!--label="申请编号">-->
+                <!--<template scope="scope">-->
+                  <!--<div slot="reference" class="name-wrapper-normal">-->
+                    <!--<el-tag>{{ scope.row.applicationNo }}</el-tag>-->
+                  <!--</div>-->
+                <!--</template>-->
+              <!--</el-table-column>-->
+              <!--<el-table-column-->
+                <!--min-width="100"-->
+                <!--prop="customerName"-->
+                <!--label="租客姓名">-->
+                <!--<template scope="scope">-->
+                  <!--<div slot="reference" class="name-wrapper-normal">-->
+                    <!--<el-tag>{{ scope.row.customerName}}</el-tag>-->
+                  <!--</div>-->
+                <!--</template>-->
+              <!--</el-table-column>-->
+              <!--<el-table-column-->
+                <!--min-width="150"-->
+                <!--prop="apartmentNo"-->
+                <!--label="台账号">-->
+                <!--<template scope="scope">-->
+                  <!--{{ scope.row.apartmentNo?scope.row.apartmentNo:'无'}}-->
+                <!--</template>-->
+              <!--</el-table-column>-->
+              <!--<el-table-column-->
+                <!--min-width="120"-->
+                <!--prop="monthlyRent"-->
+                <!--label="账单金额">-->
+                <!--<template scope="scope">-->
+                  <!--<div slot="reference" class="name-wrapper-normal">-->
+                    <!--<el-tag>{{ scope.row.monthlyRent | currency }}</el-tag>-->
+                  <!--</div>-->
+                <!--</template>-->
+              <!--</el-table-column>-->
+              <!--<el-table-column-->
+                <!--min-width="120"-->
+                <!--prop="monthlyRent"-->
+                <!--label="月租金">-->
+                <!--<template scope="scope">-->
+                  <!--<div slot="reference" class="name-wrapper-normal">-->
+                    <!--<el-tag>{{ scope.row.monthlyRent | currency }}</el-tag>-->
+                  <!--</div>-->
+                <!--</template>-->
+              <!--</el-table-column>-->
+              <!--<el-table-column-->
+                <!--min-width="120"-->
+                <!--prop="monthlyRent"-->
+                <!--label="逾期费">-->
+                <!--<template scope="scope">-->
+                  <!--<div slot="reference" class="name-wrapper-normal">-->
+                    <!--<el-tag>{{ scope.row.monthlyRent | currency }}</el-tag>-->
+                  <!--</div>-->
+                <!--</template>-->
+              <!--</el-table-column>-->
+              <!--<el-table-column-->
+                <!--min-width="120"-->
+                <!--prop="monthlyRent"-->
+                <!--label="状态">-->
+                <!--<template scope="scope">-->
+                  <!--<div slot="reference" class="name-wrapper-normal">-->
+                    <!--<el-tag>{{ scope.row.status }}</el-tag>-->
+                  <!--</div>-->
+                <!--</template>-->
+              <!--</el-table-column>-->
+              <!--<el-table-column min-width="80" label="操作">-->
+                <!--<template scope="scope">-->
+                  <!--<el-tooltip class="item" effect="dark" content="上传凭证" placement="top-end">-->
+                    <!--<el-button size="small" type="primary" @click="upload(scope.row)"><i class="fa fa-pencil-square-o"></i>-->
+                    <!--</el-button>-->
+                  <!--</el-tooltip>-->
+                  <!--<el-tooltip class="item" effect="dark" content="查看" placement="top-end">-->
+                    <!--<el-button size="small" type="primary" @click="query(scope.row)"><i class="fa fa-pencil-square-o"></i>-->
+                    <!--</el-button>-->
+                  <!--</el-tooltip>-->
+                <!--</template>-->
+              <!--</el-table-column>-->
+            <!--</el-table>-->
+          <!--</el-row>-->
+        <!--</el-tab-pane>-->
       </el-tabs>
     </el-row>
 
