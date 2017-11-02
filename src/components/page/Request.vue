@@ -874,24 +874,46 @@
       },
       //转单确认
       transfer() {
-        this.axios.post('/api/v2/applications/transfer/'+this.currentRow.applicationNo+'/'+this.transferId).then((res) => {
-          this.axios.post(this.url, {
-            ...this.searchForm,
-            status: [this.radio],
-            page: this.cur_page - 1,
-            size: this.size
-          }).then((res) => {
-            this.$message.success("转单成功！");
-            this.dialogTransfer = false;
-            this.tableData = res.data.data.content;
-            this.currentRow = this.tableData[this.currentIndex];
-            this.totalElements = res.data.data.totalElements;
+        if(this.searchForm.status[0] === 'Unchecked') {
+          this.axios.post('/api/v2/applications/transfer/'+this.currentRow.applicationNo+'/'+this.transferId).then((res) => {
+            this.axios.post(this.url, {
+              ...this.searchForm,
+              status: [this.radio],
+              page: this.cur_page - 1,
+              size: this.size
+            }).then((res) => {
+              this.$message.success("转单成功！");
+              this.dialogTransfer = false;
+              this.tableData = res.data.data.content;
+              this.currentRow = this.tableData[this.currentIndex];
+              this.totalElements = res.data.data.totalElements;
+            }).catch((error) => {
+              this.$message.error(error.response.data.message);
+            });
           }).catch((error) => {
             this.$message.error(error.response.data.message);
-          });
-        }).catch((error) => {
-          this.$message.error(error.response.data.message);
-        })
+          })
+        } else {
+          this.axios.post('/api/v2/applications/transfer/'+this.currentRow.applicationNo+'/'+this.transferId).then((res) => {
+            this.axios.post(this.url, {
+              ...this.searchForm,
+              status: this.searchForm.status,
+              page: this.cur_page - 1,
+              size: this.size
+            }).then((res) => {
+              this.$message.success("转单成功！");
+              this.dialogTransfer = false;
+              this.tableData = res.data.data.content;
+              this.currentRow = this.tableData[this.currentIndex];
+              this.totalElements = res.data.data.totalElements;
+            }).catch((error) => {
+              this.$message.error(error.response.data.message);
+            });
+          }).catch((error) => {
+            this.$message.error(error.response.data.message);
+          })
+        }
+
       },
       //临时保存
       currentSave() {
