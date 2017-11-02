@@ -141,7 +141,7 @@
           <el-form-item label="员工类型" :label-width="formLabelWidth" prop="staffType">
             <el-col :span="24">
               <el-select v-model="form2.staffType" filterable @change="staffTypeChange"
-                         placeholder="员工类型" disabled>
+                         placeholder="员工类型">
                 <el-option v-for="staff in staffTypeList" :key="staff.englishName" :label="staff.name"
                            :value="staff.englishName"></el-option>
               </el-select>
@@ -173,7 +173,7 @@
       </div>
       <div slot="footer" class="dialog-footer">
         <el-button @click="resetForm2('form2')">取 消</el-button>
-        <el-button type="primary" @click="submitUser2('form2')" :disabled="form2.staffType === 'BrachSalesman'">确 定</el-button>
+        <el-button type="primary" @click="submitUser2('form2')">确 定</el-button>
       </div>
     </el-dialog>
 
