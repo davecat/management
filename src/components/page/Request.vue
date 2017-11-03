@@ -232,6 +232,9 @@
       size="tiny">
       <el-form>
         <el-form-item label="转单给：" :label-width="formLabelWidth"  prop="agencies">
+          <el-select v-model="branchId" @change="branchList2Change()">
+            <el-option v-for="item in branchList2" :key="item.id" :label="item.name" :value="item.id"></el-option>
+          </el-select>
           <el-select v-model="transferId">
             <el-option v-for="item in agentList" :key="item.agentId" :label="item.agentName" :value="item.agentId"></el-option>
           </el-select>
@@ -272,7 +275,7 @@
           <el-button v-if="searchForm.status[0] === 'Unchecked'" type="success" @click="submit('currentRow')">提交审批</el-button>
           <el-button v-if="searchForm.status[0] === 'Unchecked'" type="danger" @click="dialogVisible = true">取消申请</el-button>
           <el-button v-if="searchForm.status[0] === 'Unconfirmed'" type="info" style="width: 88px;" @click="revocation()">撤回</el-button>
-          <el-button style="width: 88px;" v-if="searchForm.status[0] !== 'AllFinished' && searchForm.status[0] !== 'Inadvancefinished' && searchForm.status[0] !== 'RetirementFinished'" @click="dialogTransfer = true;transferId=''" type="warning">转单
+          <el-button style="width: 88px;" v-if="searchForm.status[0] !== 'AllFinished' && searchForm.status[0] !== 'Inadvancefinished' && searchForm.status[0] !== 'RetirementFinished'" @click="transferClick" type="warning">转单
           </el-button>
           <el-button v-if="searchForm.status[0] === 'Repayment' || searchForm.status[0] === 'Breach'" type="danger" @click="dialogTermination = true">
             提前退租
@@ -643,6 +646,8 @@
         url: '/api/v2/applications',
         agentList: [],
         branchList: [],
+        branchList2: [],
+        branchId: '',//门店id
         //省市县
         selectedOptions: [],
         options: [],
@@ -871,6 +876,23 @@
           console.log(error.response.data);
           this.$message.error(error.response.data.message);
         })
+      },
+      //转单
+      transferClick() {
+        //获取该人所属门店
+        this.axios.get('/api/v2/agents/branchNames/'+this.currentRow.agentId).then((res) => {
+          this.branchList2 = res.data.data;
+          this.dialogTransfer = true;
+          this.transferId = '';
+          this.branchId = this.branchList2[0].id;
+          this.axios.get('/api/v2/agents/agentNames/'+this.branchId+'/'+this.currentRow.agentId).then((res) => {
+            this.agentList = res.data;
+          }).catch((error) => {
+            this.$message.error(error.response.data.message);
+          });
+        }).catch((error) => {
+          this.$message.error(error.response.data.message);
+        });
       },
       //转单确认
       transfer() {
@@ -1304,14 +1326,8 @@
             })
           }
         });
-        console.log(val);
         this.currentRow = Object.assign({}, val);
-        //获取该人所属门店下的所有经纪人
-        this.axios.get('api/v2/agents/getByAgentIdAgents/'+this.currentRow.agentId).then((res) => {
-          this.agentList = res.data;
-        }).catch((error) => {
-          this.$message.error(error.response.data.message);
-        });
+
         //日期默认值
         this.dateRange=[this.currentRow.startDate,this.currentRow.endDate];
         //回显省市区
@@ -1332,6 +1348,15 @@
         }).catch((error) => {
           this.$message.error(error.response.data.message);
         })
+      },
+      //转单城市改变
+      branchList2Change() {
+        //点击门店获取该门店下的经纪人
+        this.axios.get('/api/v2/agents/agentNames/'+this.branchId+'/'+this.currentRow.agentId).then((res) => {
+          this.agentList = res.data;
+        }).catch((error) => {
+          this.$message.error(error.response.data.message);
+        });
       },
       selectedData() {
         if(this.searchForm.applyDate) {
