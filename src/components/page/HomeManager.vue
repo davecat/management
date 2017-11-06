@@ -47,7 +47,7 @@
           min-width="215"
           prop="city"
           label="城市">
-          <template scope="scope">
+          <template slot-scope="scope">
             {{ scope.row.province}}-{{ scope.row.city}}-{{
             scope.row.district }}
           </template>
@@ -60,7 +60,7 @@
         <el-table-column
           min-width="300"
           label="出租类型">
-          <template scope="scope">
+          <template slot-scope="scope">
             {{ scope.row.rentalType | rentalType}}
           </template>
         </el-table-column>
@@ -80,7 +80,7 @@
           label="房间数">
         </el-table-column>
         <el-table-column min-width="123" label="操作">
-          <template scope="scope">
+          <template slot-scope="scope">
             <el-tooltip class="item" effect="dark" content="修改" placement="top-end">
               <el-button size="small" type="warning"
                          :disabled="scope.row.enabled === 'false'"

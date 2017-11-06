@@ -71,14 +71,14 @@
           min-width="80"
           label="状态"
           show-overflow-tooltip>
-          <template scope="scope">
+          <template slot-scope="scope">
             <div slot="reference" :class="scope.row.enabled === 'false'? 'name-wrapper-1':'name-wrapper-normal'">
               <el-tag>{{ scope.row.enabled === 'true' ? '启用' : '停用' }}</el-tag>
             </div>
           </template>
         </el-table-column>
         <el-table-column label="操作" min-width="82">
-          <template scope="scope">
+          <template slot-scope="scope">
             <el-tooltip class="item" effect="dark" content="修改" placement="top-end">
               <el-button size="small" type="primary"
                          @click="handleEdit(scope.row)"><i

@@ -120,7 +120,7 @@
             sortable
             label="总金额"
             min-width="100">
-            <template scope="scope">
+            <template slot-scope="scope">
               {{ scope.row.total | currency}}
             </template>
           </el-table-column>
@@ -133,7 +133,7 @@
             min-width="57"
             prop="percent"
             label="占比">
-            <template scope="scope">
+            <template slot-scope="scope">
               {{ scope.row.percent}}%
             </template>
           </el-table-column>

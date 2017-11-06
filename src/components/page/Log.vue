@@ -42,7 +42,7 @@
           sortable
           width="150"
           label="日志时间">
-          <template scope="scope">
+          <template slot-scope="scope">
             {{ scope.row.logDate }}
           </template>
         </el-table-column>
@@ -52,7 +52,7 @@
           min-width="1110"
           prop="logContent"
           label="日志内容">
-          <template scope="scope">
+          <template slot-scope="scope">
             {{ scope.row.logContent }}
           </template>
         </el-table-column>

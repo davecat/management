@@ -50,7 +50,7 @@
                 sortable
                 min-width="130"
                 label="收款日期">
-                <template scope="scope">
+                <template slot-scope="scope">
                   <div slot="reference" class="name-wrapper-normal">
                     <el-tag>{{ scope.row.payeeDate | dateFormat }}</el-tag>
                   </div>
@@ -60,7 +60,7 @@
                 min-width="120"
                 prop="payeeAmount"
                 label="应收金额">
-                <template scope="scope">
+                <template slot-scope="scope">
                   <div slot="reference" class="name-wrapper-blue">
                     <el-tag>{{ scope.row.payeeAmount | currency }}</el-tag>
                   </div>
@@ -70,7 +70,7 @@
                 min-width="136"
                 prop="applicationNo"
                 label="申请编号">
-                <template scope="scope">
+                <template slot-scope="scope">
                   <div slot="reference" class="name-wrapper-normal">
                     <el-tag>{{ scope.row.applicationNo }}</el-tag>
                   </div>
@@ -80,7 +80,7 @@
                 min-width="120"
                 prop="totalAmount"
                 label="分期总金额">
-                <template scope="scope">
+                <template slot-scope="scope">
                   <div slot="reference" class="name-wrapper-normal">
                     <el-tag>{{ scope.row.totalAmount | currency }}</el-tag>
                   </div>
@@ -90,7 +90,7 @@
                 min-width="100"
                 prop="customerName"
                 label="租客姓名">
-                <template scope="scope">
+                <template slot-scope="scope">
                   <div slot="reference" class="name-wrapper-normal">
                     <el-tag>{{ scope.row.customerName}}</el-tag>
                   </div>
@@ -100,7 +100,7 @@
                 min-width="150"
                 prop="mobile"
                 label="联系方式">
-                <template scope="scope">
+                <template slot-scope="scope">
                   <div slot="reference" class="name-wrapper-normal">
                     <el-tag>{{ scope.row.mobile}}</el-tag>
                   </div>
@@ -110,7 +110,7 @@
                 min-width="150"
                 prop="apartmentNo"
                 label="台账号">
-                <template scope="scope">
+                <template slot-scope="scope">
                   {{ scope.row.apartmentNo?scope.row.apartmentNo:'无'}}
                 </template>
               </el-table-column>
@@ -118,7 +118,7 @@
                 min-width="115"
                 prop="rentPeriod"
                 label="租期">
-                <template scope="scope">
+                <template slot-scope="scope">
                   <div slot="reference" class="name-wrapper-normal">
                     <el-tag>{{ scope.row.rentPeriod}}</el-tag>
                   </div>
@@ -128,7 +128,7 @@
                 min-width="180"
                 prop="startDate"
                 label="起止时间">
-                <template scope="scope">
+                <template slot-scope="scope">
                   <div slot="reference" class="name-wrapper-normal">
                     <el-tag>{{ scope.row.startDate | dateFormat}}-{{ scope.row.endDate | dateFormat}}</el-tag>
                   </div>
@@ -138,7 +138,7 @@
                 min-width="120"
                 prop="monthlyRent"
                 label="月租金">
-                <template scope="scope">
+                <template slot-scope="scope">
                   <div slot="reference" class="name-wrapper-normal">
                     <el-tag>{{ scope.row.monthlyRent | currency }}</el-tag>
                   </div>
@@ -148,7 +148,7 @@
                 min-width="180"
                 prop="city"
                 label="城市">
-                <template scope="scope">
+                <template slot-scope="scope">
                   <div slot="reference" class="name-wrapper-normal">
                     <el-tag>{{ scope.row.province | districtFormat }}-{{ scope.row.city | districtFormat }}-{{
                       scope.row.district | districtFormat }}
@@ -160,7 +160,7 @@
                 min-width="130"
                 prop="responsibleAgent"
                 label="经纪人">
-                <template scope="scope">
+                <template slot-scope="scope">
                   {{ scope.row.responsibleBranch }}-{{ scope.row.responsibleAgent }}
                 </template>
               </el-table-column>
@@ -215,7 +215,7 @@
                 sortable
                 min-width="130"
                 label="报违约日期">
-                <template scope="scope">
+                <template slot-scope="scope">
                   <div slot="reference" class="name-wrapper-refundDate">
                     <el-tag>{{ scope.row.refundDate | dateFormat }}</el-tag>
                   </div>
@@ -225,7 +225,7 @@
                 min-width="120"
                 prop="refundAmount"
                 label="应退金额">
-                <template scope="scope">
+                <template slot-scope="scope">
                   <div slot="reference" class="name-wrapper-blue">
                     <el-tag>{{ scope.row.refundAmount | currency }}</el-tag>
                   </div>
@@ -235,7 +235,7 @@
                 min-width="136"
                 prop="applicationNo"
                 label="申请编号">
-                <template scope="scope">
+                <template slot-scope="scope">
                   <div slot="reference" class="name-wrapper-normal">
                     <el-tag>{{ scope.row.applicationNo }}</el-tag>
                   </div>
@@ -245,7 +245,7 @@
                 min-width="100"
                 prop="customerName"
                 label="租客姓名">
-                <template scope="scope">
+                <template slot-scope="scope">
                   <div slot="reference" class="name-wrapper-normal">
                     <el-tag>{{ scope.row.customerName}}</el-tag>
                   </div>
@@ -255,7 +255,7 @@
                 min-width="150"
                 prop="apartmentNo"
                 label="台账号">
-                <template scope="scope">
+                <template slot-scope="scope">
                   {{ scope.row.apartmentNo?scope.row.apartmentNo:'无'}}
                 </template>
               </el-table-column>
@@ -263,7 +263,7 @@
                 min-width="180"
                 prop="startDate"
                 label="起止时间">
-                <template scope="scope">
+                <template slot-scope="scope">
                   <div slot="reference" class="name-wrapper-normal">
                     <el-tag>{{ scope.row.startDate | dateFormat}}-{{ scope.row.endDate | dateFormat}}</el-tag>
                   </div>
@@ -273,7 +273,7 @@
                 min-width="115"
                 prop="rentPeriod"
                 label="租期">
-                <template scope="scope">
+                <template slot-scope="scope">
                   <div slot="reference" class="name-wrapper-normal">
                     <el-tag>{{ scope.row.rentPeriod}}</el-tag>
                   </div>
@@ -283,7 +283,7 @@
                 min-width="120"
                 prop="monthlyRent"
                 label="月租金">
-                <template scope="scope">
+                <template slot-scope="scope">
                   <div slot="reference" class="name-wrapper-normal">
                     <el-tag>{{ scope.row.monthlyRent | currency }}</el-tag>
                   </div>
@@ -293,7 +293,7 @@
                 min-width="180"
                 prop="city"
                 label="城市">
-                <template scope="scope">
+                <template slot-scope="scope">
                   <div slot="reference" class="name-wrapper-normal">
                     <el-tag>{{ scope.row.province | districtFormat }}-{{ scope.row.city | districtFormat }}-{{
                       scope.row.district | districtFormat }}
@@ -305,7 +305,7 @@
                 min-width="130"
                 prop="responsibleAgent"
                 label="经纪人">
-                <template scope="scope">
+                <template slot-scope="scope">
                   {{ scope.row.responsibleBranch }}-{{ scope.row.responsibleAgent }}
                 </template>
               </el-table-column>
@@ -360,7 +360,7 @@
                 <!--sortable-->
                 <!--min-width="130"-->
                 <!--label="应还款日期">-->
-                <!--<template scope="scope">-->
+                <!--<template slot-scope="scope">-->
                   <!--<div slot="reference" class="name-wrapper-refundDate">-->
                     <!--<el-tag>{{ scope.row.refundDate | dateFormat }}</el-tag>-->
                   <!--</div>-->
@@ -370,7 +370,7 @@
                 <!--min-width="136"-->
                 <!--prop="applicationNo"-->
                 <!--label="申请编号">-->
-                <!--<template scope="scope">-->
+                <!--<template slot-scope="scope">-->
                   <!--<div slot="reference" class="name-wrapper-normal">-->
                     <!--<el-tag>{{ scope.row.applicationNo }}</el-tag>-->
                   <!--</div>-->
@@ -380,7 +380,7 @@
                 <!--min-width="100"-->
                 <!--prop="customerName"-->
                 <!--label="租客姓名">-->
-                <!--<template scope="scope">-->
+                <!--<template slot-scope="scope">-->
                   <!--<div slot="reference" class="name-wrapper-normal">-->
                     <!--<el-tag>{{ scope.row.customerName}}</el-tag>-->
                   <!--</div>-->
@@ -390,7 +390,7 @@
                 <!--min-width="150"-->
                 <!--prop="apartmentNo"-->
                 <!--label="台账号">-->
-                <!--<template scope="scope">-->
+                <!--<template slot-scope="scope">-->
                   <!--{{ scope.row.apartmentNo?scope.row.apartmentNo:'无'}}-->
                 <!--</template>-->
               <!--</el-table-column>-->
@@ -398,7 +398,7 @@
                 <!--min-width="120"-->
                 <!--prop="monthlyRent"-->
                 <!--label="账单金额">-->
-                <!--<template scope="scope">-->
+                <!--<template slot-scope="scope">-->
                   <!--<div slot="reference" class="name-wrapper-normal">-->
                     <!--<el-tag>{{ scope.row.monthlyRent | currency }}</el-tag>-->
                   <!--</div>-->
@@ -408,7 +408,7 @@
                 <!--min-width="120"-->
                 <!--prop="monthlyRent"-->
                 <!--label="月租金">-->
-                <!--<template scope="scope">-->
+                <!--<template slot-scope="scope">-->
                   <!--<div slot="reference" class="name-wrapper-normal">-->
                     <!--<el-tag>{{ scope.row.monthlyRent | currency }}</el-tag>-->
                   <!--</div>-->
@@ -418,7 +418,7 @@
                 <!--min-width="120"-->
                 <!--prop="monthlyRent"-->
                 <!--label="逾期费">-->
-                <!--<template scope="scope">-->
+                <!--<template slot-scope="scope">-->
                   <!--<div slot="reference" class="name-wrapper-normal">-->
                     <!--<el-tag>{{ scope.row.monthlyRent | currency }}</el-tag>-->
                   <!--</div>-->
@@ -428,14 +428,14 @@
                 <!--min-width="120"-->
                 <!--prop="monthlyRent"-->
                 <!--label="状态">-->
-                <!--<template scope="scope">-->
+                <!--<template slot-scope="scope">-->
                   <!--<div slot="reference" class="name-wrapper-normal">-->
                     <!--<el-tag>{{ scope.row.status }}</el-tag>-->
                   <!--</div>-->
                 <!--</template>-->
               <!--</el-table-column>-->
               <!--<el-table-column min-width="80" label="操作">-->
-                <!--<template scope="scope">-->
+                <!--<template slot-scope="scope">-->
                   <!--<el-tooltip class="item" effect="dark" content="上传凭证" placement="top-end">-->
                     <!--<el-button size="small" type="primary" @click="upload(scope.row)"><i class="fa fa-pencil-square-o"></i>-->
                     <!--</el-button>-->

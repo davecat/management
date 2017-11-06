@@ -119,7 +119,7 @@
           min-width="180"
           prop="city"
           label="租房城市">
-          <template scope="scope">
+          <template slot-scope="scope">
             {{ scope.row.province | districtFormat }}-{{ scope.row.city | districtFormat }}-{{
             scope.row.district | districtFormat }}
           </template>
@@ -129,7 +129,7 @@
           min-width="130"
           prop="overdueDays"
           label="逾期天数">
-          <template scope="scope">
+          <template slot-scope="scope">
             <div slot="reference" class="name-wrapper">
               <el-tag>{{ scope.row.overdueDays}}</el-tag>
             </div>
@@ -140,7 +140,7 @@
           min-width="130"
           prop="overdueFee"
           label="逾期费用">
-          <template scope="scope">
+          <template slot-scope="scope">
             <div slot="reference" class="name-wrapper">
               <el-tag>{{ scope.row.overdueFee | currency }}</el-tag>
             </div>
@@ -150,7 +150,7 @@
           min-width="180"
           prop="startDate"
           label="起止日期">
-          <template scope="scope">
+          <template slot-scope="scope">
             {{ scope.row.startDate | dateFormat}}-{{ scope.row.endDate | dateFormat}}
           </template>
         </el-table-column>
@@ -158,7 +158,7 @@
           min-width="130"
           prop="monthlyRent"
           label="月租金">
-          <template scope="scope">
+          <template slot-scope="scope">
             {{ scope.row.monthlyRent | currency}}
           </template>
         </el-table-column>
@@ -171,7 +171,7 @@
           min-width="130"
           prop="totalAmount"
           label="房租总额">
-          <template scope="scope">
+          <template slot-scope="scope">
             {{ scope.row.totalAmount | currency }}
           </template>
         </el-table-column>
@@ -179,7 +179,7 @@
           min-width="200"
           prop="responsibleAgent"
           label="经纪人">
-          <template scope="scope">
+          <template slot-scope="scope">
             {{ scope.row.responsibleBranch }}-{{ scope.row.responsibleAgent }}
           </template>
         </el-table-column>
@@ -187,7 +187,7 @@
           min-width="100"
           prop="startDate"
           label="申请日期">
-          <template scope="scope">
+          <template slot-scope="scope">
             {{ scope.row.applyDate | dateFormat}}
           </template>
         </el-table-column>
@@ -359,7 +359,7 @@
                   min-width="140"
                   prop="paymentDueDate"
                   label="应还款日期">
-                  <template scope="scope">
+                  <template slot-scope="scope">
                     {{ scope.row.paymentDueDate | dateFormat }}
                   </template>
                 </el-table-column>
@@ -367,7 +367,7 @@
                   min-width="100"
                   prop="amount"
                   label="账单金额">
-                  <template scope="scope">
+                  <template slot-scope="scope">
                     {{ scope.row.amount | currency }}
                   </template>
                 </el-table-column>
@@ -375,7 +375,7 @@
                   min-width="130"
                   prop="serviceFee"
                   label="手续费">
-                  <template scope="scope">
+                  <template slot-scope="scope">
                     {{ scope.row.serviceFee | currency }}
                   </template>
                 </el-table-column>
@@ -383,7 +383,7 @@
                   min-width="130"
                   prop="overdueFee"
                   label="逾期费">
-                  <template scope="scope">
+                  <template slot-scope="scope">
                     {{ scope.row.overdueFee | currency }}
                   </template>
                 </el-table-column>
@@ -391,7 +391,7 @@
                   min-width="180"
                   prop="status"
                   label="账单状态">
-                  <template scope="scope">
+                  <template slot-scope="scope">
                     {{ scope.row.status | billStatusFormat }}
                   </template>
                 </el-table-column>
@@ -399,7 +399,7 @@
                   min-width="130"
                   prop="monthlyRent"
                   label="实际还款日期">
-                  <template scope="scope">
+                  <template slot-scope="scope">
                     {{ scope.row.paymentDate | dateFormat }}
                   </template>
                 </el-table-column>

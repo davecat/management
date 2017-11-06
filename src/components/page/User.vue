@@ -46,12 +46,12 @@
         <el-table-column prop="nickname" label="用户昵称">
         </el-table-column>
         <el-table-column prop="staffType" label="类型">
-          <template scope="scope">
+          <template slot-scope="scope">
             {{scope.row.staffType | staffTypeFormat}}
           </template>
         </el-table-column>
         <el-table-column prop="status" label="状态">
-          <template scope="scope">
+          <template slot-scope="scope">
             {{scope.row.status == 'Normal' ? '启用' : '停用'}}
           </template>
         </el-table-column>
@@ -60,7 +60,7 @@
         <el-table-column prop="role" label="角色">
         </el-table-column>
         <el-table-column label="操作" min-width="80">
-          <template scope="scope">
+          <template slot-scope="scope">
             <el-tooltip class="item" effect="dark" content="修改" placement="top-end">
               <el-button size="small" type="primary"
                          @click="handleEdit(scope.row)"><i class="fa fa-pencil-square-o"></i>

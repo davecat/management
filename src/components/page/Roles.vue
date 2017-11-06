@@ -32,7 +32,7 @@
         <el-table-column prop="description" label="描述">
         </el-table-column>
         <el-table-column min-width="50" label="操作">
-          <template scope="scope">
+          <template slot-scope="scope">
             <el-tooltip class="item" effect="dark" content="删除" placement="top-end">
               <el-button size="small" type="warning"
                          @click="rowDelete(scope.row.id)"><i class="fa fa-trash"></i>

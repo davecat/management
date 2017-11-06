@@ -56,7 +56,7 @@
           min-width="215"
           prop="city"
           label="门店城市">
-          <template scope="scope">
+          <template slot-scope="scope">
             {{ scope.row.province | districtFormat }}-{{ scope.row.city | districtFormat }}-{{
             scope.row.district | districtFormat }}
           </template>
@@ -71,14 +71,14 @@
           prop="enabled"
           label="门店状态"
           show-overflow-tooltip>
-          <template scope="scope">
+          <template slot-scope="scope">
             <div slot="reference" :class="scope.row.enabled === 'false'? 'name-wrapper-1':'name-wrapper-normal'">
               <el-tag>{{ scope.row.enabled === 'true' ? '启用' : '停用' }}</el-tag>
             </div>
           </template>
         </el-table-column>
         <el-table-column min-width="171" label="操作">
-          <template scope="scope">
+          <template slot-scope="scope">
             <el-tooltip class="item" effect="dark" content="修改" placement="top-end">
               <el-button size="small" type="primary"
                          :disabled="scope.row.enabled === 'false'"

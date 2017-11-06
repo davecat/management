@@ -72,7 +72,7 @@
           min-width="180"
           prop="city"
           label="城市">
-          <template scope="scope">
+          <template slot-scope="scope">
             {{ scope.row.province | districtFormat }}-{{ scope.row.city | districtFormat }}-{{
             scope.row.district | districtFormat }}
           </template>
@@ -86,12 +86,12 @@
           min-width="100"
           prop="status"
           label="人员状态">
-          <template scope="scope">
+          <template slot-scope="scope">
             {{ scope.row.status | agentStatusFormat }}
           </template>
         </el-table-column>
         <el-table-column min-width="80" label="操作">
-          <template scope="scope">
+          <template slot-scope="scope">
             <el-tooltip class="item" effect="dark" content="修改" placement="top-end"
                         v-if="scope.row.status === 'Enabled' || scope.row.status === 'Disable'">
               <el-button size="small" type="primary"
