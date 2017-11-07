@@ -1048,10 +1048,12 @@
         let that = this;
         clearTimeout(a);//清除延时
         this.cover = false;
-        document.querySelector('.hiddenForm').className = 'hiddenForm el-form demo-table-expand el-form--label-left el-form--inline';
-        var a = setTimeout(function () {
-          that.pullBloor = false;
-        }, 500);
+        if(document.querySelector('.hiddenForm') !== null) {
+          document.querySelector('.hiddenForm').className = 'hiddenForm el-form demo-table-expand el-form--label-left el-form--inline';
+          var a = setTimeout(function () {
+            that.pullBloor = false;
+          }, 500);
+        }
       },
       handleCurrentChange(val){
         this.cur_page = val;
