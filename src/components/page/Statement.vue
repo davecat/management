@@ -590,7 +590,7 @@
       },
       //导出全部
       exportCSV() {
-        var head = [["收款日期","申请编号","应收金额","分期总金额", "租客姓名", "联系方式", "租期", "起租时间","结束时间", "月租金","所属店","经纪人"]];
+        var head = [["收款日期","申请编号","应收金额","分期总金额", "租客姓名", "联系方式", "台账号","租期", "起租时间","结束时间", "月租金","所属店","经纪人"]];
         let param = {
           ...this.searchForm,
           page: this.cur_page - 1,
@@ -609,7 +609,7 @@
                 case 'Cash': payeeType = '现金';break;
                 case 'Other': payeeType = '其他';break
               }
-              head.push([rowData[i].payeeDate, rowData[i].applicationNo, rowData[i].payeeAmount, rowData[i].totalAmount, rowData[i].customerName, rowData[i].mobile,rowData[i].rentPeriod,rowData[i].startDate,rowData[i].endDate,rowData[i].monthlyRent,rowData[i].responsibleBranch, rowData[i].responsibleAgent]);
+              head.push([rowData[i].payeeDate, rowData[i].applicationNo, rowData[i].payeeAmount, rowData[i].totalAmount, rowData[i].customerName, rowData[i].mobile,rowData[i].apartmentNo, rowData[i].rentPeriod,rowData[i].startDate,rowData[i].endDate,rowData[i].monthlyRent,rowData[i].responsibleBranch, rowData[i].responsibleAgent]);
             };
             var csvRows = [];
             head.forEach(item => csvRows.push(item.join(',')));
