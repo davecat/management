@@ -227,6 +227,7 @@
             </span>
     </el-dialog>
     <el-dialog
+      id="transferForm"
       title="转单"
       :visible.sync="dialogTransfer"
       size="tiny">
@@ -1609,5 +1610,11 @@
   }
   #customerOrAppNoValue input{
     width: 204px;
+  }
+  #transferForm .el-select {
+    width: 150px;
+  }
+  #transferForm .el-dialog {
+    width: 472px;
   }
 </style>
