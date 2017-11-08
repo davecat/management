@@ -60,7 +60,7 @@
       </el-col>
     </el-row>
     <!--图表-->
-    <el-row style="margin-top: 5px">
+    <el-row style="margin-top: 20px">
       <!--折线统计-->
       <el-radio-group v-model="radio3" @change="aaa()">
         <el-radio-button label="最近7天"></el-radio-button>
@@ -71,7 +71,7 @@
         <div id="line" style="width: 100%;height:400px;"></div>
       </el-col>
     </el-row>
-    <el-row style="margin-bottom: 50px">
+    <el-row style="margin-bottom: 50px;margin-top: 20px">
       <!--地图区域分布-->
       <el-radio-group v-model="radio2" @change="bbb()">
         <el-radio-button label="最近7天"></el-radio-button>
