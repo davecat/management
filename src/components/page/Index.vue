@@ -83,61 +83,102 @@
       </el-col>
       <el-col :span="12">
         <el-tabs v-model="tableStatus" type="card" @tab-click="handleChange(tableStatus)">
-          <el-tab-pane label="地域" name="area"></el-tab-pane>
-          <el-tab-pane label="门店" name="store"></el-tab-pane>
+          <el-tab-pane label="地域" name="area">
+            <el-table
+              :data="tableData1"
+              tooltip-effect="dark"
+              :default-sort="{prop: 'value', order: 'descending'}"
+              highlight-current-row
+              maxHeight="300"
+              row-class-name="myTable"
+              style="width: 100%;">
+              <el-table-column
+                type="index"
+                width="50">
+              </el-table-column>
+              <el-table-column
+                prop="name"
+                label="省份"
+                min-width="50">
+              </el-table-column>
+              <el-table-column
+                prop="value"
+                sortable
+                min-width="57"
+                label="申请数量">
+              </el-table-column>
+              <el-table-column
+                min-width="57"
+                prop="percent"
+                label="占比">
+                <template slot-scope="scope">
+                  {{ scope.row.percent}}%
+                </template>
+              </el-table-column>
+              <el-table-column
+                prop="total"
+                label="总金额"
+                min-width="100">
+                <template slot-scope="scope">
+                  {{ scope.row.total | currency}}
+                </template>
+              </el-table-column>
+            </el-table>
+          </el-tab-pane>
+          <el-tab-pane label="门店" name="store">
+            <el-table
+              :data="tableData1"
+              tooltip-effect="dark"
+              :default-sort="{prop: 'value', order: 'descending'}"
+              highlight-current-row
+              maxHeight="300"
+              row-class-name="myTable"
+              style="width: 100%;">
+              <el-table-column
+                type="index"
+                width="50">
+              </el-table-column>
+              <!--<el-table-column-->
+                <!--prop="name"-->
+                <!--label="省份"-->
+                <!--min-width="50">-->
+              <!--</el-table-column>-->
+              <!--<el-table-column-->
+                <!--v-if="tableStatus === 'store'"-->
+                <!--prop="cityName"-->
+                <!--label="市"-->
+                <!--min-width="75">-->
+              <!--</el-table-column>-->
+              <el-table-column
+                prop="responsible_branch"
+                label="门店"
+                min-width="100">
+              </el-table-column>
+              <el-table-column
+                prop="value"
+                sortable
+                min-width="57"
+                label="申请数量">
+              </el-table-column>
+              <el-table-column
+                min-width="57"
+                prop="percent"
+                label="占比">
+                <template slot-scope="scope">
+                  {{ scope.row.percent}}%
+                </template>
+              </el-table-column>
+              <el-table-column
+                prop="total"
+                label="总金额"
+                min-width="100">
+                <template slot-scope="scope">
+                  {{ scope.row.total | currency}}
+                </template>
+              </el-table-column>
+            </el-table>
+          </el-tab-pane>
         </el-tabs>
-        <el-table
-          :data="tableData1"
-          tooltip-effect="dark"
-          :default-sort="{prop: 'value', order: 'descending'}"
-          highlight-current-row
-          maxHeight="300"
-          row-class-name="myTable"
-          style="width: 100%;">
-          <el-table-column
-            type="index"
-            width="50">
-          </el-table-column>
-          <el-table-column
-            prop="name"
-            label="省份"
-            min-width="50">
-          </el-table-column>
-          <el-table-column
-            v-if="tableStatus === 'store'"
-            prop="cityName"
-            label="市"
-            min-width="75">
-          </el-table-column>
-          <el-table-column
-            v-if="tableStatus === 'store'"
-            prop="responsible_branch"
-            label="门店"
-            min-width="100">
-          </el-table-column>
-          <el-table-column
-            prop="value"
-            sortable
-            min-width="57"
-            label="申请数量">
-          </el-table-column>
-          <el-table-column
-            min-width="57"
-            prop="percent"
-            label="占比">
-            <template slot-scope="scope">
-              {{ scope.row.percent}}%
-            </template>
-          </el-table-column>
-          <el-table-column
-            prop="total"
-            label="总金额"
-            min-width="100">
-            <template slot-scope="scope">
-              {{ scope.row.total | currency}}
-            </template>
-          </el-table-column>
-        </el-table>
       </el-col>
     </el-row>
   </div>
