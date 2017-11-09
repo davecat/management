@@ -60,7 +60,7 @@
       </el-col>
     </el-row>
     <!--图表-->
-    <el-row style="margin-top: 20px">
+    <el-row style="margin-top: 35px">
       <!--折线统计-->
       <el-radio-group v-model="radio3" @change="aaa()">
         <el-radio-button label="最近7天"></el-radio-button>
@@ -71,7 +71,7 @@
         <div id="line" style="width: 100%;height:400px;"></div>
       </el-col>
     </el-row>
-    <el-row style="margin-bottom: 50px;margin-top: 20px">
+    <el-row style="margin-bottom: 50px;margin-top: 35px">
       <!--地图区域分布-->
       <el-radio-group v-model="radio2" @change="bbb()">
         <el-radio-button label="最近7天"></el-radio-button>
@@ -89,7 +89,7 @@
         <el-table
           :data="tableData1"
           tooltip-effect="dark"
-          :default-sort="{prop: 'total', order: 'descending'}"
+          :default-sort="{prop: 'value', order: 'descending'}"
           highlight-current-row
           maxHeight="300"
           row-class-name="myTable"
@@ -116,16 +116,8 @@
             min-width="100">
           </el-table-column>
           <el-table-column
-            prop="total"
-            sortable
-            label="总金额"
-            min-width="100">
-            <template slot-scope="scope">
-              {{ scope.row.total | currency}}
-            </template>
-          </el-table-column>
-          <el-table-column
             prop="value"
+            sortable
             min-width="57"
             label="申请数量">
           </el-table-column>
@@ -135,6 +127,14 @@
             label="占比">
             <template slot-scope="scope">
               {{ scope.row.percent}}%
+            </template>
+          </el-table-column>
+          <el-table-column
+            prop="total"
+            label="总金额"
+            min-width="100">
+            <template slot-scope="scope">
+              {{ scope.row.total | currency}}
             </template>
           </el-table-column>
         </el-table>
