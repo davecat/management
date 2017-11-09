@@ -36,9 +36,15 @@
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-select v-model="searchForm.branchId" placeholder="选择城市下的门店">
+          <el-select v-model="searchForm.branchId" filterable @change="getAgentList()" placeholder="选择城市下的门店">
             <el-option v-for="branch in branchList" :key="branch.id" :label="branch.name"
                        :value="branch.id"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-select v-model="searchForm.agentId" placeholder="选择门店下的经纪人" filterable>
+            <el-option v-for="agent in agentList2" :key="agent.id" :label="agent.name"
+                       :value="agent.id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item>
@@ -646,6 +652,7 @@
         totalElements: 0,
         url: '/api/v2/applications',
         agentList: [],
+        agentList2: [],
         branchList: [],
         branchList2: [],
         branchId: '',//门店id
@@ -656,6 +663,7 @@
           applyDate: '',
           customerOrAppNoValue: '',
           branchId: '',
+          agentId: '',
           cityId: '',
           status: ['Unchecked']
         },
@@ -1129,6 +1137,9 @@
         }).catch((error) => {
           this.$message.error(error.response.data.message);
         });
+        //获取门店、经纪人列表
+        this.getBranchList('');
+        this.getAgentList();
       },
       getCount() {
         this.axios.get('/api/v2/applications/status/count').then((res) => {
@@ -1393,18 +1404,30 @@
         this.dialogBigPhoto = true;
       },
       getBranchList(cityId) {
-        if (cityId !== ' ') {
-          this.searchForm.branchId = '';
-          this.branchList = [];
-          this.axios.get('/api/v2/agents/getByCityIdBranch/'+cityId).then((res) => {
-            this.branchList = res.data;
-          }).catch((error) => {
-            this.$message.error(error.response.data.message);
-          })
-        } else {
-          this.searchForm.branchId = '';
-          this.branchList = [{id: '', name: '全部'}];
-        }
+        this.searchForm.branchId = '';
+        this.branchList = [];
+        this.searchForm.agentId = '';
+        this.agentList2 = [];
+        this.axios.post('/api/v2/agents/getByCityIdBranch', {cityId: cityId}).then((res) => {
+          this.branchList = res.data;
+        }).catch((error) => {
+          this.$message.error(error.response.data.message);
+        });
+        this.getAgentList();
+      },
+      //获取经纪人List
+      getAgentList() {
+        this.searchForm.agentId = '';
+        this.agentList2 = [];
+        let form = {
+          cityId: this.searchForm.cityId,
+          branchId: this.searchForm.branchId
+        };
+        this.axios.post('/api/v2/agents/getByBranchIdAgent', form).then((res) => {
+          this.agentList2 = res.data;
+        }).catch((error) => {
+          this.$message.error(error.response.data.message);
+        })
       },
       exportCSV() {
         var head = [["申请编号", "租客姓名", "联系方式", "起止日期", "月租金", "租期", "房租总额", "经纪人", "申请日期"]];
