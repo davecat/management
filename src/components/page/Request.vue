@@ -41,8 +41,17 @@
                        :value="branch.id"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item>
+        <el-form-item v-if="searchForm.cityId || searchForm.branchId">
           <el-select v-model="searchForm.agentId" placeholder="选择门店下的经纪人" filterable clearable>
+            <el-option v-for="agent in agentList2" :key="agent.id" :label="agent.name"
+                       :value="agent.id"></el-option>
+          </el-select>
+        </el-form-item>
+        <!--当拉取全部经纪人时候显示下面这个-->
+        <el-form-item v-else="searchForm.cityId || searchForm.branchId">
+          <el-select v-model="searchForm.agentId" placeholder="请输入经纪人名字"
+                     filterable clearable
+                     remote  :remote-method="remoteMethod">
             <el-option v-for="agent in agentList2" :key="agent.id" :label="agent.name"
                        :value="agent.id"></el-option>
           </el-select>
@@ -1414,17 +1423,29 @@
       },
       //获取经纪人List
       getAgentList() {
-        this.searchForm.agentId = '';
-        this.agentList2 = [];
-        let form = {
-          cityId: this.searchForm.cityId,
-          branchId: this.searchForm.branchId
-        };
-        this.axios.post('/api/v2/agents/getByBranchIdAgent', form).then((res) => {
+        if(this.searchForm.cityId || this.searchForm.branchId) {
+          this.searchForm.agentId = '';
+          this.agentList2 = [];
+          let form = {
+            cityId: this.searchForm.cityId,
+            branchId: this.searchForm.branchId
+          };
+          this.axios.post('/api/v2/agents/getByBranchIdAgent', form).then((res) => {
+            this.agentList2 = res.data;
+          }).catch((error) => {
+            this.$message.error(error.response.data.message);
+          })
+        }
+      },
+      //远程搜索
+      remoteMethod(query) {
+        if(query) {
+          this.axios.get('/api/v2/agents/getAgentsByName/'+query).then((res) => {
           this.agentList2 = res.data;
-        }).catch((error) => {
-          this.$message.error(error.response.data.message);
-        })
+          }).catch((error) => {
+            this.$message.error(error.response.data.message);
+          })
+        }
       },
       exportCSV() {
         var head = [["申请编号", "租客姓名", "联系方式", "起止日期", "月租金", "租期", "房租总额", "经纪人", "申请日期"]];
