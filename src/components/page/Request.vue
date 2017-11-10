@@ -235,7 +235,7 @@
       title="提前退租"
       :visible.sync="dialogTermination"
       size="tiny">
-      <p>确认进行提前退租操作？，该操作不可撤回</p>
+      <p>确认进行提前退租操作？该操作不可撤回</p>
       <span slot="footer" class="dialog-footer">
                 <el-button @click="dialogTermination=false">取 消</el-button>
                 <el-button type="primary" @click="termination()">确 定</el-button>
