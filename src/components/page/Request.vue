@@ -29,20 +29,20 @@
           </el-date-picker>
         </el-form-item>
         <el-form-item>
-          <el-select v-model="searchForm.cityId" filterable @change="getBranchList(searchForm.cityId)"
+          <el-select v-model="searchForm.cityId" filterable clearable @change="getBranchList(searchForm.cityId)"
                      placeholder="选择城市">
             <el-option v-for="city in cityList" :key="city.id" :label="city.name"
                        :value="city.id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-select v-model="searchForm.branchId" filterable @change="getAgentList()" placeholder="选择城市下的门店">
+          <el-select v-model="searchForm.branchId" filterable clearable @change="getAgentList()" placeholder="选择城市下的门店">
             <el-option v-for="branch in branchList" :key="branch.id" :label="branch.name"
                        :value="branch.id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-select v-model="searchForm.agentId" placeholder="选择门店下的经纪人" filterable>
+          <el-select v-model="searchForm.agentId" placeholder="选择门店下的经纪人" filterable clearable>
             <el-option v-for="agent in agentList2" :key="agent.id" :label="agent.name"
                        :value="agent.id"></el-option>
           </el-select>
@@ -1120,8 +1120,6 @@
         this.axios.get('/api/v2/branchs/getCitys').then((res) => {
           let citysIds = res.data.filter(item => item !== null);
           let citys = [];
-          let all = {id: ' ', name: '全部'};
-          citys.push(all);
           json.forEach(item => {
             if (item.children) {
               item.children.forEach(i => {
@@ -1139,7 +1137,6 @@
         });
         //获取门店、经纪人列表
         this.getBranchList('');
-        this.getAgentList();
       },
       getCount() {
         this.axios.get('/api/v2/applications/status/count').then((res) => {
