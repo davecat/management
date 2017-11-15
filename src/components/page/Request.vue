@@ -363,7 +363,7 @@
         <hr style="border-bottom-color: #d9d9d9; border-top: none;">
         <el-row>
           <el-tabs v-model="infoTab">
-            <el-tab-pane v-if="searchForm.status[0] !== 'Unchecked' && searchForm.status[0] !== 'Unconfirmed' && searchForm.status[0] !== 'Loan'"
+            <el-tab-pane v-if="searchForm.status[0] !== 'Unchecked' && searchForm.status[0] !== 'Unconfirmed' && searchForm.status[0] !== 'Loan' && currentRow.status !== 'Canceled'"
                          label="还款账单" name="order">
               <!--@current-change="handleCurrentRow1"-->
               <el-table
