@@ -83,6 +83,7 @@
                       style="float: left;margin-top: 7px;">
         <el-radio label='Unchecked'>待补充</el-radio>
         <el-radio label='Returned'>待修改</el-radio>
+        <el-radio label='TOBESIGNED'>等待租客签署电子合同</el-radio>
       </el-radio-group>
       <div v-if="this.radio === 'Unchecked'" class="pagination" style="position: absolute;right: 0;top: -1px;margin: 0">
         <el-pagination
@@ -287,8 +288,8 @@
           <el-button style="float: left;padding: 5px 15px" @click="prev()" :disabled="!tableData[currentIndex-1]"><i
             style="font-size: x-large;vertical-align: sub" class="fa fa-angle-left" aria-hidden="true"></i>上一条
           </el-button>
-          <el-button v-if="searchForm.status[0] === 'Unchecked'" type="info" @click="currentSave">临时保存</el-button>
-          <el-button v-if="searchForm.status[0] === 'Unchecked'" type="success" @click="submit('currentRow')">提交审批</el-button>
+          <el-button v-if="searchForm.status[0] === 'Unchecked' && radio !== 'TOBESIGNED'" type="info" @click="currentSave">临时保存</el-button>
+          <el-button v-if="searchForm.status[0] === 'Unchecked' && radio !== 'TOBESIGNED'" type="success" @click="submit('currentRow')">提交审批</el-button>
           <el-button v-if="searchForm.status[0] === 'Unchecked'" type="danger" @click="dialogVisible = true">取消申请</el-button>
           <el-button v-if="searchForm.status[0] === 'Unconfirmed'" type="info" style="width: 88px;" @click="revocation()">撤回</el-button>
           <el-button style="width: 88px;" v-if="searchForm.status[0] !== 'AllFinished' && searchForm.status[0] !== 'Inadvancefinished' && searchForm.status[0] !== 'RetirementFinished'" @click="transferClick" type="warning">转单
@@ -550,7 +551,7 @@
                   </el-upload>
                 </el-col>
               </el-row>
-              <el-row :gutter="20" style="margin: 10px -10px">
+              <el-row :gutter="20" style="margin: 10px -10px" v-if="!currentRow.isElectroniContract">
                 <el-col :span="3">
                   <el-form-item label="租房合同照片：">
                   </el-form-item>
@@ -569,6 +570,15 @@
                     :on-remove="handleRemove">
                     <i class="el-icon-plus"></i>
                   </el-upload>
+                </el-col>
+              </el-row>
+              <el-row :gutter="20" style="margin: 20px -10px" v-if="currentRow.isElectroniContract">
+                <el-col :span="3">
+                  <el-form-item label="租房合同：">
+                  </el-form-item>
+                </el-col>
+                <el-col :span="20">
+                  <a :href="currentRow.viewPdfUrl" target="view_window">查看电子合同</a>
                 </el-col>
               </el-row>
             </el-tab-pane>
@@ -802,6 +812,8 @@
           return "提前退租"
         } else if(value === "Breach"){
           return "已逾期"
+        } else if(value === "TOBESIGNED") {
+          return "待签署"
         }
       },
       educationFormat: function (value) {
@@ -1265,6 +1277,12 @@
       },
       //切换radio
       radioChange() {
+        //待签署状态单子禁止修改
+        if(this.radio === 'TOBESIGNED') {
+          this.statusDisabled = true;
+        } else {
+          this.statusDisabled = false;
+        }
         let form = {
           ...this.searchForm,
           page: this.cur_page - 1,
