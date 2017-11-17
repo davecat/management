@@ -84,16 +84,9 @@
         <el-radio label='Unchecked'>待补充</el-radio>
         <el-radio label='Returned'>待修改</el-radio>
       </el-radio-group>
-      <div v-if="this.radio === 'Unchecked'" class="pagination" style="position: absolute;right: 0;top: -1px;margin: 0">
+      <div class="pagination" style="position: absolute;right: 0;top: -1px;margin: 0">
         <el-pagination
           @current-change="handleCurrentChange"
-          layout="total, prev, pager, next"
-          :total="totalElements">
-        </el-pagination>
-      </div>
-      <div v-if="this.radio === 'Returned'" class="pagination" style="position: absolute;right: 0;top: -1px;margin: 0">
-        <el-pagination
-          @current-change="handleCurrentChange1"
           layout="total, prev, pager, next"
           :total="totalElements">
         </el-pagination>
@@ -1077,24 +1070,24 @@
         this.cur_page = val;
         this.getData();
       },
-      //为什么这里单独写了一个分页方法，主要是针对待处理下面的待修改状态单据。当点击待修改时候，实际上searchForm的status并没有改变，为了点击分页时候获取正确的数据，单独写一个方法。如果后台能分成三个状态就不用单独写方法，可惜后台忙的一比，还是自己来吧。。。
-      handleCurrentChange1(val){
-        this.cur_page = val;
-        this.loading = true;
-        this.axios.post(this.url, {
-          ...this.searchForm,
-          status:[this.radio],
-          page: this.cur_page - 1,
-          size: this.size
-        }).then((res) => {
-          this.tableData = res.data.data.content;
-          this.totalElements = res.data.data.totalElements;
-          this.loading = false;
-        }).catch((error) => {
-          this.$message.error(error.response.data.message);
-        })
-      },
       getData(){
+        //待处理的单据
+        if(this.searchForm.status[0] === 'Unchecked') {
+          this.loading = true;
+          this.axios.post(this.url, {
+            ...this.searchForm,
+            status:[this.radio],
+            page: this.cur_page - 1,
+            size: this.size
+          }).then((res) => {
+            this.tableData = res.data.data.content;
+            this.totalElements = res.data.data.totalElements;
+            this.loading = false;
+          }).catch((error) => {
+            this.$message.error(error.response.data.message);
+          });
+          return;
+        }
         //已结束  改变status
         if(this.searchForm.status[0] === 'AllFinished') {
           this.loading = true;
