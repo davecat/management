@@ -3,14 +3,14 @@
     <el-row style="margin-bottom: -15px">
       <el-form :inline="true" :model="form">
         <el-form-item>
-          <el-select v-model="searchForm.cityId" filterable @change="getBranchList(searchForm.cityId)"
+          <el-select v-model="searchForm.cityId" filterable clearable @change="getBranchList(searchForm.cityId)"
                      placeholder="选择城市">
             <el-option v-for="city in cityList" :key="city.id" :label="city.name"
                        :value="city.id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-select v-model="searchForm.branchId" placeholder="选择城市下的门店">
+          <el-select v-model="searchForm.branchId" clearable placeholder="选择城市下的门店">
             <el-option v-for="branch in branchList" :key="branch.id" :label="branch.name"
                        :value="branch.id"></el-option>
           </el-select>
@@ -243,8 +243,6 @@
       this.axios.get('/api/v2/branchs/getCitys').then((res) => {
         let citysIds = res.data.filter(item => item !== null);
         let citys = [];
-        let all = {id: ' ', name: '全部'};
-        citys.push(all);
         json.forEach(item => {
           if (item.children) {
             item.children.forEach(i => {
@@ -260,6 +258,7 @@
       }).catch((error) => {
         this.$message.error(error.response.data.message);
       });
+      this.getBranchList();
     },
     computed: {
       button() {
@@ -304,18 +303,13 @@
     },
     methods: {
       getBranchList(cityId) {
-        if (cityId !== ' ') {
-          this.searchForm.branchId = '';
-          this.branchList = [];
-          this.axios.get('/api/v2/agents/getByCityIdBranch/'+cityId).then((res) => {
-            this.branchList = res.data;
-          }).catch((error) => {
-            this.$message.error(error.response.data.error.data.message);
-          })
-        } else {
-          this.searchForm.branchId = '';
-          this.branchList = [{id: '', name: '全部'}];
-        }
+        this.searchForm.branchId = '';
+        this.branchList = [];
+        this.axios.post('/api/v2/agents/getByCityIdBranch', {cityId: cityId}).then((res) => {
+          this.branchList = res.data;
+        }).catch((error) => {
+          this.$message.error(error.response.data.message);
+        })
       },
       handleEdit(row) {
         this.form.id = row.id;
