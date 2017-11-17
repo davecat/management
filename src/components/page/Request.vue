@@ -1095,6 +1095,43 @@
         })
       },
       getData(){
+        //已结束  改变status
+        if(this.searchForm.status[0] === 'AllFinished') {
+          this.loading = true;
+          this.axios.post(this.url, {
+            ...this.searchForm,
+            status: this.checkboxList2,
+            page: this.cur_page - 1,
+            size: this.size
+          }).then((res) => {
+            this.tableData = res.data.data.content;
+            this.totalElements = res.data.data.totalElements;
+            this.loading = false;
+          }).catch((error) => {
+            this.$message.error(error.response.data.message);
+          });
+          return;
+        }
+        //提前退租
+        if(this.searchForm.status[0] === 'RetirementFinished') {
+          this.loading = true;
+          this.axios.post(this.url, {
+            ...this.searchForm,
+            status: this.checkboxList,
+            page: this.cur_page - 1,
+            size: this.size
+          }).then((res) => {
+            this.tableData = res.data.data.content;
+            this.totalElements = res.data.data.totalElements;
+            this.loading = false;
+          }).catch((error) => {
+            this.$message.error(error.response.data.message);
+          });
+          return;
+        }
+
+
+        //没有子状态的
         this.loading = true;
         this.axios.post(this.url, {
           ...this.searchForm,
