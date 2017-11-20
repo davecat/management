@@ -394,19 +394,19 @@
               name: '总申请量',
               type: 'line',
               stack: '总量1',
-              data: res.data[0]
+              data: res.data.all
             },
             {
               name: '审批通过',
               type: 'line',
               stack: '总量2',
-              data: res.data[1]
+              data: res.data.accep
             },
             {
               name: '审批不通过',
               type: 'line',
               stack: '总量3',
-              data: res.data[2]
+              data: res.data.notaccep
             }
           ];
           this.drawLine('line');
@@ -428,19 +428,19 @@
               name: '总申请量',
               type: 'line',
               stack: '总量1',
-              data: res.data[0]
+              data: res.data.all
             },
             {
               name: '审批通过',
               type: 'line',
               stack: '总量2',
-              data: res.data[1]
+              data: res.data.accep
             },
             {
               name: '审批不通过',
               type: 'line',
               stack: '总量3',
-              data: res.data[2]
+              data: res.data.notaccep
             }
           ];
           this.drawLine('line');
