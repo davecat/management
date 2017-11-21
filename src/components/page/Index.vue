@@ -491,14 +491,14 @@
         let totalAdd2 = 0;
         this.axios.post('/api/agency/getMap', {startDay: weekStart, endDay: weekEnd}).then((res) => {
           //处理数据
-          res.data[0].forEach(function (item) {
-            totalAdd += item.total;
+          res.data.area.forEach(function (item) {
+            totalAdd += item.value;
           });
-          res.data[0].forEach(item => {
+          res.data.area.forEach(item => {
             json.forEach(function (obj) {
               if (item.province === obj.value) {
                 item.name = obj.label.substr(0, 2);
-                item.percent = ((item.total / totalAdd) * 100).toFixed(2);
+                item.percent = ((item.value / totalAdd) * 100).toFixed(2);
                 if (item.name === '内蒙') {
                   item.name = '内蒙古'
                 } else if (item.name === '黑龙') {
@@ -507,14 +507,14 @@
               }
             });
           });
-          res.data[1].forEach(function (item) {
-            totalAdd2 += item.total;
+          res.data.branch.forEach(function (item) {
+            totalAdd2 += item.value;
           });
-          res.data[1].forEach(item => {
+          res.data.branch.forEach(item => {
             json.forEach(function (obj) {
               if (item.province === obj.value) {
                 item.name = obj.label.substr(0, 2);
-                item.percent = ((item.total / totalAdd2) * 100).toFixed(2);
+                item.percent = ((item.value / totalAdd2) * 100).toFixed(2);
                 if (item.name === '内蒙') {
                   item.name = '内蒙古'
                 } else if (item.name === '黑龙') {
@@ -529,12 +529,12 @@
             });
           });
           //显示数据
-          this.tableData1 = res.data[0];
+          this.tableData1 = res.data.area;
           //临时存储返回数据
-          this.currentTable1 = res.data[0];
-          this.currentTable2 = res.data[1];
+          this.currentTable1 = res.data.area;
+          this.currentTable2 = res.data.branch;
           //画图
-          this.mapOption.series[0].data = res.data[0];
+          this.mapOption.series[0].data = res.data.area;
           this.mapOption.visualMap.max = 200;
           this.drawMap('map');
         }).catch((error) => {
@@ -547,14 +547,14 @@
         let totalAdd = 0;
         let totalAdd2 = 0;
         this.axios.post('/api/agency/getMap', {startDay: monthStart, endDay: monthEnd}).then((res) => {
-          res.data[0].forEach(function (item) {
-            totalAdd += item.total;
+          res.data.area.forEach(function (item) {
+            totalAdd += item.value;
           });
-          res.data[0].forEach(item => {
+          res.data.area.forEach(item => {
             json.forEach(function (obj) {
               if (item.province === obj.value) {
                 item.name = obj.label.substr(0, 2);
-                item.percent = ((item.total / totalAdd) * 100).toFixed(2);
+                item.percent = ((item.value / totalAdd) * 100).toFixed(2);
                 if (item.name === '内蒙') {
                   item.name = '内蒙古'
                 } else if (item.name === '黑龙') {
@@ -563,14 +563,14 @@
               }
             });
           });
-          res.data[1].forEach(function (item) {
-            totalAdd2 += item.total;
+          res.data.branch.forEach(function (item) {
+            totalAdd2 += item.value;
           });
-          res.data[1].forEach(item => {
+          res.data.branch.forEach(item => {
             json.forEach(function (obj) {
               if (item.province === obj.value) {
                 item.name = obj.label.substr(0, 2);
-                item.percent = ((item.total / totalAdd2) * 100).toFixed(2);
+                item.percent = ((item.value / totalAdd2) * 100).toFixed(2);
                 if (item.name === '内蒙') {
                   item.name = '内蒙古'
                 } else if (item.name === '黑龙') {
@@ -585,12 +585,12 @@
             });
           });
           //显示数据
-          this.tableData1 = res.data[0];
+          this.tableData1 = res.data.area;
           //临时存储返回数据
-          this.currentTable1 = res.data[0];
-          this.currentTable2 = res.data[1];
+          this.currentTable1 = res.data.area;
+          this.currentTable2 = res.data.branch;
           //画图
-          this.mapOption.series[0].data = res.data[0];
+          this.mapOption.series[0].data = res.data.area;
           this.mapOption.visualMap.max = 500;
           this.drawMap('map');
         }).catch((error) => {
