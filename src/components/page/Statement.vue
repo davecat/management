@@ -57,6 +57,7 @@
               <el-table-column
                 prop="payeeDate"
                 sortable
+                align="center"
                 min-width="130"
                 label="收款日期">
                 <template slot-scope="scope">
@@ -67,11 +68,12 @@
               </el-table-column>
               <el-table-column
                 prop="factPayeeDate"
+                align="center"
                 sortable
                 min-width="130"
                 label="放款日期">
                 <template slot-scope="scope">
-                  <div slot="reference" class="name-wrapper-normal">
+                  <div slot="reference" :class="scope.row.factPayeeDate?'':'name-wrapper-normal-blue'">
                     <el-tag>{{ scope.row.factPayeeDate?scope.row.factPayeeDate: '待放款' | dateFormat }}</el-tag>
                   </div>
                 </template>
@@ -845,5 +847,10 @@
   }
   .el-upload--text {
     width: 100%;
+  }
+  .name-wrapper-normal-blue .el-tag {
+    color: #1D8CE0;
+    font-size: 14px;
+    background-color: transparent;
   }
 </style>
