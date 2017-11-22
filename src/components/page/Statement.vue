@@ -756,8 +756,8 @@
           this.searchForm.factPayeeDateFrom = '';
           this.searchForm.factPayeeDateTo = '';
         } else {
-          this.searchForm.factPayeeDateFrom = format(this.applyDate[0], 'YYYY-MM-DD');
-          this.searchForm.factPayeeDateTo = format(this.applyDate[1], 'YYYY-MM-DD');
+          this.searchForm.factPayeeDateFrom = format(this.factPayeeDate[0], 'YYYY-MM-DD');
+          this.searchForm.factPayeeDateTo = format(this.factPayeeDate[1], 'YYYY-MM-DD');
         }
       },
       Search() {
