@@ -15,6 +15,15 @@
                 </el-date-picker>
               </el-form-item>
               <el-form-item>
+                <el-date-picker
+                  type="daterange"
+                  @change="factPayeeDateChange"
+                  v-model="factPayeeDate"
+                  align="right"
+                  placeholder="放款日期">
+                </el-date-picker>
+              </el-form-item>
+              <el-form-item>
                 <el-input v-model="searchForm.applicationNoOrCustomnerName" placeholder="申请编号或租客姓名" @keyup.enter.native="Search"></el-input>
               </el-form-item>
               <el-form-item>
@@ -53,6 +62,17 @@
                 <template slot-scope="scope">
                   <div slot="reference" class="name-wrapper-normal">
                     <el-tag>{{ scope.row.payeeDate | dateFormat }}</el-tag>
+                  </div>
+                </template>
+              </el-table-column>
+              <el-table-column
+                prop="factPayeeDate"
+                sortable
+                min-width="130"
+                label="放款日期">
+                <template slot-scope="scope">
+                  <div slot="reference" class="name-wrapper-normal">
+                    <el-tag>{{ scope.row.factPayeeDate?scope.row.factPayeeDate: '待放款' | dateFormat }}</el-tag>
                   </div>
                 </template>
               </el-table-column>
@@ -501,6 +521,7 @@
         imageUrl: '',
         dialogVisible: false,
         applyDate: [format(Date.now(), 'YYYY-MM-DD'),format(Date.now(), 'YYYY-MM-DD')],
+        factPayeeDate: [],//放款日期
         //按钮权限控制
         importButton: false,
         activeName: 'Rejected',
@@ -519,6 +540,8 @@
         searchForm: {
           applyDate: format(Date.now(), 'YYYY-MM-DD'),
           applyEndDate: format(Date.now(), 'YYYY-MM-DD'),
+          factPayeeDateFrom: '',
+          factPayeeDateTo: '',
           applicationNoOrCustomnerName: ''
         },
         searchForm2: {
@@ -530,9 +553,13 @@
     },
     filters: {
       dateFormat: function (value) {
-        if (typeof value === "string") {
-          let date = Date.parse(value.substring(0, value.length - 9));
-          return format(date, 'YYYYMMDD');
+        if(value === '待放款') {
+            return '待放款'
+        } else {
+          if (typeof value === "string") {
+            let date = Date.parse(value.substring(0, value.length - 9));
+            return format(date, 'YYYYMMDD');
+          }
         }
       },
       districtFormat: function (value) {
@@ -722,6 +749,15 @@
         } else {
           this.searchForm.applyDate = format(this.applyDate[0], 'YYYY-MM-DD');
           this.searchForm.applyEndDate = format(this.applyDate[1], 'YYYY-MM-DD');
+        }
+      },
+      factPayeeDateChange() {
+        if(this.factPayeeDate === undefined || this.factPayeeDate[0] === null) {
+          this.searchForm.factPayeeDateFrom = '';
+          this.searchForm.factPayeeDateTo = '';
+        } else {
+          this.searchForm.factPayeeDateFrom = format(this.applyDate[0], 'YYYY-MM-DD');
+          this.searchForm.factPayeeDateTo = format(this.applyDate[1], 'YYYY-MM-DD');
         }
       },
       Search() {
