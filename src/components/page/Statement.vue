@@ -73,7 +73,7 @@
                 min-width="130"
                 label="放款日期">
                 <template slot-scope="scope">
-                  <div slot="reference" :class="scope.row.factPayeeDate?'':'name-wrapper-normal-blue'">
+                  <div slot="reference" :class="scope.row.factPayeeDate?'name-wrapper-normal':'name-wrapper-normal-blue'">
                     <el-tag>{{ scope.row.factPayeeDate?scope.row.factPayeeDate: '待放款' | dateFormat }}</el-tag>
                   </div>
                 </template>
