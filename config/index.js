@@ -1,13 +1,16 @@
 // see http://vuejs-templates.github.io/webpack for documentation.
-var path = require('path')
+var path = require('path');
+// var proxyPath = 'http://testbk.wezebra.com';
+var proxyPath = 'http://localhost:8085';
+var versiony = require('versiony');
 
 module.exports = {
   build: {
     env: require('./prod.env'),
     index: path.resolve(__dirname, '../dist/index.html'),
-    assetsRoot: path.resolve(__dirname, '../dist'),
+    assetsRoot: path.resolve(__dirname, '../dist/'+versiony.from('package.json').get()),
     assetsSubDirectory: 'static',
-    assetsPublicPath: '/',
+    assetsPublicPath: 'https://libfile1.wezebra.com/'+versiony.from('package.json').get(),
     productionSourceMap: true,
     // Gzip off by default as many popular static hosts such as
     // Surge or Netlify already gzip all static assets for you.
@@ -30,7 +33,8 @@ module.exports = {
     proxyTable: {
       //中介报表
       '/api/agency': {
-        target: 'http://localhost:8000',
+        target: 'http://0.0.0.0:8888',
+        changeOrigin: true,
         secure: false,
         pathRewrite: {
           '^/api/agency': '/api/agency'
@@ -38,7 +42,8 @@ module.exports = {
       },
       //地图
       '/api/getMap': {
-        target: 'http://localhost:8000',
+        target: 'http://0.0.0.0:8888',
+        changeOrigin: true,
         secure: false,
         pathRewrite: {
           '^/api/getMap': '/api/getMap'
@@ -46,7 +51,8 @@ module.exports = {
       },
       //折线图
       '/api/getAmountByDate': {
-        target: 'http://localhost:8000',
+        target: 'http://0.0.0.0:8888',
+        changeOrigin: true,
         secure: false,
         pathRewrite: {
           '^/api/getAmountByDate': '/api/getAmountByDate'
@@ -54,8 +60,9 @@ module.exports = {
       },
       //中介接口
       '/api/v2': {
-        target: 'http://182.92.186.16:8085',
-        // target: 'http://192.168.0.105:8085',
+        // target: '192.168.0.120:8085',
+        target: proxyPath,
+        changeOrigin: true,
         secure: false,
         pathRewrite: {
           '^/api/v2': '/api/v2'
@@ -63,7 +70,8 @@ module.exports = {
       },
       // 中退、撤回
       '/counter': {
-        target: 'http://192.168.0.66:8080',
+        target: proxyPath,
+        changeOrigin: true,
         secure: false,
         pathRewrite: {
           '^/counter': '/counter'
@@ -71,7 +79,8 @@ module.exports = {
       },
       //获取门店二维码
       '/admin/api/branch': {
-        target: 'http://testbk.wezebra.com',
+        target: proxyPath,
+        changeOrigin: true,
         secure: false,
         pathRewrite: {
           '^/admin/api/branch': '/admin/api/branch'
@@ -85,4 +94,4 @@ module.exports = {
     // just be aware of this issue when enabling this option.
     cssSourceMap: false
   }
-}
+};

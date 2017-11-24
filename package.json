@@ -17,6 +17,7 @@
     "babel-polyfill": "^6.23.0",
     "date-fns": "^1.28.5",
     "echarts": "^3.7.0",
+    "versiony": "^2.0.1",
     "vue-axios": "^2.0.2",
     "vuex": "^2.3.1"
   },
