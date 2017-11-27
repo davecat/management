@@ -7,7 +7,7 @@ var versiony = require('versiony');
 module.exports = {
   build: {
     env: require('./prod.env'),
-    index: path.resolve(__dirname, '../dist/index.html'),
+    index: path.resolve(__dirname, '../dist/'+versiony.from('package.json').get()+'/index.html'),
     assetsRoot: path.resolve(__dirname, '../dist/'+versiony.from('package.json').get()),
     assetsSubDirectory: 'static',
     assetsPublicPath: 'https://libfile1.wezebra.com/'+versiony.from('package.json').get(),
