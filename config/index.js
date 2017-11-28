@@ -10,7 +10,7 @@ module.exports = {
     index: path.resolve(__dirname, '../dist/'+versiony.from('package.json').get()+'/index.html'),
     assetsRoot: path.resolve(__dirname, '../dist/'+versiony.from('package.json').get()),
     assetsSubDirectory: 'static',
-    assetsPublicPath: 'https://libfile1.wezebra.com/'+versiony.from('package.json').get(),
+    assetsPublicPath: 'https://libfile1.wezebra.com/'+versiony.from('package.json').get()+'/',
     productionSourceMap: true,
     // Gzip off by default as many popular static hosts such as
     // Surge or Netlify already gzip all static assets for you.
