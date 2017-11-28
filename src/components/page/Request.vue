@@ -436,7 +436,7 @@
               <el-row>
                 <el-col>
                   <el-form-item label="台账号码：" :label-width="formLabelWidth" prop="apartmentNo">
-                    <el-input :disabled="statusDisabled" v-model="currentRow.apartmentNo" placeholder="请输入台账号"></el-input>
+                    <el-input :disabled="NoBoolean" v-model="currentRow.apartmentNo" placeholder="请输入台账号" @keyup.enter.native="editApartmentNo" @blur="editApartmentNo"></el-input>
                   </el-form-item>
                 </el-col>
               </el-row>
@@ -610,6 +610,7 @@
         checkboxList2: ['Finished','CanceledAndRejected'],
         billList:[],
         statusDisabled: false,//不同状态下控制是否只读
+        NoBoolean: false,//台账号是否可以修改
         //按钮权限控制
         importButton: false,
         transferId: '',
@@ -974,6 +975,47 @@
           this.$message.error(error.response.data.message);
         })
       },
+      //修改台账号
+      editApartmentNo() {
+        //如果是待补充单据，查询状态需根据单选框
+        if(this.searchForm.status[0] === 'Unchecked') {
+          this.axios.put('/api/v2/applications/temp', {apartmentNo: this.currentRow.apartmentNo,applicationNo: this.currentRow.applicationNo}).then((res) => {
+            this.axios.post(this.url, {
+              ...this.searchForm,
+              status: [this.radio],
+              page: this.cur_page - 1,
+              size: this.size
+            }).then((res) => {
+              this.$message.success("修改台账号成功！");
+              this.tableData = res.data.data.content;
+              this.currentRow = this.tableData[this.currentIndex];
+              this.totalElements = res.data.data.totalElements;
+            }).catch((error) => {
+              this.$message.error(error.response.data.message);
+            });
+          }).catch((error) => {
+            this.$message.error(error.response.data.message);
+          })
+        } else {
+          this.axios.put('/api/v2/applications/temp', {apartmentNo: this.currentRow.apartmentNo,applicationNo: this.currentRow.applicationNo}).then((res) => {
+            this.axios.post(this.url, {
+              ...this.searchForm,
+              page: this.cur_page - 1,
+              size: this.size
+            }).then((res) => {
+              this.$message.success("修改台账号成功！");
+              this.tableData = res.data.data.content;
+              this.currentRow = this.tableData[this.currentIndex];
+              this.totalElements = res.data.data.totalElements;
+            }).catch((error) => {
+              this.$message.error(error.response.data.message);
+            });
+          }).catch((error) => {
+            this.$message.error(error.response.data.message);
+          })
+        }
+
+      },
       //上一条
       prev() {
         //跳转到上一条
@@ -1082,6 +1124,7 @@
           }).then((res) => {
             this.tableData = res.data.data.content;
             this.totalElements = res.data.data.totalElements;
+            this.currentRow = this.tableData[this.currentIndex];
             this.loading = false;
           }).catch((error) => {
             this.$message.error(error.response.data.message);
@@ -1099,6 +1142,7 @@
           }).then((res) => {
             this.tableData = res.data.data.content;
             this.totalElements = res.data.data.totalElements;
+            this.currentRow = this.tableData[this.currentIndex];
             this.loading = false;
           }).catch((error) => {
             this.$message.error(error.response.data.message);
@@ -1116,6 +1160,7 @@
           }).then((res) => {
             this.tableData = res.data.data.content;
             this.totalElements = res.data.data.totalElements;
+            this.currentRow = this.tableData[this.currentIndex];
             this.loading = false;
           }).catch((error) => {
             this.$message.error(error.response.data.message);
@@ -1133,6 +1178,7 @@
         }).then((res) => {
           this.tableData = res.data.data.content;
           this.totalElements = res.data.data.totalElements;
+          this.currentRow = this.tableData[this.currentIndex];
           this.loading = false;
         }).catch((error) => {
           this.$message.error(error.response.data.message);
@@ -1305,6 +1351,7 @@
         this.axios.post(this.url, form).then((res) => {
           this.tableData = res.data.data.content;
           this.totalElements = res.data.data.totalElements;
+          this.currentRow = this.tableData[this.currentIndex];
           this.loading = false;
         }).catch((error) => {
           this.$message.error(error.response.data.message);
@@ -1325,6 +1372,13 @@
         } else {
           this.statusDisabled = true;
           this.getData();
+        }
+
+        //已结束、提前退租的单子 台账号不允许修改
+        if(a === 'RetirementFinished' || a === 'AllFinished') {
+            this.NoBoolean = true
+        } else {
+          this.NoBoolean = false
         }
       },
       //点击每一行
